@@ -26,19 +26,19 @@ public class Member extends AuditingTimeEntity {
     private String password;
 
     private String name;
-    private String phoneNum;
+    private String phone;
     private String birth;
     private String gender;
 
-    private final Boolean deleted = false;
+    private final Boolean isDeleted = false;
 
     @Builder
-    public Member(String userId, String password, String name, String phoneNum, String birth,
+    public Member(String userId, String password, String name, String phone, String birth,
         String gender) {
         this.userId = userId;
         this.password = password;
         this.name = name;
-        this.phoneNum = phoneNum;
+        this.phone = phone;
         this.birth = birth;
         this.gender = gender;
     }
