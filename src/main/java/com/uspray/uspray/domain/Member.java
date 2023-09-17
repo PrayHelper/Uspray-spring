@@ -1,9 +1,9 @@
 package com.uspray.uspray.domain;
 
 import com.uspray.uspray.common.domain.AuditingTimeEntity;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+
+import javax.persistence.*;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -32,14 +32,18 @@ public class Member extends AuditingTimeEntity {
 
     private final Boolean deleted = false;
 
+    @Enumerated(EnumType.STRING)
+    private Authority authority;
+
     @Builder
     public Member(String userId, String password, String name, String phoneNum, String birth,
-        String gender) {
+        String gender, Authority authority) {
         this.userId = userId;
         this.password = password;
         this.name = name;
         this.phoneNum = phoneNum;
         this.birth = birth;
         this.gender = gender;
+        this.authority = authority;
     }
 }
