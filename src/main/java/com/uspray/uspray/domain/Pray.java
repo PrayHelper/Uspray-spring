@@ -5,7 +5,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
-import com.uspray.uspray.domain.dto.PrayDto;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
