@@ -4,6 +4,8 @@ import com.uspray.uspray.common.domain.AuditingTimeEntity;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+
+import com.uspray.uspray.domain.dto.PrayDto;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,7 +17,7 @@ import java.time.LocalDate;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Where(clause = "deleted=false")
+@Where(clause = "is_deleted=false")
 public class Pray extends AuditingTimeEntity {
 
     @Id
