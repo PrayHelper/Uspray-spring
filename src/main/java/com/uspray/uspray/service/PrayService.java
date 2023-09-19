@@ -2,8 +2,8 @@ package com.uspray.uspray.service;
 
 import com.uspray.uspray.domain.Member;
 import com.uspray.uspray.domain.Pray;
-import com.uspray.uspray.domain.dto.PrayDto;
-import com.uspray.uspray.domain.dto.request.PrayRequestDto;
+import com.uspray.uspray.dto.pray.PrayDto;
+import com.uspray.uspray.dto.pray.request.PrayRequestDto;
 import com.uspray.uspray.infrastructure.MemberRepository;
 import com.uspray.uspray.infrastructure.PrayRepository;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package com.uspray.uspray.common.dto;
+package com.uspray.uspray.dto;
 
 import com.uspray.uspray.exception.ErrorStatus;
 import com.uspray.uspray.exception.SuccessStatus;
