@@ -31,7 +31,7 @@ public class AuthService {
     @Transactional
     public MemberResponseDto signup(MemberRequestDto memberRequestDto) {
         // 핸드폰번호가 존재하거나 아이디가 존재하면 에러
-        if (memberRepository.existsByPhoneNum(memberRequestDto.getPhoneNum()) || memberRepository.existsByUserId(memberRequestDto.getUserId())) {
+        if (memberRepository.existsByUserId(memberRequestDto.getUserId())) {
             throw new RuntimeException("이미 가입되어 있는 유저입니다");
         }
 
@@ -88,5 +88,10 @@ public class AuthService {
 
         // 토큰 발급
         return tokenDto;
+    }
+    @Transactional
+    public String withdrawal(String id) {
+        memberRepository.delete(memberRepository.getMemberByUserId(id));
+        return "회원 탈퇴에 성공하였습니다";
     }
 }
