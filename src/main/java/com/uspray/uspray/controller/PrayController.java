@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-@RestController
 @RequiredArgsConstructor
 @RequestMapping("/pray")
 @Tag(name = "Pray", description = "기도제목 API")
@@ -31,7 +30,6 @@ public class PrayController {
             responseCode = "200",
             description = "기도제목 목록 반환",
             content = @Content(schema = @Schema(implementation = PrayDto.class)))
-
     @GetMapping("")
     public ApiResponseDto<PrayDto> getPrayList() {
         return ApiResponseDto.success(SuccessStatus.GET_PRAY_LIST_SUCCESS, null);
