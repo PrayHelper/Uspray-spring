@@ -2,6 +2,7 @@ package com.uspray.uspray.domain.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -10,9 +11,12 @@ import java.time.LocalDateTime;
 
 @Getter
 @AllArgsConstructor
+@Builder
 @NoArgsConstructor
 public class PrayDto {
     @Schema(description = "기도제목 ID", example = "1")
+    private Long id;
+    @Schema(description = "기도제목 작성자 ID", example = "1")
     private Long memberId;
     @Schema(description = "기도제목 내용", example = "@@이가 $$ 할 수 있도록")
     private String content;
