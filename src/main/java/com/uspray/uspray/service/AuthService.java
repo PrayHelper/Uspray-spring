@@ -5,6 +5,8 @@ import com.uspray.uspray.DTO.auth.request.MemberLoginRequestDto;
 import com.uspray.uspray.DTO.auth.request.MemberRequestDto;
 import com.uspray.uspray.DTO.auth.response.MemberResponseDto;
 import com.uspray.uspray.domain.Member;
+import com.uspray.uspray.exception.ErrorStatus;
+import com.uspray.uspray.exception.model.ExistEmailException;
 import com.uspray.uspray.infrastructure.MemberRepository;
 import com.uspray.uspray.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -94,4 +96,14 @@ public class AuthService {
         memberRepository.delete(memberRepository.getMemberByUserId(id));
         return "회원 탈퇴에 성공하였습니다";
     }
+
+    public String dupCheck(String id) {
+
+        if (memberRepository.existsByUserId(id)) {
+            throw new ExistEmailException(ErrorStatus.ALREADY_EXIST_USER_EXCEPTION,
+                ErrorStatus.ALREADY_EXIST_USER_EXCEPTION.getMessage());
+        }
+        return "사용 가능한 이메일입니다.";
+    }
+
 }

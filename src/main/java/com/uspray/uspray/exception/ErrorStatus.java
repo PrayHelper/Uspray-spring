@@ -12,6 +12,7 @@ public enum ErrorStatus {
      * 400 BAD_REQUEST
      */
     VALIDATION_EXCEPTION(HttpStatus.BAD_REQUEST, "잘못된 요청입니다."),
+    ALREADY_EXIST_USER_EXCEPTION(HttpStatus.BAD_REQUEST, "이미 존재하는 유저입니다."),
 
     /**
      * 404 NOT FOUND

@@ -16,6 +16,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -62,5 +64,12 @@ public class AuthController {
         @Parameter(hidden = true) @AuthenticationPrincipal User user) {
         return ApiResponseDto.success(SuccessStatus.WITHDRAWAL_SUCCESS,
             authService.withdrawal(user.getUsername()));
+    }
+
+    @GetMapping("/dup-check/{id}")
+    @Operation(summary = "이메일 중복 체크")
+    public ApiResponseDto<String> duplCheck(@PathVariable("id") String id) {
+        return ApiResponseDto.success(SuccessStatus.CHECK_DUPL_EMAIL_SUCCESS,
+            authService.dupCheck(id));
     }
 }
