@@ -1,9 +1,10 @@
 package com.uspray.uspray.domain;
 
+import com.uspray.uspray.Enums.Authority;
 import com.uspray.uspray.common.domain.AuditingTimeEntity;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+
+import javax.persistence.*;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,8 +15,8 @@ import org.hibernate.annotations.Where;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SQLDelete(sql = "UPDATE member SET is_deleted = true WHERE member_id=?")
-@Where(clause = "is_deleted=false")
+@SQLDelete(sql = "UPDATE member SET deleted = true WHERE member_id=?")
+@Where(clause = "deleted=false")
 public class Member extends AuditingTimeEntity {
 
     @Id
@@ -26,20 +27,24 @@ public class Member extends AuditingTimeEntity {
     private String password;
 
     private String name;
-    private String phone;
+    private String phoneNum;
     private String birth;
     private String gender;
 
-    private final Boolean isDeleted = false;
+    private final Boolean deleted = false;
+
+    @Enumerated(EnumType.STRING)
+    private Authority authority;
 
     @Builder
-    public Member(String userId, String password, String name, String phone, String birth,
-        String gender) {
+    public Member(String userId, String password, String name, String phoneNum, String birth,
+        String gender, Authority authority) {
         this.userId = userId;
         this.password = password;
         this.name = name;
-        this.phone = phone;
+        this.phoneNum = phoneNum;
         this.birth = birth;
         this.gender = gender;
+        this.authority = authority;
     }
 }

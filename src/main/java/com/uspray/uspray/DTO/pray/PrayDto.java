@@ -1,4 +1,4 @@
-package com.uspray.uspray.dto.pray;
+package com.uspray.uspray.DTO.pray;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;

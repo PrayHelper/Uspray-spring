@@ -4,13 +4,13 @@ import com.uspray.uspray.domain.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import javax.transaction.Transactional;
+import java.util.Optional;
 
-@Transactional
 @Repository
 public interface MemberRepository extends JpaRepository<Member, Long> {
-    Member getMemberById(Long id);
-    Member findFirstByOrderById();
-
+    Optional<Member> findByUserId(String userId);
+    Optional<Member> findByPhoneNum(String phoneNum);
+    boolean existsByUserId(String userId);
+    boolean existsByPhoneNum(String phoneNum);
     Member getMemberByName(String name);
 }

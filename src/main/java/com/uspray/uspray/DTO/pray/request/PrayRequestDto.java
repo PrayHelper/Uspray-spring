@@ -1,4 +1,4 @@
-package com.uspray.uspray.dto.pray.request;
+package com.uspray.uspray.DTO.pray.request;
 
 import com.uspray.uspray.domain.Member;
 import com.uspray.uspray.domain.Pray;

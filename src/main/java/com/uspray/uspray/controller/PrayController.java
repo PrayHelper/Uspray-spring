@@ -1,9 +1,9 @@
 package com.uspray.uspray.controller;
 
 
-import com.uspray.uspray.dto.ApiResponseDto;
-import com.uspray.uspray.dto.pray.PrayDto;
-import com.uspray.uspray.dto.pray.request.PrayRequestDto;
+import com.uspray.uspray.DTO.ApiResponseDto;
+import com.uspray.uspray.DTO.pray.PrayDto;
+import com.uspray.uspray.DTO.pray.request.PrayRequestDto;
 import com.uspray.uspray.exception.SuccessStatus;
 import com.uspray.uspray.service.PrayService;
 import io.swagger.v3.oas.annotations.Operation;
