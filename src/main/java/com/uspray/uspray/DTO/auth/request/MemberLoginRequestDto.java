@@ -1,4 +1,4 @@
-package com.uspray.uspray.controller.dto.request;
+package com.uspray.uspray.DTO.auth.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

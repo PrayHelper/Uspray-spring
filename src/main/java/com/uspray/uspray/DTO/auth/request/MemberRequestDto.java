@@ -1,6 +1,6 @@
-package com.uspray.uspray.controller.dto.request;
+package com.uspray.uspray.DTO.auth.request;
 
-import com.uspray.uspray.domain.Authority;
+import com.uspray.uspray.Enums.Authority;
 import com.uspray.uspray.domain.Member;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
 
 @Getter
 @AllArgsConstructor

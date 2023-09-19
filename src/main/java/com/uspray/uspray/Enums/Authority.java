@@ -1,4 +1,4 @@
-package com.uspray.uspray.domain;
+package com.uspray.uspray.Enums;
 
 public enum Authority {
     ROLE_USER, ROLE_ADMIN

@@ -1,9 +1,9 @@
 package com.uspray.uspray.service;
 
-import com.uspray.uspray.controller.dto.TokenDto;
-import com.uspray.uspray.controller.dto.request.MemberLoginRequestDto;
-import com.uspray.uspray.controller.dto.request.MemberRequestDto;
-import com.uspray.uspray.controller.dto.response.MemberResponseDto;
+import com.uspray.uspray.DTO.auth.TokenDto;
+import com.uspray.uspray.DTO.auth.request.MemberLoginRequestDto;
+import com.uspray.uspray.DTO.auth.request.MemberRequestDto;
+import com.uspray.uspray.DTO.auth.response.MemberResponseDto;
 import com.uspray.uspray.domain.Member;
 import com.uspray.uspray.infrastructure.MemberRepository;
 import com.uspray.uspray.jwt.TokenProvider;

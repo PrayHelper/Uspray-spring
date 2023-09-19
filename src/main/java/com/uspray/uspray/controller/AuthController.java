@@ -1,10 +1,9 @@
 package com.uspray.uspray.controller;
 
+import com.uspray.uspray.DTO.auth.request.MemberLoginRequestDto;
+import com.uspray.uspray.DTO.auth.request.MemberRequestDto;
 import com.uspray.uspray.common.dto.ApiResponseDto;
-import com.uspray.uspray.controller.dto.TokenDto;
-import com.uspray.uspray.controller.dto.request.MemberLoginRequestDto;
-import com.uspray.uspray.controller.dto.request.MemberRequestDto;
-import com.uspray.uspray.controller.dto.response.MemberResponseDto;
+import com.uspray.uspray.DTO.auth.TokenDto;
 import com.uspray.uspray.exception.SuccessStatus;
 import com.uspray.uspray.service.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import com.uspray.uspray.DTO.auth.response.MemberResponseDto;
 
 import javax.validation.Valid;
 

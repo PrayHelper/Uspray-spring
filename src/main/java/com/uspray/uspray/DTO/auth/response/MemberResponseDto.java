@@ -1,6 +1,5 @@
-package com.uspray.uspray.controller.dto.response;
+package com.uspray.uspray.DTO.auth.response;
 
-import com.uspray.uspray.controller.dto.request.MemberRequestDto;
 import com.uspray.uspray.domain.Member;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

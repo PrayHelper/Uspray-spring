@@ -1,5 +1,6 @@
 package com.uspray.uspray.domain;
 
+import com.uspray.uspray.Enums.Authority;
 import com.uspray.uspray.common.domain.AuditingTimeEntity;
 
 import javax.persistence.*;
