@@ -44,6 +44,8 @@ dependencies {
 
 	//swagger
 	implementation 'org.springdoc:springdoc-openapi-ui:1.7.0'
+
+	implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
 }
 
 tasks.named('test') {
