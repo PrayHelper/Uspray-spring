@@ -18,9 +18,9 @@ public class MemberResponseDto {
     private String name;
 
     @Schema(description = "전화번호", example = "01012345678")
-    private String phoneNum;
+    private String phone;
 
     public static MemberResponseDto of(Member member) {
-        return new MemberResponseDto(member.getUserId(), member.getName(), member.getPhoneNum());
+        return new MemberResponseDto(member.getUserId(), member.getName(), member.getPhone());
     }
 }
