@@ -1,6 +1,8 @@
 package com.uspray.uspray.service;
 
 import com.uspray.uspray.DTO.auth.TokenDto;
+import com.uspray.uspray.DTO.auth.request.FindIdDto;
+import com.uspray.uspray.DTO.auth.request.FindPwDto;
 import com.uspray.uspray.DTO.auth.request.MemberLoginRequestDto;
 import com.uspray.uspray.DTO.auth.request.MemberRequestDto;
 import com.uspray.uspray.DTO.auth.response.MemberResponseDto;
@@ -31,7 +33,7 @@ public class AuthService {
     @Transactional
     public MemberResponseDto signup(MemberRequestDto memberRequestDto) {
         // 핸드폰번호가 존재하거나 아이디가 존재하면 에러
-        if (memberRepository.existsByPhoneNum(memberRequestDto.getPhoneNum()) || memberRepository.existsByUserId(memberRequestDto.getUserId())) {
+        if (memberRepository.existsByUserId(memberRequestDto.getUserId())) {
             throw new RuntimeException("이미 가입되어 있는 유저입니다");
         }
 
@@ -70,7 +72,7 @@ public class AuthService {
         Authentication authentication = tokenProvider.getAuthentication(accessToken);
 
         // 3. 저장소에서 Member ID 를 기반으로 Refresh Token 값 가져오기
-        String refreshTokenValue = redisTemplate.opsForValue().get("RT:" + authentication.getName()).toString();
+        String refreshTokenValue = redisTemplate.opsForValue().get("RT:" + authentication.getName());
 
         // 4. Refresh Token 일치하는지 검사
         if (!refreshToken.equals(refreshTokenValue)) {
@@ -88,5 +90,16 @@ public class AuthService {
 
         // 토큰 발급
         return tokenDto;
+    }
+
+    public String findId(FindIdDto findIdDto) {
+        return memberRepository.findByNameAndPhone(findIdDto.getName(), findIdDto.getPhone()).getUserId();
+    }
+
+    @Transactional
+    public void findPw(FindPwDto findPwDto) {
+        memberRepository.findByNameAndPhoneAndUserId(
+            findPwDto.getName(), findPwDto.getPhone(),
+            findPwDto.getUserId()).changePw(passwordEncoder.encode(findPwDto.getPassword()));
     }
 }
