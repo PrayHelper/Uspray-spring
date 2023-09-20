@@ -33,7 +33,7 @@ public class SmsController {
     }
 
     @PostMapping("/sms/send/cert")
-    @Operation(summary = "인증 코드 확인 ")
+    @Operation(summary = "인증 코드 확인")
     public ApiResponseDto<Boolean> sendSms(@RequestBody CertDto certDto) {
         return ApiResponseDto.success(SuccessStatus.CERTIFICATION_SUCCESS,
             smsService.getCertification(certDto));
