@@ -21,7 +21,7 @@ public class Member extends AuditingTimeEntity {
 
     @Id
     @GeneratedValue
-    private Long id;
+    private Long memberId;
 
     private String userId;
     private String password;
@@ -35,16 +35,15 @@ public class Member extends AuditingTimeEntity {
 
     @Enumerated(EnumType.STRING)
     private Authority authority;
-
-    @Builder
-    public Member(String userId, String password, String name, String phoneNum, String birth,
-        String gender, Authority authority) {
-        this.userId = userId;
-        this.password = password;
-        this.name = name;
-        this.phoneNum = phoneNum;
-        this.birth = birth;
-        this.gender = gender;
-        this.authority = authority;
+        @Builder
+        public Member(String userId, String password, String name, String phoneNum, String birth,
+            String gender, Authority authority) {
+            this.userId = userId;
+            this.password = password;
+            this.name = name;
+            this.phoneNum = phoneNum;
+            this.birth = birth;
+            this.gender = gender;
+            this.authority = authority;
+        }
     }
-}

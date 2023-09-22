@@ -30,7 +30,7 @@ public class PrayController {
             responseCode = "200",
             description = "기도제목 목록 반환",
             content = @Content(schema = @Schema(implementation = PrayDto.class)))
-    @GetMapping("")
+    @GetMapping()
     public ApiResponseDto<PrayDto> getPrayList() {
         return ApiResponseDto.success(SuccessStatus.GET_PRAY_LIST_SUCCESS, null);
     }
@@ -47,7 +47,7 @@ public class PrayController {
         return ApiResponseDto.success(SuccessStatus.GET_PRAY_SUCCESS, null);
     }
 
-    @PostMapping("")
+    @PostMapping()
     @ApiResponse(
             responseCode = "201",
             description = "기도제목 생성",
@@ -56,8 +56,7 @@ public class PrayController {
     public ApiResponseDto<PrayDto> createPray(
           @RequestBody @Valid PrayRequestDto prayRequestDto
     ) {
-        PrayDto result = prayService.createPray(prayRequestDto);
-        return ApiResponseDto.success(SuccessStatus.CREATE_PRAY_SUCCESS, result);
+        return ApiResponseDto.success(SuccessStatus.CREATE_PRAY_SUCCESS, prayService.createPray(prayRequestDto));
     }
 
     @DeleteMapping("/{prayId}")

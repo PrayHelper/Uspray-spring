@@ -20,7 +20,7 @@ public class Pray extends AuditingTimeEntity {
 
     @Id
     @GeneratedValue
-    private Long id;
+    private Long prayId;
     private Long memberId;
 
     private String content;

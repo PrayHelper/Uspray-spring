@@ -2,24 +2,14 @@ package com.uspray.uspray.infrastructure;
 
 import com.uspray.uspray.domain.Pray;
 import com.uspray.uspray.exception.model.NotFoundException;
-import com.uspray.uspray.domain.Member;
-import com.uspray.uspray.domain.Pray;
-import com.uspray.uspray.exception.model.NotFoundException;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.jpa.repository.JpaRepository;
 import com.uspray.uspray.exception.ErrorStatus;
 import org.springframework.stereotype.Repository;
 
-import javax.transaction.Transactional;
-import java.util.List;
-import java.util.Optional;
-
-@Transactional
 @Repository
 public interface PrayRepository extends JpaRepository<Pray, Long> {
 //    List<Pray> findAllByMember(Member member);
     default Pray getPrayById(Long id) {
-        Optional<Pray> optionalPray = findById(id);
-        return optionalPray.orElseThrow(() -> new NotFoundException(ErrorStatus.PRAY_NOT_FOUND_EXCEPTION, ErrorStatus.PRAY_NOT_FOUND_EXCEPTION.getMessage()));
+        return findById(id).orElseThrow(() -> new NotFoundException(ErrorStatus.PRAY_NOT_FOUND_EXCEPTION, ErrorStatus.PRAY_NOT_FOUND_EXCEPTION.getMessage()));
     }
 }

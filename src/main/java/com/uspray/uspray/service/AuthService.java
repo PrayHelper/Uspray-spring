@@ -30,7 +30,7 @@ public class AuthService {
 
     @Transactional
     public MemberResponseDto signup(MemberRequestDto memberRequestDto) {
-        // 핸드폰번호가 존재하거나 아이디가 존재하면 에러
+        // 아이디가 존재하면 에러
         if (memberRepository.existsByUserId(memberRequestDto.getUserId())) {
             throw new RuntimeException("이미 가입되어 있는 유저입니다");
         }
