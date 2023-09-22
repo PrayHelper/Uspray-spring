@@ -17,7 +17,7 @@ import org.hibernate.annotations.Where;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SQLDelete(sql = "UPDATE member SET deleted = true WHERE member_id = ? AND deleted = false")
+@SQLDelete(sql = "UPDATE member SET deleted = true WHERE member_id = ?")
 @Where(clause = "deleted=false")
 public class Member extends AuditingTimeEntity {
 

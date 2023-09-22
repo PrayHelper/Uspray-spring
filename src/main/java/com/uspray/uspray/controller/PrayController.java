@@ -2,7 +2,6 @@ package com.uspray.uspray.controller;
 
 
 import com.uspray.uspray.DTO.ApiResponseDto;
-import com.uspray.uspray.DTO.pray.PrayDto;
 import com.uspray.uspray.DTO.pray.request.PrayRequestDto;
 import com.uspray.uspray.DTO.pray.request.PrayResponseDto;
 import com.uspray.uspray.exception.SuccessStatus;
@@ -13,10 +12,12 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,8 +37,10 @@ public class PrayController {
       description = "기도제목 목록 반환",
       content = @Content(schema = @Schema(implementation = PrayResponseDto.class)))
   @GetMapping()
-  public ApiResponseDto<PrayDto> getPrayList() {
-    return ApiResponseDto.success(SuccessStatus.GET_PRAY_LIST_SUCCESS, null);
+  public ApiResponseDto<List<PrayResponseDto>> getPrayList() {
+    String username = "test";
+    return ApiResponseDto.success(SuccessStatus.GET_PRAY_LIST_SUCCESS,
+        prayService.getPrayList(username));
   }
 
   @GetMapping("/{prayId}")
@@ -46,10 +49,13 @@ public class PrayController {
       description = "기도제목 조회",
       content = @Content(schema = @Schema(implementation = PrayResponseDto.class)))
   @Operation(summary = "기도제목 조회")
-  public ApiResponseDto<PrayDto> getPrayDetail(
-      @Parameter(description = "기도제목 ID", required = true) Long prayId
+  public ApiResponseDto<PrayResponseDto> getPrayDetail(
+      @Parameter(description = "기도제목 ID", required = true) @PathVariable("prayId") Long prayId
+      //      @AuthenticationPrincipal UserDetails userDetails
   ) {
-    return ApiResponseDto.success(SuccessStatus.GET_PRAY_SUCCESS, null);
+    String username = "test";
+    return ApiResponseDto.success(SuccessStatus.GET_PRAY_SUCCESS,
+        prayService.getPrayDetail(prayId, username));
   }
 
   @PostMapping()
@@ -70,9 +76,12 @@ public class PrayController {
   @DeleteMapping("/{prayId}")
   @ApiResponse(responseCode = "204", description = "기도제목 삭제")
   @Operation(summary = "기도제목 삭제")
-  public ApiResponseDto<String> deletePray(
-      @Parameter(description = "기도제목 ID", required = true) Long prayId
+  public ApiResponseDto<PrayResponseDto> deletePray(
+      @Parameter(description = "기도제목 ID", required = true) @PathVariable("prayId") Long prayId
+//      @AuthenticationPrincipal UserDetails userDetails
   ) {
-    return ApiResponseDto.success(SuccessStatus.DELETE_PRAY_SUCCESS, null);
+    String username = "test";
+    return ApiResponseDto.success(SuccessStatus.DELETE_PRAY_SUCCESS,
+        prayService.deletePray(prayId, username));
   }
 }
