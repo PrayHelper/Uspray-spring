@@ -4,6 +4,7 @@ package com.uspray.uspray.controller;
 import com.uspray.uspray.DTO.ApiResponseDto;
 import com.uspray.uspray.DTO.pray.PrayDto;
 import com.uspray.uspray.DTO.pray.request.PrayRequestDto;
+import com.uspray.uspray.DTO.pray.request.PrayResponseDto;
 import com.uspray.uspray.exception.SuccessStatus;
 import com.uspray.uspray.service.PrayService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,7 +34,7 @@ public class PrayController {
   @ApiResponse(
       responseCode = "200",
       description = "기도제목 목록 반환",
-      content = @Content(schema = @Schema(implementation = PrayDto.class)))
+      content = @Content(schema = @Schema(implementation = PrayResponseDto.class)))
   @GetMapping()
   public ApiResponseDto<PrayDto> getPrayList() {
     return ApiResponseDto.success(SuccessStatus.GET_PRAY_LIST_SUCCESS, null);
@@ -43,7 +44,7 @@ public class PrayController {
   @ApiResponse(
       responseCode = "200",
       description = "기도제목 조회",
-      content = @Content(schema = @Schema(implementation = PrayDto.class)))
+      content = @Content(schema = @Schema(implementation = PrayResponseDto.class)))
   @Operation(summary = "기도제목 조회")
   public ApiResponseDto<PrayDto> getPrayDetail(
       @Parameter(description = "기도제목 ID", required = true) Long prayId
@@ -55,13 +56,15 @@ public class PrayController {
   @ApiResponse(
       responseCode = "201",
       description = "기도제목 생성",
-      content = @Content(schema = @Schema(implementation = PrayDto.class)))
+      content = @Content(schema = @Schema(implementation = PrayResponseDto.class)))
   @Operation(summary = "기도제목 생성")
-  public ApiResponseDto<PrayDto> createPray(
+  public ApiResponseDto<PrayResponseDto> createPray(
       @RequestBody @Valid PrayRequestDto prayRequestDto
+//      @AuthenticationPrincipal UserDetails userDetails
   ) {
+    String username = "test";
     return ApiResponseDto.success(SuccessStatus.CREATE_PRAY_SUCCESS,
-        prayService.createPray(prayRequestDto));
+        prayService.createPray(prayRequestDto, username));
   }
 
   @DeleteMapping("/{prayId}")
