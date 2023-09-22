@@ -23,7 +23,7 @@ public class PrayRequestDto {
 
     public Pray toEntity(Member member) {
         return Pray.builder()
-                .memberId(member.getId())
+                .memberId(member.getMemberId())
                 .content(content)
                 .deadline(deadline)
                 .build();
