@@ -21,6 +21,6 @@ public class MemberResponseDto {
     private String phoneNum;
 
     public static MemberResponseDto of(Member member) {
-        return new MemberResponseDto(member.getUserId(), member.getName(), member.getPhoneNum());
+        return new MemberResponseDto(member.getUserId(), member.getName(), member.getPhone());
     }
 }

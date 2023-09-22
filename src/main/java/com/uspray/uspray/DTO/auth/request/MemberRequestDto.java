@@ -29,7 +29,7 @@ public class MemberRequestDto {
 
     @NotBlank
     @Schema(description = "전화번호", example = "01012345678")
-    private String phoneNum;
+    private String phone;
 
     @NotBlank
     @Schema(description = "생년월일", example = "2002-01-01")
@@ -44,7 +44,7 @@ public class MemberRequestDto {
                 .userId(userId)
                 .password(passwordEncoder.encode(password))
                 .name(name)
-                .phoneNum(phoneNum)
+                .phone(phone)
                 .birth(birth)
                 .gender(gender)
                 .authority(Authority.ROLE_USER)

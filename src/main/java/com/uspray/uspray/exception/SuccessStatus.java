@@ -13,6 +13,7 @@ public enum SuccessStatus {
      * 200 OK
      */
     LOGIN_SUCCESS(HttpStatus.OK, "로그인에 성공했습니다."),
+    CHANGE_PHONE_SUCCESS(HttpStatus.OK, "전화번호를 성공적으로 변경했습니다."),
 
     /*
      * 201 created
