@@ -1,5 +1,7 @@
 package com.uspray.uspray.controller;
 
+import com.uspray.uspray.DTO.auth.request.FindIdDto;
+import com.uspray.uspray.DTO.auth.request.FindPwDto;
 import com.uspray.uspray.DTO.auth.request.MemberLoginRequestDto;
 import com.uspray.uspray.DTO.auth.request.MemberRequestDto;
 import com.uspray.uspray.common.dto.ApiResponseDto;
@@ -36,26 +38,44 @@ public class AuthController {
 
     @PostMapping("/signup")
     @ApiResponse(
-            responseCode = "201",
-            description = "회원가입 성공",
-            content = @Content(schema = @Schema(implementation = MemberResponseDto.class)))
-    public ApiResponseDto<MemberResponseDto> signup(@RequestBody @Valid MemberRequestDto memberRequestDto) {
-        return ApiResponseDto.success(SuccessStatus.SIGNUP_SUCCESS, authService.signup(memberRequestDto));
+        responseCode = "201",
+        description = "회원가입 성공",
+        content = @Content(schema = @Schema(implementation = MemberResponseDto.class)))
+    public ApiResponseDto<MemberResponseDto> signup(
+        @RequestBody @Valid MemberRequestDto memberRequestDto) {
+        return ApiResponseDto.success(SuccessStatus.SIGNUP_SUCCESS,
+            authService.signup(memberRequestDto));
     }
 
     @PostMapping("/login")
     @ApiResponse(
-            responseCode = "200",
-            description = "로그인 성공",
-            content = @Content(schema = @Schema(implementation = MemberResponseDto.class)))
-    public ApiResponseDto<TokenDto> login(@RequestBody MemberLoginRequestDto memberLoginRequestDto) {
-        return ApiResponseDto.success(SuccessStatus.LOGIN_SUCCESS, authService.login(memberLoginRequestDto));
+        responseCode = "200",
+        description = "로그인 성공",
+        content = @Content(schema = @Schema(implementation = MemberResponseDto.class)))
+    public ApiResponseDto<TokenDto> login(
+        @RequestBody MemberLoginRequestDto memberLoginRequestDto) {
+        return ApiResponseDto.success(SuccessStatus.LOGIN_SUCCESS,
+            authService.login(memberLoginRequestDto));
     }
 
 //    @PostMapping("/reissue")
 //    public ApiResponseDto<TokenDto> reissue(@RequestBody TokenDto tokenDto) {
 //        return ApiResponseDto.success(SuccessStatus.LOGIN_SUCCESS, authService.reissue(tokenDto));
 //    }
+
+
+    @PostMapping("/find-id")
+    @Operation(summary = "아이디 찾기")
+    public ApiResponseDto<String> findId(@RequestBody FindIdDto findIdDto) {
+        return ApiResponseDto.success(SuccessStatus.FIND_USER_ID_SUCCESS,
+            authService.findId(findIdDto));
+    }
+
+    @PostMapping("/find-pw")
+    @Operation(summary = "비밀번호 찾기")
+    public ApiResponseDto<?> findId(@RequestBody FindPwDto findPwDto) {
+        authService.findPw(findPwDto);
+        return ApiResponseDto.success(SuccessStatus.CHANGE_USER_PW_SUCCESS);
 
     @PostMapping("/withdrawal")
     @Operation(summary = "회원 탈퇴")
@@ -71,5 +91,6 @@ public class AuthController {
     public ApiResponseDto<?> dupCheck(@PathVariable("userId") String userId) {
         authService.dupCheck(userId);
         return ApiResponseDto.success(SuccessStatus.CHECK_USER_ID_SUCCESS);
+
     }
 }

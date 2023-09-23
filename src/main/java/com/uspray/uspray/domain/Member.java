@@ -20,7 +20,7 @@ import org.hibernate.annotations.Where;
 public class Member extends AuditingTimeEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     @Column(name = "member_id")
     private Long id;
 
@@ -28,7 +28,7 @@ public class Member extends AuditingTimeEntity {
     private String password;
 
     private String name;
-    private String phoneNum;
+    private String phone;
     private String birth;
     private String gender;
 
@@ -37,13 +37,17 @@ public class Member extends AuditingTimeEntity {
     @Enumerated(EnumType.STRING)
     private Authority authority;
 
+    public void changePw(String pw) {
+        this.password = pw;
+    }
+
     @Builder
-    public Member(String userId, String password, String name, String phoneNum, String birth,
+    public Member(String userId, String password, String name, String phone, String birth,
         String gender, Authority authority) {
         this.userId = userId;
         this.password = password;
         this.name = name;
-        this.phoneNum = phoneNum;
+        this.phone = phone;
         this.birth = birth;
         this.gender = gender;
         this.authority = authority;
