@@ -37,8 +37,12 @@ public class Member extends AuditingTimeEntity {
     @Enumerated(EnumType.STRING)
     private Authority authority;
 
+
     public void changePhone(String phone) {
         this.phone = phone;
+
+    public void changePw(String pw) {
+        this.password = pw;
     }
 
     @Builder

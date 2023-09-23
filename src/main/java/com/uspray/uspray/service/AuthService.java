@@ -1,10 +1,14 @@
 package com.uspray.uspray.service;
 
 import com.uspray.uspray.DTO.auth.TokenDto;
+import com.uspray.uspray.DTO.auth.request.FindIdDto;
+import com.uspray.uspray.DTO.auth.request.FindPwDto;
 import com.uspray.uspray.DTO.auth.request.MemberLoginRequestDto;
 import com.uspray.uspray.DTO.auth.request.MemberRequestDto;
 import com.uspray.uspray.DTO.auth.response.MemberResponseDto;
 import com.uspray.uspray.domain.Member;
+import com.uspray.uspray.exception.ErrorStatus;
+import com.uspray.uspray.exception.model.ExistIdException;
 import com.uspray.uspray.infrastructure.MemberRepository;
 import com.uspray.uspray.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -70,7 +74,7 @@ public class AuthService {
         Authentication authentication = tokenProvider.getAuthentication(accessToken);
 
         // 3. 저장소에서 Member ID 를 기반으로 Refresh Token 값 가져오기
-        String refreshTokenValue = redisTemplate.opsForValue().get("RT:" + authentication.getName()).toString();
+        String refreshTokenValue = redisTemplate.opsForValue().get("RT:" + authentication.getName());
 
         // 4. Refresh Token 일치하는지 검사
         if (!refreshToken.equals(refreshTokenValue)) {
@@ -89,4 +93,32 @@ public class AuthService {
         // 토큰 발급
         return tokenDto;
     }
+
+
+    //Custom exception merge된 후 예외처리 하기
+    public String findId(FindIdDto findIdDto) {
+        return memberRepository.findByNameAndPhone(findIdDto.getName(), findIdDto.getPhone()).getUserId();
+    }
+
+    @Transactional
+    public void findPw(FindPwDto findPwDto) {
+        memberRepository.findByNameAndPhoneAndUserId(
+            findPwDto.getName(), findPwDto.getPhone(),
+            findPwDto.getUserId()).changePw(passwordEncoder.encode(findPwDto.getPassword()));
+    }
+
+    @Transactional
+    public void withdrawal(String userId) {
+        memberRepository.delete(memberRepository.getMemberByUserId(userId));
+    }
+
+    public void dupCheck(String userId) {
+
+        if (memberRepository.existsByUserId(userId)) {
+            throw new ExistIdException(ErrorStatus.ALREADY_EXIST_ID_EXCEPTION,
+                ErrorStatus.ALREADY_EXIST_ID_EXCEPTION.getMessage());
+        }
+    }
+
+
 }
