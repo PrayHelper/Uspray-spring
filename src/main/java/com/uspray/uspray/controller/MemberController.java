@@ -25,7 +25,7 @@ public class MemberController {
     private final MemberService memberService;
 
     @Operation(summary = "전화번호 변경")
-    @PostMapping("/member/{changePhone}")
+    @PostMapping("/{changePhone}")
     public ApiResponseDto<?> changePhone(@AuthenticationPrincipal User user, @Schema(example = "01046518879") @PathVariable("changePhone") String changePhone) {
         memberService.changePhone(user.getUsername(), changePhone);
         return ApiResponseDto.success(SuccessStatus.CHANGE_PHONE_SUCCESS);
