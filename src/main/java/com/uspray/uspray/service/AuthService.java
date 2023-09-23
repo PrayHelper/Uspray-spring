@@ -92,6 +92,7 @@ public class AuthService {
         return tokenDto;
     }
 
+    //Custom exception merge된 후 예외처리 하기
     public String findId(FindIdDto findIdDto) {
         return memberRepository.findByNameAndPhone(findIdDto.getName(), findIdDto.getPhone()).getUserId();
     }
