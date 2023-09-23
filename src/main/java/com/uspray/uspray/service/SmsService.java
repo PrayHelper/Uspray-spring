@@ -4,7 +4,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.uspray.uspray.DTO.sms.CertDto;
+import com.uspray.uspray.DTO.sms.CertificationDto;
 import com.uspray.uspray.DTO.sms.MessageDto;
 import com.uspray.uspray.DTO.sms.SmsRequestDto;
 import com.uspray.uspray.DTO.sms.SmsResponseDto;
@@ -36,6 +36,7 @@ import org.springframework.web.client.RestTemplate;
 @Slf4j
 @RequiredArgsConstructor
 public class SmsService {
+
     private final String smsConfirmNum = createSmsKey();
     private final RedisTemplate redisTemplate;
 
@@ -50,10 +51,23 @@ public class SmsService {
 
     @Value("${naver-cloud-sms.senderPhone}")
     private String phone;
-    public SmsResponseDto sendSms(MessageDto messageDto) throws JsonProcessingException, RestClientException, URISyntaxException, InvalidKeyException, NoSuchAlgorithmException, UnsupportedEncodingException {
+
+    public static String createSmsKey() {
+        StringBuilder key = new StringBuilder();
+        Random rnd = new Random();
+
+        for (int i = 0; i < 6; i++) {
+            key.append((rnd.nextInt(10)));
+        }
+        return key.toString();
+    }
+
+    public SmsResponseDto sendSms(MessageDto messageDto)
+        throws JsonProcessingException, RestClientException, URISyntaxException, InvalidKeyException, NoSuchAlgorithmException, UnsupportedEncodingException {
 
         // 현재시간
         String time = Long.toString(System.currentTimeMillis());
+
         // 헤더세팅
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -63,6 +77,7 @@ public class SmsService {
 
         List<MessageDto> messages = new ArrayList<>();
         messages.add(messageDto);
+
         // api 요청 양식에 맞춰 세팅
         SmsRequestDto request = SmsRequestDto.builder()
             .type("SMS")
@@ -76,24 +91,31 @@ public class SmsService {
         //request를 json형태로 body로 변환
         ObjectMapper objectMapper = new ObjectMapper();
         String body = objectMapper.writeValueAsString(request);
+
         // body와 header을 합친다
         HttpEntity<String> httpBody = new HttpEntity<>(body, headers);
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+
         //restTemplate를 통해 외부 api와 통신
-        SmsResponseDto smsResponseDto = restTemplate.postForObject(new URI("https://sens.apigw.ntruss.com/sms/v2/services/"+ serviceId +"/messages"), httpBody, SmsResponseDto.class);
+        SmsResponseDto smsResponseDto = restTemplate.postForObject(
+            new URI("https://sens.apigw.ntruss.com/sms/v2/services/" + serviceId + "/messages"),
+            httpBody, SmsResponseDto.class);
 
         //redis에 저장 (3분 / key는 requestId)
-        redisTemplate.opsForValue().set(smsResponseDto.getRequestId(), smsConfirmNum, 3L, TimeUnit.MINUTES);
+        redisTemplate.opsForValue()
+            .set(smsResponseDto.getRequestId(), smsConfirmNum, 3L, TimeUnit.MINUTES);
 
         return smsResponseDto;
     }
+
     // 전달하고자 하는 데이터를 암호화해주는 작업
-    public String getSignature(String time) throws NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException {
+    public String getSignature(String time)
+        throws NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException {
         String space = " ";
         String newLine = "\n";
         String method = "POST";
-        String url = "/sms/v2/services/"+ this.serviceId+"/messages";
+        String url = "/sms/v2/services/" + this.serviceId + "/messages";
         String accessKey = this.accessKey;
         String secretKey = this.secretKey;
 
@@ -113,19 +135,10 @@ public class SmsService {
 
         return Base64.encodeBase64String(rawHmac);
     }
-    // 5자리의 난수를 조합을 통해 인증코드 만들기
-    public static String createSmsKey() {
-        StringBuilder key = new StringBuilder();
-        Random rnd = new Random();
 
-        for (int i = 0; i < 6; i++) { // 인증코드 6자리
-            key.append((rnd.nextInt(10)));
-        }
-        return key.toString();
-    }
-
-    public Boolean getCertification(CertDto certDto) {
-        String verificationCode = (String) redisTemplate.opsForValue().get(certDto.getRequestId());
+    public Boolean getCertification(CertificationDto certificationDto) {
+        String verificationCode = (String) redisTemplate.opsForValue()
+            .get(certificationDto.getRequestId());
 //        exception 정의한 pr 머지된 후 에러처리
 //        if(Objects.equals(verificationCode, certDto.getSmsConfirmNum())) throw new MissMatchCertificationCodeException();
         return true;

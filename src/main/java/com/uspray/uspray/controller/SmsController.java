@@ -1,7 +1,7 @@
 package com.uspray.uspray.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.uspray.uspray.DTO.sms.CertDto;
+import com.uspray.uspray.DTO.sms.CertificationDto;
 import com.uspray.uspray.DTO.sms.MessageDto;
 import com.uspray.uspray.DTO.sms.SmsResponseDto;
 import com.uspray.uspray.common.dto.ApiResponseDto;
@@ -32,10 +32,10 @@ public class SmsController {
         return ApiResponseDto.success(SuccessStatus.SEND_SMS_SUCCESS, smsService.sendSms(messageDto));
     }
 
-    @PostMapping("/sms/send/cert")
+    @PostMapping("/sms/verification")
     @Operation(summary = "인증 코드 확인")
-    public ApiResponseDto<Boolean> sendSms(@RequestBody CertDto certDto) {
+    public ApiResponseDto<Boolean> sendSms(@RequestBody CertificationDto certificationDto) {
         return ApiResponseDto.success(SuccessStatus.CERTIFICATION_SUCCESS,
-            smsService.getCertification(certDto));
+            smsService.getCertification(certificationDto));
     }
 }
