@@ -2,6 +2,8 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '2.7.15'
 	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+	//querydsl 추가
+	id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
 }
 
 group = 'com.uspray'
@@ -45,9 +47,37 @@ dependencies {
 	//swagger
 	implementation 'org.springdoc:springdoc-openapi-ui:1.7.0'
 
+
 	implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
+
+	//querydsl 추가
+	implementation "com.querydsl:querydsl-jpa:5.0.0"
+	annotationProcessor "com.querydsl:querydsl-apt:5.0.0"
+
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+//querydsl 추가 시작
+def querydslDir = "$buildDir/generated/querydsl"
+
+querydsl {
+	jpa = true
+	querydslSourcesDir = querydslDir
+}
+sourceSets {
+	main.java.srcDir querydslDir
+}
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+	querydsl.extendsFrom compileClasspath
+}
+compileQuerydsl {
+	options.annotationProcessorPath = configurations.querydsl
+}
+//querydsl 추가 끝
+
