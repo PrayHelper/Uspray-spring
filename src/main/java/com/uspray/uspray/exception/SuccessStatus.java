@@ -13,13 +13,17 @@ public enum SuccessStatus {
      * 200 OK
      */
     LOGIN_SUCCESS(HttpStatus.OK, "로그인에 성공했습니다."),
-    WITHDRAWAL_SUCCESS(HttpStatus.OK, "회원 탈퇴에 성공했습니다."),
-    CHECK_DUPL_EMAIL_SUCCESS(HttpStatus.OK, "사용 가능한 이메일 주소입니다."),
+    CHECK_USER_ID_SUCCESS(HttpStatus.OK, "사용 가능한 아이디입니다."),
 
     /*
      * 201 created
      */
     SIGNUP_SUCCESS(HttpStatus.CREATED, "회원가입이 완료되었습니다."),
+
+    /*
+     * 204 deleted
+     */
+    WITHDRAWAL_SUCCESS(HttpStatus.NO_CONTENT, "회원 탈퇴에 성공했습니다."),
 
     ;
 
