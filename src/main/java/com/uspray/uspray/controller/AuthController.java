@@ -76,6 +76,7 @@ public class AuthController {
     public ApiResponseDto<?> findId(@RequestBody FindPwDto findPwDto) {
         authService.findPw(findPwDto);
         return ApiResponseDto.success(SuccessStatus.CHANGE_USER_PW_SUCCESS);
+    }
 
     @PostMapping("/withdrawal")
     @Operation(summary = "회원 탈퇴")

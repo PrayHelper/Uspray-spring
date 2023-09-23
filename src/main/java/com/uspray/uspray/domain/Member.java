@@ -40,6 +40,7 @@ public class Member extends AuditingTimeEntity {
 
     public void changePhone(String phone) {
         this.phone = phone;
+    }
 
     public void changePw(String pw) {
         this.password = pw;
