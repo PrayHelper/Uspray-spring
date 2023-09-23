@@ -6,7 +6,7 @@ import com.uspray.uspray.DTO.auth.request.MemberRequestDto;
 import com.uspray.uspray.DTO.auth.response.MemberResponseDto;
 import com.uspray.uspray.domain.Member;
 import com.uspray.uspray.exception.ErrorStatus;
-import com.uspray.uspray.exception.model.ExistEmailException;
+import com.uspray.uspray.exception.model.ExistIdException;
 import com.uspray.uspray.infrastructure.MemberRepository;
 import com.uspray.uspray.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -72,7 +72,7 @@ public class AuthService {
         Authentication authentication = tokenProvider.getAuthentication(accessToken);
 
         // 3. 저장소에서 Member ID 를 기반으로 Refresh Token 값 가져오기
-        String refreshTokenValue = redisTemplate.opsForValue().get("RT:" + authentication.getName()).toString();
+        String refreshTokenValue = redisTemplate.opsForValue().get("RT:" + authentication.getName());
 
         // 4. Refresh Token 일치하는지 검사
         if (!refreshToken.equals(refreshTokenValue)) {
@@ -92,18 +92,16 @@ public class AuthService {
         return tokenDto;
     }
     @Transactional
-    public String withdrawal(String id) {
-        memberRepository.delete(memberRepository.getMemberByUserId(id));
-        return "회원 탈퇴에 성공하였습니다";
+    public void withdrawal(String userId) {
+        memberRepository.delete(memberRepository.getMemberByUserId(userId));
     }
 
-    public String dupCheck(String id) {
+    public void dupCheck(String userId) {
 
-        if (memberRepository.existsByUserId(id)) {
-            throw new ExistEmailException(ErrorStatus.ALREADY_EXIST_USER_EXCEPTION,
-                ErrorStatus.ALREADY_EXIST_USER_EXCEPTION.getMessage());
+        if (memberRepository.existsByUserId(userId)) {
+            throw new ExistIdException(ErrorStatus.ALREADY_EXIST_ID_EXCEPTION,
+                ErrorStatus.ALREADY_EXIST_ID_EXCEPTION.getMessage());
         }
-        return "사용 가능한 이메일입니다.";
     }
 
 }

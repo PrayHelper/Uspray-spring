@@ -60,16 +60,16 @@ public class AuthController {
     @PostMapping("/withdrawal")
     @Operation(summary = "회원 탈퇴")
     @SecurityRequirement(name = "JWT Auth")
-    public ApiResponseDto<String> withdrawal(
+    public ApiResponseDto<?> withdrawal(
         @Parameter(hidden = true) @AuthenticationPrincipal User user) {
-        return ApiResponseDto.success(SuccessStatus.WITHDRAWAL_SUCCESS,
-            authService.withdrawal(user.getUsername()));
+        authService.withdrawal(user.getUsername());
+        return ApiResponseDto.success(SuccessStatus.WITHDRAWAL_SUCCESS);
     }
 
-    @GetMapping("/dup-check/{id}")
-    @Operation(summary = "이메일 중복 체크")
-    public ApiResponseDto<String> duplCheck(@PathVariable("id") String id) {
-        return ApiResponseDto.success(SuccessStatus.CHECK_DUPL_EMAIL_SUCCESS,
-            authService.dupCheck(id));
+    @GetMapping("/dup-check/{userId}")
+    @Operation(summary = "아이디 중복 체크")
+    public ApiResponseDto<?> dupCheck(@PathVariable("userId") String userId) {
+        authService.dupCheck(userId);
+        return ApiResponseDto.success(SuccessStatus.CHECK_USER_ID_SUCCESS);
     }
 }
