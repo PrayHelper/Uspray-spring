@@ -19,6 +19,11 @@ public enum ErrorStatus {
      */
     NOT_FOUND_USER_EXCEPTION(HttpStatus.NOT_FOUND, "존재하지 않는 유저입니다"),
 
+    /**
+     * 404 NOT FOUND
+     */
+    NOT_FOUND_USER_EXCEPTION(HttpStatus.NOT_FOUND, "존재하지 않는 유저입니다"),
+
     ;
 
     private final HttpStatus httpStatus;

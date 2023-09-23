@@ -13,6 +13,7 @@ public enum SuccessStatus {
      * 200 OK
      */
     LOGIN_SUCCESS(HttpStatus.OK, "로그인에 성공했습니다."),
+    CHANGE_PHONE_SUCCESS(HttpStatus.OK, "전화번호를 성공적으로 변경했습니다."),
     FIND_USER_ID_SUCCESS(HttpStatus.OK, "아이디를 성공적으로 조회했습니다."),
     CHANGE_USER_PW_SUCCESS(HttpStatus.OK, "비밀번호를 성공적으로 변경했습니다."),
     CHECK_USER_ID_SUCCESS(HttpStatus.OK, "사용 가능한 아이디입니다."),
