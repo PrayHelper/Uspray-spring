@@ -15,6 +15,11 @@ public enum ErrorStatus {
     ALREADY_EXIST_ID_EXCEPTION(HttpStatus.BAD_REQUEST, "이미 사용중인 아이디입니다."),
 
     /**
+     * 401 UNAUTHORIZED
+     */
+    TOKEN_NOT_VALID_EXCEPTION(HttpStatus.UNAUTHORIZED, "유효하지 않는 토큰입니다."),
+
+    /**
      * 404 NOT FOUND
      */
     NOT_FOUND_USER_EXCEPTION(HttpStatus.NOT_FOUND, "존재하지 않는 유저입니다"),

@@ -10,6 +10,7 @@ import com.uspray.uspray.DTO.auth.response.MemberResponseDto;
 import com.uspray.uspray.domain.Member;
 import com.uspray.uspray.exception.ErrorStatus;
 import com.uspray.uspray.exception.model.ExistIdException;
+import com.uspray.uspray.exception.model.TokenNotValidException;
 import com.uspray.uspray.infrastructure.MemberRepository;
 import com.uspray.uspray.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +37,8 @@ public class AuthService {
     @Transactional
     public MemberResponseDto signup(MemberRequestDto memberRequestDto) {
         if (memberRepository.existsByUserId(memberRequestDto.getUserId())) {
-            throw new RuntimeException("이미 가입되어 있는 유저입니다");
+            throw new ExistIdException(ErrorStatus.ALREADY_EXIST_ID_EXCEPTION,
+                ErrorStatus.ALREADY_EXIST_ID_EXCEPTION.getMessage());
         }
 
         Member member = memberRequestDto.toMember(passwordEncoder);
@@ -52,24 +54,31 @@ public class AuthService {
                 tokenDto.getRefreshToken(),
                 tokenProvider.getRefreshTokenExpireTime(),
                 TimeUnit.MILLISECONDS);
+
         return tokenDto;
     }
 
     @Transactional
     public TokenDto reissue(TokenRequestDto tokenRequestDto) {
         if (!tokenProvider.validateToken(tokenRequestDto.getAccessToken())) {
-            throw new RuntimeException("Refresh Token 이 유효하지 않습니다");
+            throw new TokenNotValidException(ErrorStatus.TOKEN_NOT_VALID_EXCEPTION,
+                ErrorStatus.TOKEN_NOT_VALID_EXCEPTION.getMessage());
         }
+
         Authentication authentication = tokenProvider.getAuthentication(tokenRequestDto.getAccessToken());
         String refreshTokenValue = redisTemplate.opsForValue().get("RT:" + authentication.getName());
+
         if (!tokenRequestDto.getRefreshToken().equals(refreshTokenValue)) {
-            throw new RuntimeException("Refresh Token 이 일치하지 않습니다");
+            throw new TokenNotValidException(ErrorStatus.TOKEN_NOT_VALID_EXCEPTION,
+                ErrorStatus.TOKEN_NOT_VALID_EXCEPTION.getMessage());
         }
+
         TokenDto tokenDto = tokenProvider.generateTokenDto(authentication);
         redisTemplate.opsForValue().set("RT:" + authentication.getName(),
                 tokenDto.getRefreshToken(),
                 tokenProvider.getRefreshTokenExpireTime(),
                 TimeUnit.MILLISECONDS);
+
         return tokenDto;
     }
 
