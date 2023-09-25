@@ -60,6 +60,10 @@ public class AuthController {
     }
 
     @PostMapping("/reissue")
+    @ApiResponse(
+        responseCode = "200",
+        description = "토큰 재발급 성공",
+        content = @Content(schema = @Schema(implementation = TokenDto.class)))
     public ApiResponseDto<TokenDto> reissue(@RequestBody TokenRequestDto tokenRequestDto) {
         return ApiResponseDto.success(SuccessStatus.REISSUE_SUCCESS, authService.reissue(tokenRequestDto));
     }
