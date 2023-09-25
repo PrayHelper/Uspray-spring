@@ -5,6 +5,7 @@ import com.uspray.uspray.DTO.auth.request.FindIdDto;
 import com.uspray.uspray.DTO.auth.request.FindPwDto;
 import com.uspray.uspray.DTO.auth.request.MemberLoginRequestDto;
 import com.uspray.uspray.DTO.auth.request.MemberRequestDto;
+import com.uspray.uspray.DTO.auth.request.TokenRequestDto;
 import com.uspray.uspray.DTO.auth.response.MemberResponseDto;
 import com.uspray.uspray.domain.Member;
 import com.uspray.uspray.exception.ErrorStatus;
@@ -64,20 +65,20 @@ public class AuthService {
     }
 
     @Transactional
-    public TokenDto reissue(String accessToken, String refreshToken) {
+    public TokenDto reissue(TokenRequestDto tokenRequestDto) {
         // 1. Refresh Token 검증
-        if (!tokenProvider.validateToken(refreshToken)) {
+        if (!tokenProvider.validateToken(tokenRequestDto.getAccessToken())) {
             throw new RuntimeException("Refresh Token 이 유효하지 않습니다");
         }
 
         // 2. Access Token 에서 Member ID 가져오기
-        Authentication authentication = tokenProvider.getAuthentication(accessToken);
+        Authentication authentication = tokenProvider.getAuthentication(tokenRequestDto.getAccessToken());
 
         // 3. 저장소에서 Member ID 를 기반으로 Refresh Token 값 가져오기
         String refreshTokenValue = redisTemplate.opsForValue().get("RT:" + authentication.getName());
 
         // 4. Refresh Token 일치하는지 검사
-        if (!refreshToken.equals(refreshTokenValue)) {
+        if (!tokenRequestDto.getRefreshToken().equals(refreshTokenValue)) {
             throw new RuntimeException("Refresh Token 이 일치하지 않습니다");
         }
 

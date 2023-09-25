@@ -4,6 +4,7 @@ import com.uspray.uspray.DTO.auth.request.FindIdDto;
 import com.uspray.uspray.DTO.auth.request.FindPwDto;
 import com.uspray.uspray.DTO.auth.request.MemberLoginRequestDto;
 import com.uspray.uspray.DTO.auth.request.MemberRequestDto;
+import com.uspray.uspray.DTO.auth.request.TokenRequestDto;
 import com.uspray.uspray.common.dto.ApiResponseDto;
 import com.uspray.uspray.DTO.auth.TokenDto;
 import com.uspray.uspray.exception.SuccessStatus;
@@ -58,10 +59,10 @@ public class AuthController {
             authService.login(memberLoginRequestDto));
     }
 
-//    @PostMapping("/reissue")
-//    public ApiResponseDto<TokenDto> reissue(@RequestBody TokenDto tokenDto) {
-//        return ApiResponseDto.success(SuccessStatus.LOGIN_SUCCESS, authService.reissue(tokenDto));
-//    }
+    @PostMapping("/reissue")
+    public ApiResponseDto<TokenDto> reissue(@RequestBody TokenRequestDto tokenRequestDto) {
+        return ApiResponseDto.success(SuccessStatus.REISSUE_SUCCESS, authService.reissue(tokenRequestDto));
+    }
 
 
     @PostMapping("/find-id")
