@@ -20,7 +20,7 @@ import org.hibernate.annotations.Where;
 public class Member extends AuditingTimeEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
     private Long id;
 
