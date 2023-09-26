@@ -1,6 +1,8 @@
 package com.uspray.uspray.service;
 
 import com.uspray.uspray.DTO.auth.TokenDto;
+import com.uspray.uspray.DTO.auth.request.FindIdDto;
+import com.uspray.uspray.DTO.auth.request.FindPwDto;
 import com.uspray.uspray.DTO.auth.request.MemberLoginRequestDto;
 import com.uspray.uspray.DTO.auth.request.MemberRequestDto;
 import com.uspray.uspray.DTO.auth.response.MemberResponseDto;
@@ -91,6 +93,20 @@ public class AuthService {
         // 토큰 발급
         return tokenDto;
     }
+
+
+    //Custom exception merge된 후 예외처리 하기
+    public String findId(FindIdDto findIdDto) {
+        return memberRepository.findByNameAndPhone(findIdDto.getName(), findIdDto.getPhone()).getUserId();
+    }
+
+    @Transactional
+    public void findPw(FindPwDto findPwDto) {
+        memberRepository.findByNameAndPhoneAndUserId(
+            findPwDto.getName(), findPwDto.getPhone(),
+            findPwDto.getUserId()).changePw(passwordEncoder.encode(findPwDto.getPassword()));
+    }
+
     @Transactional
     public void withdrawal(String userId) {
         memberRepository.delete(memberRepository.getMemberByUserId(userId));
@@ -103,5 +119,6 @@ public class AuthService {
                 ErrorStatus.ALREADY_EXIST_ID_EXCEPTION.getMessage());
         }
     }
+
 
 }

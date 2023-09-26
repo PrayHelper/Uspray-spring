@@ -4,7 +4,7 @@ import com.uspray.uspray.exception.ErrorStatus;
 import lombok.Getter;
 
 @Getter
-public class CustomException extends RuntimeException {
+public class CustomException extends RuntimeException{
     private final ErrorStatus errorStatus;
 
     public CustomException(ErrorStatus errorStatus, String message) {
@@ -16,3 +16,4 @@ public class CustomException extends RuntimeException {
         return errorStatus.getHttpStatusCode();
     }
 }
+

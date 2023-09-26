@@ -11,13 +11,18 @@ import java.util.Optional;
 @Repository
 public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findByUserId(String userId);
-    Optional<Member> findByPhoneNum(String phoneNum);
+    Optional<Member> findByPhone(String phone);
     boolean existsByUserId(String userId);
-    boolean existsByPhoneNum(String phoneNum);
+    boolean existsByPhone(String phone);
+
+    Member findByNameAndPhone(String name, String phone);
+    Member findByNameAndPhoneAndUserId(String name, String phone, String userId);
+
 
     default Member getMemberByUserId(String userId) {
         return this.findByUserId(userId).orElseThrow(
             () -> new NotFoundException(ErrorStatus.NOT_FOUND_USER_EXCEPTION,
                 ErrorStatus.NOT_FOUND_USER_EXCEPTION.getMessage()));
     }
+
 }
