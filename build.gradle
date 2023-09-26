@@ -47,9 +47,13 @@ dependencies {
 	//swagger
 	implementation 'org.springdoc:springdoc-openapi-ui:1.7.0'
 
+
+	implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
+
 	//querydsl 추가
 	implementation "com.querydsl:querydsl-jpa:5.0.0"
 	annotationProcessor "com.querydsl:querydsl-apt:5.0.0"
+
 }
 
 tasks.named('test') {
