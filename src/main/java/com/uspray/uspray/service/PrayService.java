@@ -24,7 +24,6 @@ public class PrayService {
   @Transactional
   public PrayResponseDto createPray(PrayRequestDto prayRequestDto, String username) {
     Member member = memberRepository.getMemberByUserId(username);
-    System.out.println(member);
     Pray pray = prayRequestDto.toEntity(member);
     prayRepository.save(pray);
     return PrayResponseDto.of(pray);
@@ -52,6 +51,19 @@ public class PrayService {
           ErrorStatus.PRAY_UNAUTHORIZED_EXCEPTION.getMessage());
     }
     prayRepository.delete(pray);
+    return PrayResponseDto.of(pray);
+  }
+
+  @Transactional
+  public PrayResponseDto updatePray(Long prayId, String username, PrayRequestDto prayRequestDto) {
+    Pray pray = prayRepository.findById(prayId)
+        .orElseThrow(() -> new NotFoundException(ErrorStatus.PRAY_NOT_FOUND_EXCEPTION,
+            ErrorStatus.PRAY_NOT_FOUND_EXCEPTION.getMessage()));
+    if (!pray.getMemberId().equals(memberRepository.getMemberByUserId(username).getId())) {
+      throw new NotFoundException(ErrorStatus.PRAY_UNAUTHORIZED_EXCEPTION,
+          ErrorStatus.PRAY_UNAUTHORIZED_EXCEPTION.getMessage());
+    }
+    pray.update(prayRequestDto);
     return PrayResponseDto.of(pray);
   }
 

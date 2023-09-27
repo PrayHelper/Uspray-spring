@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -82,11 +83,25 @@ public class PrayController {
   @ApiResponse(responseCode = "204", description = "기도제목 삭제")
   @Operation(summary = "기도제목 삭제")
   public ApiResponseDto<PrayResponseDto> deletePray(
-      @Parameter(description = "기도제목 ID", required = true) @PathVariable("prayId") Long prayId
-//      @AuthenticationPrincipal UserDetails userDetails
+      @Parameter(description = "기도제목 ID", required = true) @PathVariable("prayId") Long prayId,
+      @Parameter(hidden = true) @AuthenticationPrincipal User user
   ) {
-    String username = "test";
     return ApiResponseDto.success(SuccessStatus.DELETE_PRAY_SUCCESS,
-        prayService.deletePray(prayId, username));
+        prayService.deletePray(prayId, user.getUsername()));
+  }
+
+  @PutMapping("/{prayId}")
+  @ApiResponse(
+      responseCode = "200",
+      description = "기도제목 수정",
+      content = @Content(schema = @Schema(implementation = PrayResponseDto.class)))
+  @Operation(summary = "기도제목 수정")
+  public ApiResponseDto<PrayResponseDto> updatePray(
+      @Parameter(description = "기도제목 ID", required = true) @PathVariable("prayId") Long prayId,
+      @RequestBody @Valid PrayRequestDto prayRequestDto,
+      @Parameter(hidden = true) @AuthenticationPrincipal User user
+  ) {
+    return ApiResponseDto.success(SuccessStatus.UPDATE_PRAY_SUCCESS,
+        prayService.updatePray(prayId, user.getUsername(), prayRequestDto));
   }
 }

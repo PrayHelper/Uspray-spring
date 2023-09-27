@@ -1,5 +1,6 @@
 package com.uspray.uspray.domain;
 
+import com.uspray.uspray.DTO.pray.request.PrayRequestDto;
 import com.uspray.uspray.common.domain.AuditingTimeEntity;
 import java.time.LocalDate;
 import javax.persistence.Column;
@@ -39,5 +40,10 @@ public class Pray extends AuditingTimeEntity {
     this.content = content;
     this.count = count;
     this.deadline = deadline;
+  }
+
+  public void update(PrayRequestDto prayRequestDto) {
+    this.content = prayRequestDto.getContent();
+    this.deadline = prayRequestDto.getDeadline();
   }
 }
