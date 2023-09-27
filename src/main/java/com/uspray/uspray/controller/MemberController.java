@@ -4,6 +4,7 @@ import com.uspray.uspray.common.dto.ApiResponseDto;
 import com.uspray.uspray.exception.SuccessStatus;
 import com.uspray.uspray.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -26,7 +27,7 @@ public class MemberController {
 
     @Operation(summary = "전화번호 변경")
     @PostMapping("/{changePhone}")
-    public ApiResponseDto<?> changePhone(@AuthenticationPrincipal User user, @Schema(example = "01046518879") @PathVariable("changePhone") String changePhone) {
+    public ApiResponseDto<?> changePhone(@Parameter(hidden = true) @AuthenticationPrincipal User user, @Schema(example = "01046518879") @PathVariable("changePhone") String changePhone) {
         memberService.changePhone(user.getUsername(), changePhone);
         return ApiResponseDto.success(SuccessStatus.CHANGE_PHONE_SUCCESS);
     }
