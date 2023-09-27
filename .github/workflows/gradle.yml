@@ -7,10 +7,7 @@
 name: Java CI with Gradle
 
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -37,6 +34,12 @@ jobs:
         mkdir -p ./src/main/resources
         cd ./src/main/resources
         echo "${{ secrets.APPLICATION }}" base64 -d > application.yml
+
+    - name: Create service-account-file.json
+      run: |
+        mkdir -p ./src/main/resources/firebase
+        cd ./src/main/resources/firebase
+        echo "${{ secrets.SERVICE_ACCOUNT_FILE }}" base64 -d > service-account-file.json
 
     - name: Build with Gradle
       run: ./gradlew clean build
