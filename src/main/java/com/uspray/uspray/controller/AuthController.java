@@ -4,7 +4,7 @@ import com.uspray.uspray.DTO.auth.request.FindIdDto;
 import com.uspray.uspray.DTO.auth.request.FindPwDto;
 import com.uspray.uspray.DTO.auth.request.MemberLoginRequestDto;
 import com.uspray.uspray.DTO.auth.request.MemberRequestDto;
-import com.uspray.uspray.common.dto.ApiResponseDto;
+import com.uspray.uspray.DTO.ApiResponseDto;
 import com.uspray.uspray.DTO.auth.TokenDto;
 import com.uspray.uspray.exception.SuccessStatus;
 import com.uspray.uspray.service.AuthService;
