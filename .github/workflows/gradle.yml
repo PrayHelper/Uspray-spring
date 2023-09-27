@@ -8,9 +8,9 @@ name: Java CI with Gradle
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "feat/#15-spring-security-settings" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "feat/#15-spring-security-settings" ]
 
 permissions:
   contents: read
@@ -36,10 +36,7 @@ jobs:
       run: |
         mkdir -p ./src/main/resources
         cd ./src/main/resources
-
-        touch ./application.yml
-        
-        echo "${{ secrets.APPLICATION }}" base64 -d > ./src/main/resources/application.yml
+        echo "${{ secrets.APPLICATION }}" base64 -d > application.yml
 
     - name: Build with Gradle
       run: ./gradlew clean build
