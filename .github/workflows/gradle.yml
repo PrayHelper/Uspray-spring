@@ -29,6 +29,9 @@ jobs:
         java-version: '11'
         distribution: 'temurin'
 
+    - name: Make gradlew executable
+      run: chmod +x ./gradlew   # Gradle 스크립트 파일에 실행 권한을 부여합니다.
+      
     - name: Create application.yml
       run: |
         mkdir -p ./src/main/resources
