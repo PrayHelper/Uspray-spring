@@ -1,6 +1,6 @@
 package com.uspray.uspray.common.advice;
 
-import com.uspray.uspray.common.dto.ApiResponseDto;
+import com.uspray.uspray.DTO.ApiResponseDto;
 import com.uspray.uspray.exception.ErrorStatus;
 import com.uspray.uspray.exception.model.CustomException;
 import io.lettuce.core.RedisCommandExecutionException;
