@@ -33,6 +33,10 @@ public class Member extends AuditingTimeEntity {
     private String gender;
     private String firebaseToken;
 
+    private Boolean firstNotiAgree = true;
+    private Boolean secondNotiAgree= true;
+    private Boolean thirdNotiAgree = true;
+
     private final Boolean deleted = false;
 
     @Enumerated(EnumType.STRING)
