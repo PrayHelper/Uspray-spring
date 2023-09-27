@@ -31,12 +31,16 @@ public class Member extends AuditingTimeEntity {
     private String phone;
     private String birth;
     private String gender;
+    private String firebaseToken;
 
     private final Boolean deleted = false;
 
     @Enumerated(EnumType.STRING)
     private Authority authority;
 
+    public void changeFirebaseToken(String firebaseToken) {
+        this.firebaseToken = firebaseToken;
+    }
 
     public void changePhone(String phone) {
         this.phone = phone;
