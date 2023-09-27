@@ -11,22 +11,28 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/pray")
 @Tag(name = "Pray", description = "기도제목 API")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "JWT Auth")
 public class PrayController {
 
   private final PrayService prayService;
@@ -51,7 +57,6 @@ public class PrayController {
   @Operation(summary = "기도제목 조회")
   public ApiResponseDto<PrayResponseDto> getPrayDetail(
       @Parameter(description = "기도제목 ID", required = true) @PathVariable("prayId") Long prayId
-      //      @AuthenticationPrincipal UserDetails userDetails
   ) {
     String username = "test";
     return ApiResponseDto.success(SuccessStatus.GET_PRAY_SUCCESS,
@@ -64,13 +69,13 @@ public class PrayController {
       description = "기도제목 생성",
       content = @Content(schema = @Schema(implementation = PrayResponseDto.class)))
   @Operation(summary = "기도제목 생성")
+  @ResponseStatus(HttpStatus.CREATED)
   public ApiResponseDto<PrayResponseDto> createPray(
-      @RequestBody @Valid PrayRequestDto prayRequestDto
-//      @AuthenticationPrincipal UserDetails userDetails
+      @RequestBody @Valid PrayRequestDto prayRequestDto,
+      @Parameter(hidden = true) @AuthenticationPrincipal User user
   ) {
-    String username = "test";
     return ApiResponseDto.success(SuccessStatus.CREATE_PRAY_SUCCESS,
-        prayService.createPray(prayRequestDto, username));
+        prayService.createPray(prayRequestDto, user.getUsername()));
   }
 
   @DeleteMapping("/{prayId}")
