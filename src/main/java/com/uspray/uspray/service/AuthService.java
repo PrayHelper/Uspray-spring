@@ -59,16 +59,16 @@ public class AuthService {
     }
 
     @Transactional
-    public TokenDto reissue(TokenRequestDto tokenRequestDto) {
-        if (!tokenProvider.validateToken(tokenRequestDto.getAccessToken())) {
+    public TokenDto reissue(String accessToken, String refreshToken) {
+        if (!tokenProvider.validateToken(accessToken)) {
             throw new TokenNotValidException(ErrorStatus.TOKEN_NOT_VALID_EXCEPTION,
                 ErrorStatus.TOKEN_NOT_VALID_EXCEPTION.getMessage());
         }
 
-        Authentication authentication = tokenProvider.getAuthentication(tokenRequestDto.getAccessToken());
+        Authentication authentication = tokenProvider.getAuthentication(accessToken);
         String refreshTokenValue = redisTemplate.opsForValue().get("RT:" + authentication.getName());
 
-        if (!tokenRequestDto.getRefreshToken().equals(refreshTokenValue)) {
+        if (!refreshToken.equals(refreshTokenValue)) {
             throw new TokenNotValidException(ErrorStatus.TOKEN_NOT_VALID_EXCEPTION,
                 ErrorStatus.TOKEN_NOT_VALID_EXCEPTION.getMessage());
         }
