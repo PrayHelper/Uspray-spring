@@ -4,9 +4,11 @@ import com.uspray.uspray.DTO.auth.request.FindIdDto;
 import com.uspray.uspray.DTO.auth.request.FindPwDto;
 import com.uspray.uspray.DTO.auth.request.MemberLoginRequestDto;
 import com.uspray.uspray.DTO.auth.request.MemberRequestDto;
-import com.uspray.uspray.common.dto.ApiResponseDto;
+import com.uspray.uspray.DTO.auth.request.TokenRequestDto;
+import com.uspray.uspray.DTO.ApiResponseDto;
 import com.uspray.uspray.DTO.auth.TokenDto;
 import com.uspray.uspray.exception.SuccessStatus;
+import com.uspray.uspray.jwt.TokenProvider;
 import com.uspray.uspray.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -14,7 +16,9 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
@@ -34,6 +38,7 @@ import javax.validation.Valid;
 @Tag(name = "회원 관리", description = "Auth 관련 API docs")
 public class AuthController {
 
+    private final TokenProvider tokenProvider;
     private final AuthService authService;
 
     @PostMapping("/signup")
@@ -58,10 +63,20 @@ public class AuthController {
             authService.login(memberLoginRequestDto));
     }
 
-//    @PostMapping("/reissue")
-//    public ApiResponseDto<TokenDto> reissue(@RequestBody TokenDto tokenDto) {
-//        return ApiResponseDto.success(SuccessStatus.LOGIN_SUCCESS, authService.reissue(tokenDto));
-//    }
+    @PostMapping("/reissue")
+    @ApiResponse(
+        responseCode = "200",
+        description = "토큰 재발급 성공",
+        content = @Content(schema = @Schema(implementation = TokenDto.class)))
+    @SecurityRequirements({
+        @SecurityRequirement(name = "JWT Auth"),
+        @SecurityRequirement(name = "Refresh")
+    })
+    public ApiResponseDto<TokenDto> reissue(@Parameter(hidden = true) HttpServletRequest request) {
+        String accessToken = request.getHeader("Authorization").substring(7);
+        String refreshToken = request.getHeader("Refresh");
+        return ApiResponseDto.success(SuccessStatus.REISSUE_SUCCESS, authService.reissue(accessToken, refreshToken));
+    }
 
 
     @PostMapping("/find-id")

@@ -2,6 +2,7 @@ package com.uspray.uspray.controller;
 
 import com.uspray.uspray.DTO.notification.NotificationAgreeDto;
 import com.uspray.uspray.common.dto.ApiResponseDto;
+import com.uspray.uspray.DTO.ApiResponseDto;
 import com.uspray.uspray.exception.SuccessStatus;
 import com.uspray.uspray.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Member API", description = "유저 관련 api")
 public class MemberController {
 
-    private final MemberService memberService;
+  private final MemberService memberService;
 
     @Operation(summary = "전화번호 변경")
     @PostMapping("/{changePhone}")
