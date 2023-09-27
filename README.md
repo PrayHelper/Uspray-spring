@@ -59,3 +59,9 @@
 - 클래스명은 UpperCamelCase를 사용하고 명사로 작성 → UserEmail, Address
 - 예외를 던질때는 세부적인 Custom Exception으로 던진다
 - 메소드와  클래스는 쪼개서 최대한 작게 만든다.
+
+<br>
+
+## Archive
+### [코드 리뷰](https://descriptive-pear-e89.notion.site/SW-43ffbc8c962449b28fe5e0efd9a15559?pvs=4)
+### [주석 생성 전략](https://velog.io/@hangem422/clean-code-comment)

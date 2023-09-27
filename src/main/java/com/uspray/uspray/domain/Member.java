@@ -20,33 +20,43 @@ import org.hibernate.annotations.Where;
 @SQLDelete(sql = "UPDATE member SET deleted = true WHERE member_id = ?")
 @Where(clause = "deleted=false")
 public class Member extends AuditingTimeEntity {
+  
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "member_id")
+    private Long id;
 
-  @Id
-  @GeneratedValue
-  private Long memberId;
+    private String userId;
+    private String password;
 
-  private String userId;
-  private String password;
+    private String name;
+    private String phone;
+    private String birth;
+    private String gender;
 
-  private String name;
-  private String phoneNum;
-  private String birth;
-  private String gender;
+    private final Boolean deleted = false;
 
-  private final Boolean deleted = false;
+    @Enumerated(EnumType.STRING)
+    private Authority authority;
 
-  @Enumerated(EnumType.STRING)
-  private Authority authority;
 
-  @Builder
-  public Member(String userId, String password, String name, String phoneNum, String birth,
-      String gender, Authority authority) {
-    this.userId = userId;
-    this.password = password;
-    this.name = name;
-    this.phoneNum = phoneNum;
-    this.birth = birth;
-    this.gender = gender;
-    this.authority = authority;
-  }
+    public void changePhone(String phone) {
+        this.phone = phone;
+    }
+
+    public void changePw(String pw) {
+        this.password = pw;
+    }
+
+    @Builder
+    public Member(String userId, String password, String name, String phone, String birth,
+        String gender, Authority authority) {
+        this.userId = userId;
+        this.password = password;
+        this.name = name;
+        this.phone = phone;
+        this.birth = birth;
+        this.gender = gender;
+        this.authority = authority;
+    }
 }
