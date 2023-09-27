@@ -4,13 +4,18 @@ import com.uspray.uspray.DTO.pray.request.PrayRequestDto;
 import com.uspray.uspray.common.domain.AuditingTimeEntity;
 import java.time.LocalDate;
 import javax.persistence.Column;
+import javax.persistence.ConstraintMode;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
@@ -25,9 +30,13 @@ public class Pray extends AuditingTimeEntity {
   @GeneratedValue
   @Column(name = "pray_id")
   private Long id;
-  private Long memberId;
+  @ManyToOne
+  @JoinColumn(name = "member_id", nullable = false, foreignKey = @ForeignKey(ConstraintMode.CONSTRAINT))
+  private Member member;
 
   private String content;
+
+  @ColumnDefault("0")
   private Integer count;
 
   private LocalDate deadline;
@@ -35,10 +44,10 @@ public class Pray extends AuditingTimeEntity {
   private final Boolean deleted = false;
 
   @Builder
-  public Pray(Long memberId, String content, Integer count, LocalDate deadline) {
-    this.memberId = memberId;
+  public Pray(Member member, String content, LocalDate deadline) {
+    this.member = member;
     this.content = content;
-    this.count = count;
+    this.count = 0;
     this.deadline = deadline;
   }
 
