@@ -44,10 +44,12 @@ public class PrayController {
       description = "기도제목 목록 반환",
       content = @Content(schema = @Schema(implementation = PrayResponseDto.class)))
   @GetMapping()
-  public ApiResponseDto<List<PrayResponseDto>> getPrayList() {
+  public ApiResponseDto<List<PrayResponseDto>> getPrayList(
+      @Parameter(description = "정렬 기준 (date, count)", required = true) String orderType
+  ) {
     String username = "test";
     return ApiResponseDto.success(SuccessStatus.GET_PRAY_LIST_SUCCESS,
-        prayService.getPrayList(username));
+        prayService.getPrayList(username, orderType));
   }
 
   @GetMapping("/{prayId}")
