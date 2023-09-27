@@ -35,7 +35,7 @@ public class PrayService {
     Pray pray = prayRepository.findById(prayId)
         .orElseThrow(() -> new NotFoundException(ErrorStatus.PRAY_NOT_FOUND_EXCEPTION,
             ErrorStatus.PRAY_NOT_FOUND_EXCEPTION.getMessage()));
-    if (!pray.getMemberId().equals(memberRepository.getMemberByUserId(username).getMemberId())) {
+    if (!pray.getMemberId().equals(memberRepository.getMemberByUserId(username).getId())) {
       throw new NotFoundException(ErrorStatus.PRAY_UNAUTHORIZED_EXCEPTION,
           ErrorStatus.PRAY_UNAUTHORIZED_EXCEPTION.getMessage());
     }
@@ -47,7 +47,7 @@ public class PrayService {
     Pray pray = prayRepository.findById(prayId)
         .orElseThrow(() -> new NotFoundException(ErrorStatus.PRAY_NOT_FOUND_EXCEPTION,
             ErrorStatus.PRAY_NOT_FOUND_EXCEPTION.getMessage()));
-    if (!pray.getMemberId().equals(memberRepository.getMemberByUserId(username).getMemberId())) {
+    if (!pray.getMemberId().equals(memberRepository.getMemberByUserId(username).getId())) {
       throw new NotFoundException(ErrorStatus.PRAY_UNAUTHORIZED_EXCEPTION,
           ErrorStatus.PRAY_UNAUTHORIZED_EXCEPTION.getMessage());
     }

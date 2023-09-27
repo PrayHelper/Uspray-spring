@@ -33,7 +33,7 @@ public class PrayResponseDto {
   private LocalDateTime createdAt;
 
   public static PrayResponseDto of(Pray pray) {
-    return new PrayResponseDto(pray.getPrayId(), pray.getContent(), pray.getDeadline(),
+    return new PrayResponseDto(pray.getId(), pray.getContent(), pray.getDeadline(),
         pray.getCount(), pray.getCreatedAt());
   }
 

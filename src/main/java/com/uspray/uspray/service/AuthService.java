@@ -33,13 +33,17 @@ public class AuthService {
 
   @Transactional
   public MemberResponseDto signup(MemberRequestDto memberRequestDto) {
-    // 아이디가 존재하면 에러
-    if (memberRepository.existsByUserId(memberRequestDto.getUserId())) {
+    // 핸드폰번호가 존재하거나 아이디가 존재하면 에러
+    // 핸드폰 번호 또는 아이디가 이미 존재하는지 확인
+    if (memberRepository.existsByUserId(memberRequestDto.getUserId())
+        || memberRepository.existsByPhone(memberRequestDto.getPhone())) {
       throw new RuntimeException("이미 가입되어 있는 유저입니다");
-      
+    }
+
     Member member = memberRequestDto.toMember(passwordEncoder);
     return MemberResponseDto.of(memberRepository.save(member));
   }
+
 
   @Transactional
   public TokenDto login(MemberLoginRequestDto memberLoginRequestDto) {
@@ -73,10 +77,7 @@ public class AuthService {
     Authentication authentication = tokenProvider.getAuthentication(accessToken);
 
     // 3. 저장소에서 Member ID 를 기반으로 Refresh Token 값 가져오기
-    String refreshTokenValue = redisTemplate.opsForValue().get("RT:" + authentication.getName())
-        .toString();
-        // 3. 저장소에서 Member ID 를 기반으로 Refresh Token 값 가져오기
-        String refreshTokenValue = redisTemplate.opsForValue().get("RT:" + authentication.getName());
+    String refreshTokenValue = redisTemplate.opsForValue().get("RT:" + authentication.getName());
 
     // 4. Refresh Token 일치하는지 검사
     if (!refreshToken.equals(refreshTokenValue)) {
@@ -92,35 +93,36 @@ public class AuthService {
         tokenProvider.getRefreshTokenExpireTime(),
         TimeUnit.MILLISECONDS);
 
-        // 토큰 발급
-        return tokenDto;
+    // 토큰 발급
+    return tokenDto;
+  }
+
+
+  //Custom exception merge된 후 예외처리 하기
+  public String findId(FindIdDto findIdDto) {
+    return memberRepository.findByNameAndPhone(findIdDto.getName(), findIdDto.getPhone())
+        .getUserId();
+  }
+
+  @Transactional
+  public void findPw(FindPwDto findPwDto) {
+    memberRepository.findByNameAndPhoneAndUserId(
+        findPwDto.getName(), findPwDto.getPhone(),
+        findPwDto.getUserId()).changePw(passwordEncoder.encode(findPwDto.getPassword()));
+  }
+
+  @Transactional
+  public void withdrawal(String userId) {
+    memberRepository.delete(memberRepository.getMemberByUserId(userId));
+  }
+
+  public void dupCheck(String userId) {
+
+    if (memberRepository.existsByUserId(userId)) {
+      throw new ExistIdException(ErrorStatus.ALREADY_EXIST_ID_EXCEPTION,
+          ErrorStatus.ALREADY_EXIST_ID_EXCEPTION.getMessage());
     }
-
-
-    //Custom exception merge된 후 예외처리 하기
-    public String findId(FindIdDto findIdDto) {
-        return memberRepository.findByNameAndPhone(findIdDto.getName(), findIdDto.getPhone()).getUserId();
-    }
-
-    @Transactional
-    public void findPw(FindPwDto findPwDto) {
-        memberRepository.findByNameAndPhoneAndUserId(
-            findPwDto.getName(), findPwDto.getPhone(),
-            findPwDto.getUserId()).changePw(passwordEncoder.encode(findPwDto.getPassword()));
-    }
-
-    @Transactional
-    public void withdrawal(String userId) {
-        memberRepository.delete(memberRepository.getMemberByUserId(userId));
-    }
-
-    public void dupCheck(String userId) {
-
-        if (memberRepository.existsByUserId(userId)) {
-            throw new ExistIdException(ErrorStatus.ALREADY_EXIST_ID_EXCEPTION,
-                ErrorStatus.ALREADY_EXIST_ID_EXCEPTION.getMessage());
-        }
-    }
+  }
 
 
 }
