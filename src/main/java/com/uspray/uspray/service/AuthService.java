@@ -5,10 +5,12 @@ import com.uspray.uspray.DTO.auth.request.FindIdDto;
 import com.uspray.uspray.DTO.auth.request.FindPwDto;
 import com.uspray.uspray.DTO.auth.request.MemberLoginRequestDto;
 import com.uspray.uspray.DTO.auth.request.MemberRequestDto;
+import com.uspray.uspray.DTO.auth.request.TokenRequestDto;
 import com.uspray.uspray.DTO.auth.response.MemberResponseDto;
 import com.uspray.uspray.domain.Member;
 import com.uspray.uspray.exception.ErrorStatus;
 import com.uspray.uspray.exception.model.ExistIdException;
+import com.uspray.uspray.exception.model.TokenNotValidException;
 import com.uspray.uspray.infrastructure.MemberRepository;
 import com.uspray.uspray.jwt.TokenProvider;
 import java.util.concurrent.TimeUnit;
@@ -96,7 +98,6 @@ public class AuthService {
     // 토큰 발급
     return tokenDto;
   }
-
 
   //Custom exception merge된 후 예외처리 하기
   public String findId(FindIdDto findIdDto) {
