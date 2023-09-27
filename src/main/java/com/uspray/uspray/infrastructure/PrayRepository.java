@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PrayRepository extends JpaRepository<Pray, Long> {
 
-  @Query("SELECT p FROM Pray p JOIN Member m ON p.memberId = m.id WHERE m.userId = :userId")
+  @Query("SELECT p FROM Pray p JOIN p.member m WHERE m.userId = :userId")
   List<Pray> findAllByUserId(@Param("userId") String userId);
 
   default Pray getPrayById(Long id) {
