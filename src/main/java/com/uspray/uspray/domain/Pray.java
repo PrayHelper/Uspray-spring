@@ -2,6 +2,7 @@ package com.uspray.uspray.domain;
 
 import com.uspray.uspray.common.domain.AuditingTimeEntity;
 import java.time.LocalDate;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -21,7 +22,8 @@ public class Pray extends AuditingTimeEntity {
 
   @Id
   @GeneratedValue
-  private Long prayId;
+  @Column(name = "pray_id")
+  private Long id;
   private Long memberId;
 
   private String content;
