@@ -23,7 +23,7 @@ public class FCMController {
             requestDto.getToken(),
             requestDto.getTitle(),
             requestDto.getBody());
-        return ApiResponseDto.success(SuccessStatus.CERTIFICATION_SUCCESS);
+        return ApiResponseDto.success(SuccessStatus.PUSH_SUCCESS);
     }
 
 }

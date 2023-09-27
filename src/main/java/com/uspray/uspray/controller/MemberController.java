@@ -1,5 +1,6 @@
 package com.uspray.uspray.controller;
 
+import com.uspray.uspray.DTO.notification.NotificationAgreeDto;
 import com.uspray.uspray.common.dto.ApiResponseDto;
 import com.uspray.uspray.exception.SuccessStatus;
 import com.uspray.uspray.service.MemberService;
@@ -13,6 +14,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,8 +29,19 @@ public class MemberController {
 
     @Operation(summary = "전화번호 변경")
     @PostMapping("/{changePhone}")
-    public ApiResponseDto<?> changePhone(@Parameter(hidden = true) @AuthenticationPrincipal User user, @Schema(example = "01046518879") @PathVariable("changePhone") String changePhone) {
+    public ApiResponseDto<?> changePhone(
+        @Parameter(hidden = true) @AuthenticationPrincipal User user,
+        @Schema(example = "01046518879") @PathVariable("changePhone") String changePhone) {
         memberService.changePhone(user.getUsername(), changePhone);
         return ApiResponseDto.success(SuccessStatus.CHANGE_PHONE_SUCCESS);
+    }
+
+    @Operation(summary = "알림 On/Off")
+    @PostMapping("/nodification-setting")
+    public ApiResponseDto<?> setNotificationAgree(
+        @Parameter(hidden = true) @AuthenticationPrincipal User user,
+        @RequestBody NotificationAgreeDto notificationAgreeDto) {
+        memberService.changeNotificationAgree(user.getUsername(), notificationAgreeDto);
+        return ApiResponseDto.success(SuccessStatus.CHANGE_PUSH_AGREE_SUCCESS);
     }
 }

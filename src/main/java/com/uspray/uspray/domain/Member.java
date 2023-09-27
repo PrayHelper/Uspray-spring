@@ -1,5 +1,6 @@
 package com.uspray.uspray.domain;
 
+import com.uspray.uspray.DTO.notification.NotificationAgreeDto;
 import com.uspray.uspray.Enums.Authority;
 import com.uspray.uspray.common.domain.AuditingTimeEntity;
 
@@ -64,5 +65,21 @@ public class Member extends AuditingTimeEntity {
         this.birth = birth;
         this.gender = gender;
         this.authority = authority;
+    }
+
+    public void changeAgree(NotificationAgreeDto notificationAgreeDto) {
+        switch (notificationAgreeDto.getNotificationType()) {
+            case PRAY_TIME:
+                this.firstNotiAgree = notificationAgreeDto.getAgree();
+                break;
+            case PRAY_FOR_ME:
+                this.secondNotiAgree = notificationAgreeDto.getAgree();
+                break;
+            case SHARED_MY_PRAY:
+                this.thirdNotiAgree = notificationAgreeDto.getAgree();
+                break;
+            default:
+                break;
+        }
     }
 }
