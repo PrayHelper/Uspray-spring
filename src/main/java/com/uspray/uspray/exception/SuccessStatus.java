@@ -19,6 +19,7 @@ public enum SuccessStatus {
     FIND_USER_ID_SUCCESS(HttpStatus.OK, "아이디를 성공적으로 조회했습니다."),
     CHANGE_USER_PW_SUCCESS(HttpStatus.OK, "비밀번호를 성공적으로 변경했습니다."),
     CHECK_USER_ID_SUCCESS(HttpStatus.OK, "사용 가능한 아이디입니다."),
+    PUSH_SUCCESS(HttpStatus.OK, "푸쉬 알림을 성공적으로 전송했습니다."),
 
     /*
      * 201 created
