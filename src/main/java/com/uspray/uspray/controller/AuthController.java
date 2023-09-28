@@ -8,6 +8,7 @@ import com.uspray.uspray.DTO.auth.request.TokenRequestDto;
 import com.uspray.uspray.DTO.ApiResponseDto;
 import com.uspray.uspray.DTO.auth.TokenDto;
 import com.uspray.uspray.exception.SuccessStatus;
+import com.uspray.uspray.jwt.JwtFilter;
 import com.uspray.uspray.jwt.TokenProvider;
 import com.uspray.uspray.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -39,6 +40,7 @@ import javax.validation.Valid;
 public class AuthController {
 
     private final TokenProvider tokenProvider;
+    private final JwtFilter jwtFilter;
     private final AuthService authService;
 
     @PostMapping("/signup")
@@ -73,7 +75,7 @@ public class AuthController {
         @SecurityRequirement(name = "Refresh")
     })
     public ApiResponseDto<TokenDto> reissue(@Parameter(hidden = true) HttpServletRequest request) {
-        String accessToken = request.getHeader("Authorization").substring(7);
+        String accessToken = jwtFilter.resolveToken(request);
         String refreshToken = request.getHeader("Refresh");
         return ApiResponseDto.success(SuccessStatus.REISSUE_SUCCESS, authService.reissue(accessToken, refreshToken));
     }
