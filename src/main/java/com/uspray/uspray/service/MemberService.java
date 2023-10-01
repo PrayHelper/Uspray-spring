@@ -19,6 +19,6 @@ public class MemberService {
 
     @Transactional
     public void changeNotificationAgree(String userId, NotificationAgreeDto notificationAgreeDto) {
-        memberRepository.getMemberByUserId(userId).changeAgree(notificationAgreeDto);
+        memberRepository.getMemberByUserId(userId).changeNotificationSetting(notificationAgreeDto);
     }
 }

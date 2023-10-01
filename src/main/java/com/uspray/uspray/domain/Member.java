@@ -72,7 +72,7 @@ public class Member extends AuditingTimeEntity {
     this.authority = authority;
   }
 
-    public void changeAgree(NotificationAgreeDto notificationAgreeDto) {
+    public void changeNotificationSetting(NotificationAgreeDto notificationAgreeDto) {
         switch (notificationAgreeDto.getNotificationType()) {
             case PRAY_TIME:
                 this.firstNotiAgree = notificationAgreeDto.getAgree();
