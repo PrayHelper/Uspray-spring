@@ -8,7 +8,6 @@ import com.uspray.uspray.exception.ErrorStatus;
 import com.uspray.uspray.exception.model.NotFoundException;
 import com.uspray.uspray.infrastructure.MemberRepository;
 import com.uspray.uspray.infrastructure.PrayRepository;
-import com.uspray.uspray.infrastructure.querydsl.PrayRepositoryImpl;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
@@ -21,7 +20,6 @@ public class PrayService {
 
   private final PrayRepository prayRepository;
   private final MemberRepository memberRepository;
-  private final PrayRepositoryImpl prayRepositoryImpl;
 
   @Transactional
   public PrayResponseDto createPray(PrayRequestDto prayRequestDto, String username) {
@@ -69,7 +67,7 @@ public class PrayService {
 
   @Transactional
   public List<PrayResponseDto> getPrayList(String username, String orderType) {
-    return prayRepositoryImpl.findAllWithOrder(orderType, username).stream()
+    return prayRepository.findAllWithOrder(orderType, username).stream()
         .map(PrayResponseDto::of)
         .collect(Collectors.toList());
   }
