@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface PrayRepository extends JpaRepository<Pray, Long> {
+public interface PrayRepository extends JpaRepository<Pray, Long>, PrayRepositoryCustom {
 
   default Pray getPrayById(Long id) {
     return findById(id).orElseThrow(
