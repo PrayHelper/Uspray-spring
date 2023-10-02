@@ -14,6 +14,7 @@ public class PrayRepositoryImpl implements PrayRepositoryCustom {
 
   private final JPAQueryFactory queryFactory;
 
+  @Override
   public List<Pray> findAllWithOrder(String orderType, String username) {
     return queryFactory.
         selectFrom(QPray.pray)
