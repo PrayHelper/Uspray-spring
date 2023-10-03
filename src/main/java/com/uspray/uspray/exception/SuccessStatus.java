@@ -9,7 +9,6 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public enum SuccessStatus {
 
-
   /**
    * 200 OK
    */
@@ -24,6 +23,8 @@ public enum SuccessStatus {
   CHECK_USER_ID_SUCCESS(HttpStatus.OK, "사용 가능한 아이디입니다."),
   UPDATE_PRAY_SUCCESS(HttpStatus.OK, "기도제목 수정에 성공했습니다."),
   REISSUE_SUCCESS(HttpStatus.OK, "토큰 재발급에 성공했습니다."),
+  PUSH_SUCCESS(HttpStatus.OK, "푸쉬 알림을 성공적으로 전송했습니다."),
+  CHANGE_PUSH_AGREE_SUCCESS(HttpStatus.OK, "푸쉬 알림 설정을 성공적으로 변경했습니다."),
 
 
   /*
@@ -41,4 +42,5 @@ public enum SuccessStatus {
 
   private final HttpStatus httpStatus;
   private final String message;
+
 }

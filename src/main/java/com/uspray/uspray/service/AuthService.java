@@ -5,12 +5,10 @@ import com.uspray.uspray.DTO.auth.request.FindIdDto;
 import com.uspray.uspray.DTO.auth.request.FindPwDto;
 import com.uspray.uspray.DTO.auth.request.MemberLoginRequestDto;
 import com.uspray.uspray.DTO.auth.request.MemberRequestDto;
-import com.uspray.uspray.DTO.auth.request.TokenRequestDto;
 import com.uspray.uspray.DTO.auth.response.MemberResponseDto;
 import com.uspray.uspray.domain.Member;
 import com.uspray.uspray.exception.ErrorStatus;
 import com.uspray.uspray.exception.model.ExistIdException;
-import com.uspray.uspray.exception.model.TokenNotValidException;
 import com.uspray.uspray.infrastructure.MemberRepository;
 import com.uspray.uspray.jwt.TokenProvider;
 import java.util.concurrent.TimeUnit;
@@ -37,8 +35,7 @@ public class AuthService {
   public MemberResponseDto signup(MemberRequestDto memberRequestDto) {
     // 핸드폰번호가 존재하거나 아이디가 존재하면 에러
     // 핸드폰 번호 또는 아이디가 이미 존재하는지 확인
-    if (memberRepository.existsByUserId(memberRequestDto.getUserId())
-        || memberRepository.existsByPhone(memberRequestDto.getPhone())) {
+    if (memberRepository.existsByUserId(memberRequestDto.getUserId())) {
       throw new RuntimeException("이미 가입되어 있는 유저입니다");
     }
 
