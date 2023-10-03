@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public enum DeleteReason {
+public enum WithdrawReason {
 
     DONT_NEED("쓰지 않는 서비스에요."),
     NOT_USABLE("원하는 기능이 없어요"),

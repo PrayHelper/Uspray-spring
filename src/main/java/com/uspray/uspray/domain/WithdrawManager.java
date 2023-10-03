@@ -1,6 +1,6 @@
 package com.uspray.uspray.domain;
 
-import com.uspray.uspray.Enums.DeleteReason;
+import com.uspray.uspray.Enums.WithdrawReason;
 import com.uspray.uspray.common.domain.AuditingTimeEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,21 +15,21 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class DeleteManager extends AuditingTimeEntity {
+public class WithdrawManager extends AuditingTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "delete_manager_id")
+    @Column(name = "withdraw_manager_id")
     private Long id;
 
-    private DeleteReason deleteReason;
+    private WithdrawReason withdrawReason;
     private String reason;
 
     private Long memberId;
 
     @Builder
-    public DeleteManager(DeleteReason deleteReason, String reason, Long memberId) {
-        this.deleteReason = deleteReason;
+    public WithdrawManager(WithdrawReason withdrawReason, String reason, Long memberId) {
+        this.withdrawReason = withdrawReason;
         this.reason = reason;
         this.memberId = memberId;
     }
