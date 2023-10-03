@@ -1,5 +1,6 @@
 package com.uspray.uspray.domain;
 
+import com.uspray.uspray.DTO.notification.NotificationAgreeDto;
 import com.uspray.uspray.Enums.Authority;
 import com.uspray.uspray.common.domain.AuditingTimeEntity;
 import javax.persistence.Column;
@@ -35,13 +36,22 @@ public class Member extends AuditingTimeEntity {
   private String phone;
   private String birth;
   private String gender;
+  private String firebaseToken;
 
+  private Boolean firstNotiAgree = true;
+  private Boolean secondNotiAgree= true;
+  private Boolean thirdNotiAgree = true;
+  
   private final Boolean deleted = false;
 
   @Enumerated(EnumType.STRING)
   private Authority authority;
 
 
+  public void changeFirebaseToken(String firebaseToken) {
+      this.firebaseToken = firebaseToken;
+  }
+  
   public void changePhone(String phone) {
     this.phone = phone;
   }
@@ -62,4 +72,19 @@ public class Member extends AuditingTimeEntity {
     this.authority = authority;
   }
 
+    public void changeNotificationSetting(NotificationAgreeDto notificationAgreeDto) {
+        switch (notificationAgreeDto.getNotificationType()) {
+            case PRAY_TIME:
+                this.firstNotiAgree = notificationAgreeDto.getAgree();
+                break;
+            case PRAY_FOR_ME:
+                this.secondNotiAgree = notificationAgreeDto.getAgree();
+                break;
+            case SHARED_MY_PRAY:
+                this.thirdNotiAgree = notificationAgreeDto.getAgree();
+                break;
+            default:
+                break;
+        }
+    }
 }
