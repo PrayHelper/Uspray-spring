@@ -11,10 +11,12 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ShareService {
 
-    private final SharedPrayRepository sharedPrayRepository;
-
-    public SharedPrayListResponseDto getSharedPrayList(String username) {
-        List<SharedPray> sharedPrayList = sharedPrayRepository.findAllByUserId(username);
-
-    }
+//    private final SharedPrayRepository sharedPrayRepository;
+//
+//    public SharedPrayListResponseDto getSharedPrayList(String username) {
+//        List<SharedPray> sharedPrayList = sharedPrayRepository.findAllByUserId(username);
+//        return SharedPrayListResponseDto.builder()
+//                .sharedPrayList(sharedPrayList)
+//                .build();
+//    }
 }

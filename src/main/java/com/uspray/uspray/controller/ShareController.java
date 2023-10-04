@@ -23,10 +23,10 @@ public class ShareController {
 
     private final ShareService shareService;
 
-    @GetMapping()
-    // 공유받은 기도제목 조회
-    public ApiResponseDto<SharedPrayListResponseDto> getSharedPrayList(
-            @Parameter(hidden = true) @AuthenticationPrincipal User user) {
-        return ApiResponseDto.success(SuccessStatus.GET_PRAY_LIST_SUCCESS, shareService.getSharedPrayList(user.getUsername()));
-    }
+//    @GetMapping()
+//    // 공유받은 기도제목 조회
+//    public ApiResponseDto<SharedPrayListResponseDto> getSharedPrayList(
+//            @Parameter(hidden = true) @AuthenticationPrincipal User user) {
+//        return ApiResponseDto.success(SuccessStatus.GET_PRAY_LIST_SUCCESS, shareService.getSharedPrayList(user.getUsername()));
+//    }
 }
