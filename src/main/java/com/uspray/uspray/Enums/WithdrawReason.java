@@ -14,5 +14,5 @@ public enum WithdrawReason {
     USE_DIFFICULT("사용하기에 불편함이 있이요."),
     ETC("기타")
     ;
-    private final String description;
+    private final String title;
 }
