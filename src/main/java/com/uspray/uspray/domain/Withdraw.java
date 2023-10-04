@@ -15,22 +15,22 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class WithdrawManager extends AuditingTimeEntity {
+public class Withdraw extends AuditingTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "withdraw_manager_id")
+    @Column(name = "withdraw_id")
     private Long id;
 
     private WithdrawReason withdrawReason;
-    private String reason;
+    private String description;
 
     private Long memberId;
 
     @Builder
-    public WithdrawManager(WithdrawReason withdrawReason, String reason, Long memberId) {
+    public Withdraw(WithdrawReason withdrawReason, String description, Long memberId) {
         this.withdrawReason = withdrawReason;
-        this.reason = reason;
+        this.description = description;
         this.memberId = memberId;
     }
 
