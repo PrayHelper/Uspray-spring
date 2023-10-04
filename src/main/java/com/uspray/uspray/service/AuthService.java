@@ -8,11 +8,11 @@ import com.uspray.uspray.DTO.auth.request.MemberLoginRequestDto;
 import com.uspray.uspray.DTO.auth.request.MemberRequestDto;
 import com.uspray.uspray.DTO.auth.response.MemberResponseDto;
 import com.uspray.uspray.Enums.WithdrawReason;
-import com.uspray.uspray.domain.WithdrawManager;
+import com.uspray.uspray.domain.Withdraw;
 import com.uspray.uspray.domain.Member;
 import com.uspray.uspray.exception.ErrorStatus;
 import com.uspray.uspray.exception.model.ExistIdException;
-import com.uspray.uspray.infrastructure.DeleteManagerRepository;
+import com.uspray.uspray.infrastructure.WithdrawRepository;
 import com.uspray.uspray.infrastructure.MemberRepository;
 import com.uspray.uspray.jwt.TokenProvider;
 import java.util.Objects;
@@ -35,7 +35,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
     private final RedisTemplate<String, String> redisTemplate;
-    private final DeleteManagerRepository deleteManagerRepository;
+    private final WithdrawRepository withdrawRepository;
 
     @Transactional
     public MemberResponseDto signup(MemberRequestDto memberRequestDto) {
@@ -120,14 +120,14 @@ public class AuthService {
     public void withdrawal(String userId, MemberDeleteDto memberDeleteDto) {
         Member member = memberRepository.getMemberByUserId(userId);
         for (WithdrawReason withdrawReason : memberDeleteDto.getWithdrawReason()) {
-            if (Objects.equals(withdrawReason.getDescription(), "기타")) {
-                deleteManagerRepository.save(WithdrawManager.builder()
+            if (Objects.equals(withdrawReason, WithdrawReason.ETC)) {
+                withdrawRepository.save(Withdraw.builder()
                     .memberId(member.getId())
                     .withdrawReason(withdrawReason)
-                    .reason(memberDeleteDto.getReason())
+                    .description(memberDeleteDto.getDescription())
                     .build());
             }
-            deleteManagerRepository.save(WithdrawManager.builder()
+            withdrawRepository.save(Withdraw.builder()
                 .memberId(member.getId())
                 .withdrawReason(withdrawReason)
                 .build());
