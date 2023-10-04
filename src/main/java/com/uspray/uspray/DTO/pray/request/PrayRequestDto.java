@@ -27,7 +27,7 @@ public class PrayRequestDto {
     return Pray.builder()
         .content(content)
         .deadline(deadline)
-        .memberId(member.getId())
+        .member(member)
         .build();
   }
 
@@ -35,7 +35,7 @@ public class PrayRequestDto {
     return Pray.builder()
         .content(content)
         .deadline(deadline)
-        .memberId(member.getId())
+        .member(member)
         .build();
   }
 }
