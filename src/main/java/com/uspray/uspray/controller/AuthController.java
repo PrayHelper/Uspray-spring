@@ -2,6 +2,7 @@ package com.uspray.uspray.controller;
 
 import com.uspray.uspray.DTO.auth.request.FindIdDto;
 import com.uspray.uspray.DTO.auth.request.FindPwDto;
+import com.uspray.uspray.DTO.auth.request.MemberDeleteDto;
 import com.uspray.uspray.DTO.auth.request.MemberLoginRequestDto;
 import com.uspray.uspray.DTO.auth.request.MemberRequestDto;
 import com.uspray.uspray.DTO.ApiResponseDto;
@@ -98,8 +99,8 @@ public class AuthController {
     @Operation(summary = "회원 탈퇴")
     @SecurityRequirement(name = "JWT Auth")
     public ApiResponseDto<?> withdrawal(
-        @Parameter(hidden = true) @AuthenticationPrincipal User user) {
-        authService.withdrawal(user.getUsername());
+        @Parameter(hidden = true) @AuthenticationPrincipal User user, @RequestBody MemberDeleteDto memberDeleteDto) {
+        authService.withdrawal(user.getUsername(), memberDeleteDto);
         return ApiResponseDto.success(SuccessStatus.WITHDRAWAL_SUCCESS);
     }
 
