@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Member API", description = "유저 관련 api")
 public class MemberController {
 
-  private final MemberService memberService;
+    private final MemberService memberService;
 
     @Operation(summary = "전화번호 변경")
     @PostMapping("/{changePhone}")

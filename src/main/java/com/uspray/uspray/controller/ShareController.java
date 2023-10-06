@@ -3,6 +3,7 @@ package com.uspray.uspray.controller;
 
 import com.uspray.uspray.DTO.ApiResponseDto;
 import com.uspray.uspray.DTO.pray.request.PrayResponseDto;
+import com.uspray.uspray.DTO.sharedpray.request.SharedPrayRequestDto;
 import com.uspray.uspray.DTO.sharedpray.response.SharedPrayListResponseDto;
 import com.uspray.uspray.DTO.sharedpray.response.SharedPrayResponseDto;
 import com.uspray.uspray.exception.SuccessStatus;
@@ -20,6 +21,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -42,5 +44,19 @@ public class ShareController {
     public ApiResponseDto<List<SharedPrayResponseDto>> getSharedPrayList(
             @Parameter(hidden = true) @AuthenticationPrincipal User user) {
         return ApiResponseDto.success(SuccessStatus.GET_PRAY_LIST_SUCCESS, shareService.getSharedPrayList(user.getUsername()));
+    }
+
+    @PostMapping()
+    @ApiResponse(
+        responseCode = "201",
+        description = "기도제목 공유",
+        content = @Content(schema = @Schema(implementation = PrayResponseDto.class))
+    )
+    @Operation(summary = "기도제목 공유")
+    public ApiResponseDto<?> sharePray(
+            @Parameter(hidden = true) @AuthenticationPrincipal User user,
+            @RequestBody SharedPrayRequestDto sharedPrayRequestDto) {
+        shareService.sharePray(user.getUsername(), sharedPrayRequestDto);
+        return ApiResponseDto.success(SuccessStatus.SHARE_PRAY_SUCCESS);
     }
 }
