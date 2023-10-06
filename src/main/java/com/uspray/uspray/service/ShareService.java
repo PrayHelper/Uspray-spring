@@ -21,6 +21,7 @@ public class ShareService {
     @Transactional(readOnly = true)
     public List<SharedPrayResponseDto> getSharedPrayList(String userId) {
         Member member = memberRepository.getMemberByUserId(userId);
+//        List<SharedPray> sharedPrayList = sharedPrayRepository.findAllByMemberId(userId);
         List<SharedPray> sharedPrayList = sharedPrayRepository.findAllByMember(member);
         return sharedPrayList.stream()
             .map(SharedPrayResponseDto::of)

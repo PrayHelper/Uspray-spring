@@ -1,6 +1,7 @@
 package com.uspray.uspray.jwt;
 
 import com.uspray.uspray.DTO.auth.TokenDto;
+import com.uspray.uspray.domain.Member;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -83,6 +84,23 @@ public class TokenProvider {
 
         return new UsernamePasswordAuthenticationToken(principal, "", authorities);
     }
+
+//    public Authentication getAuthentication(String accessToken) {
+//
+//        Claims claims = parseClaims(accessToken);
+//
+//        if (claims.get(AUTHORITIES_KEY) == null) {
+//            throw new RuntimeException("권한 정보가 없는 토큰입니다.");
+//        }
+//
+//        Collection<? extends GrantedAuthority> authorities =
+//            Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
+//                .map(SimpleGrantedAuthority::new)
+//                .collect(Collectors.toList());
+//
+//        return new UsernamePasswordAuthenticationToken(new Member(claims), null, authorities);
+//    }
+
 
     public boolean validateToken(String token) {
         try {
