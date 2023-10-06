@@ -40,7 +40,6 @@ import javax.validation.Valid;
 public class AuthController {
 
     private final TokenProvider tokenProvider;
-    private final JwtFilter jwtFilter;
     private final AuthService authService;
 
     @PostMapping("/signup")
@@ -75,7 +74,7 @@ public class AuthController {
         @SecurityRequirement(name = "Refresh")
     })
     public ApiResponseDto<TokenDto> reissue(@Parameter(hidden = true) HttpServletRequest request) {
-        String accessToken = jwtFilter.resolveToken(request);
+        String accessToken = request.getHeader("Authorization").substring(7);
         String refreshToken = request.getHeader("Refresh");
         return ApiResponseDto.success(SuccessStatus.REISSUE_SUCCESS, authService.reissue(accessToken, refreshToken));
     }
