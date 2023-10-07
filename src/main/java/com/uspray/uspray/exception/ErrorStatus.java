@@ -23,12 +23,14 @@ public enum ErrorStatus {
     PRAY_UNAUTHORIZED_EXCEPTION(HttpStatus.UNAUTHORIZED, "해당 기도제목에 대한 권한이 없습니다."),
     TOKEN_NOT_VALID_EXCEPTION(HttpStatus.UNAUTHORIZED, "유효하지 않는 토큰입니다."),
     SHARE_NOT_AUTHORIZED_EXCEPTION(HttpStatus.UNAUTHORIZED, "기도제목을 공유할 권한이 없습니다."),
+    DELETE_NOT_AUTHORIZED_EXCEPTION(HttpStatus.UNAUTHORIZED, "기도제목을 삭제할 권한이 없습니다."),
 
     /**
      * 404 NOT FOUND
      */
     NOT_FOUND_USER_EXCEPTION(HttpStatus.NOT_FOUND, "존재하지 않는 유저입니다"),
     PRAY_NOT_FOUND_EXCEPTION(HttpStatus.NOT_FOUND, "해당 기도제목을 찾을 수 없습니다."),
+    NOT_FOUND_SHARED_PRAY_EXCEPTION(HttpStatus.NOT_FOUND, "해당 공유기도제목을 찾을 수 없습니다."),
   ;
 
   private final HttpStatus httpStatus;

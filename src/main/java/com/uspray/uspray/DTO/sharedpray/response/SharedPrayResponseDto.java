@@ -15,6 +15,9 @@ import lombok.NoArgsConstructor;
 @Schema(description = "공유기도제목 응답 DTO")
 public class SharedPrayResponseDto {
 
+    @Schema(description = "공유기도제목 ID", example = "1")
+    private Long sharedPrayId;
+
     @Schema(description = "기도제목 ID", example = "1")
     private Long prayId;
 
@@ -33,7 +36,7 @@ public class SharedPrayResponseDto {
     private LocalDateTime createdAt;
 
     public static SharedPrayResponseDto of(SharedPray sharedPray) {
-        return new SharedPrayResponseDto(sharedPray.getPray().getId(), sharedPray.getMember().getUserId(),
+        return new SharedPrayResponseDto(sharedPray.getId(), sharedPray.getPray().getId(), sharedPray.getMember().getUserId(),
             sharedPray.getPray().getContent(), sharedPray.getPray().getDeadline(), sharedPray.getPray().getCreatedAt());
     }
 }

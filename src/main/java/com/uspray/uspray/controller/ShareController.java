@@ -19,10 +19,12 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -54,9 +56,23 @@ public class ShareController {
     )
     @Operation(summary = "기도제목 공유")
     public ApiResponseDto<?> sharePray(
-            @Parameter(hidden = true) @AuthenticationPrincipal User user,
-            @RequestBody SharedPrayRequestDto sharedPrayRequestDto) {
+        @Parameter(hidden = true) @AuthenticationPrincipal User user,
+        @RequestBody SharedPrayRequestDto sharedPrayRequestDto) {
         shareService.sharePray(user.getUsername(), sharedPrayRequestDto);
         return ApiResponseDto.success(SuccessStatus.SHARE_PRAY_SUCCESS);
+    }
+
+    @DeleteMapping()
+    @ApiResponse(
+        responseCode = "204",
+        description = "공유받은 기도제목 삭제",
+        content = @Content(schema = @Schema(implementation = PrayResponseDto.class))
+    )
+    @Operation(summary = "공유받은 기도제목 삭제")
+    public ApiResponseDto<?> deletePray(
+        @Parameter(hidden = true) @AuthenticationPrincipal User user,
+        @RequestParam Long sharedPrayId) {
+        shareService.deleteSharedPray(user.getUsername(), sharedPrayId);
+        return ApiResponseDto.success(SuccessStatus.DELETE_PRAY_SUCCESS);
     }
 }
