@@ -1,6 +1,7 @@
 package com.uspray.uspray.DTO.sharedpray.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.List;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,8 +12,8 @@ import lombok.Getter;
 public class SharedPrayRequestDto {
 
     @NotNull
-    private Long prayId;
+    private List<Long> prayId;
 
     @NotNull
-    private String receiverId;
+    private List<String> receiverId;
 }

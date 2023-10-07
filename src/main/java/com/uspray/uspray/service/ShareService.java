@@ -3,6 +3,7 @@ package com.uspray.uspray.service;
 import com.uspray.uspray.DTO.sharedpray.request.SharedPrayRequestDto;
 import com.uspray.uspray.DTO.sharedpray.response.SharedPrayResponseDto;
 import com.uspray.uspray.domain.Member;
+import com.uspray.uspray.domain.Pray;
 import com.uspray.uspray.domain.SharedPray;
 import com.uspray.uspray.exception.ErrorStatus;
 import com.uspray.uspray.exception.model.CustomException;
@@ -37,18 +38,31 @@ public class ShareService {
 
     @Transactional
     public void sharePray(String userId, SharedPrayRequestDto sharedPrayRequestDto) {
-        if (sharedPrayRequestDto.getReceiverId().equals(userId)) {
-            throw new CustomException(ErrorStatus.SENDER_RECEIVER_SAME_EXCEPTION, ErrorStatus.SENDER_RECEIVER_SAME_EXCEPTION.getMessage());
+        List<Member> receiverList = memberRepository.findAllByUserIdIn(sharedPrayRequestDto.getReceiverId());
+        if (receiverList.size() != sharedPrayRequestDto.getReceiverId().size()) {
+            throw new NotFoundException(ErrorStatus.NOT_FOUND_USER_EXCEPTION, ErrorStatus.NOT_FOUND_USER_EXCEPTION.getMessage());
         }
 
-        if (prayRepository.getPrayById(sharedPrayRequestDto.getPrayId()).getMember() != memberRepository.getMemberByUserId(userId)) {
-            throw new CustomException(ErrorStatus.SHARE_NOT_AUTHORIZED_EXCEPTION, ErrorStatus.SHARE_NOT_AUTHORIZED_EXCEPTION.getMessage());
+        List<Pray> prayList = prayRepository.findAllByIdIn(sharedPrayRequestDto.getPrayId());
+        if (prayList.size() != sharedPrayRequestDto.getPrayId().size()) {
+            throw new NotFoundException(ErrorStatus.PRAY_NOT_FOUND_EXCEPTION, ErrorStatus.PRAY_NOT_FOUND_EXCEPTION.getMessage());
         }
-        SharedPray sharedPray = SharedPray.builder()
-            .member(memberRepository.findByUserId(sharedPrayRequestDto.getReceiverId()).orElseThrow(() -> new NotFoundException(ErrorStatus.NOT_FOUND_USER_EXCEPTION, ErrorStatus.NOT_FOUND_USER_EXCEPTION.getMessage())))
-            .pray(prayRepository.getPrayById(sharedPrayRequestDto.getPrayId()))
-            .build();
-        sharedPrayRepository.save(sharedPray);
+
+        for (Pray pray : prayList) {
+            if (!pray.getMember().getUserId().equals(userId)) {
+                throw new CustomException(ErrorStatus.SHARE_NOT_AUTHORIZED_EXCEPTION, ErrorStatus.SHARE_NOT_AUTHORIZED_EXCEPTION.getMessage());
+            }
+        }
+
+        for (Member receiver : receiverList) {
+            for (Pray pray : prayList) {
+                SharedPray sharedPray = SharedPray.builder()
+                    .member(receiver)
+                    .pray(pray)
+                    .build();
+                sharedPrayRepository.save(sharedPray);
+            }
+        }
     }
 
     @Transactional
@@ -59,6 +73,7 @@ public class ShareService {
             throw new NotFoundException(ErrorStatus.NOT_FOUND_SHARED_PRAY_EXCEPTION, ErrorStatus.NOT_FOUND_SHARED_PRAY_EXCEPTION.getMessage());
         }
         List<SharedPray> sharedPrayList = sharedPrayRepository.findAllByMemberOrderByCreatedAtDesc(member);
+
         // 본인 sharedPray가 아니면 지우지 못하게 막아야 함
         // 본인 sharedPray를 가지고 와서 아이디가 일치하면 삭제, 아니면 exception 발생
         for (SharedPray s : sharedPrayList) {
