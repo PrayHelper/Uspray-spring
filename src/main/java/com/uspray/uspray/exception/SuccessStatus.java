@@ -33,6 +33,7 @@ public enum SuccessStatus {
   SIGNUP_SUCCESS(HttpStatus.CREATED, "회원가입이 완료되었습니다."),
   CREATE_PRAY_SUCCESS(HttpStatus.CREATED, "기도제목 생성에 성공했습니다."),
   SHARE_PRAY_SUCCESS(HttpStatus.CREATED, "기도제목 공유에 성공했습니다."),
+  SHARE_PRAY_AGREE_SUCCESS(HttpStatus.CREATED, "기도제목 공유 수락에 성공했습니다."),
 
   /*
    * 204 deleted

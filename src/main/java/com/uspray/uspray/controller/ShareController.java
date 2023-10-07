@@ -39,10 +39,10 @@ public class ShareController {
     @GetMapping()
     @ApiResponse(
         responseCode = "200",
-        description = "공유받은 기도제목 조회",
+        description = "공유받은 기도제목 조회 (보관함 조회)",
         content = @Content(schema = @Schema(implementation = SharedPrayListResponseDto.class))
     )
-    @Operation(summary = "공유받은 기도제목 조회")
+    @Operation(summary = "공유받은 기도제목 조회 (보관함 조회)")
     public ApiResponseDto<List<SharedPrayResponseDto>> getSharedPrayList(
             @Parameter(hidden = true) @AuthenticationPrincipal User user) {
         return ApiResponseDto.success(SuccessStatus.GET_PRAY_LIST_SUCCESS, shareService.getSharedPrayList(user.getUsername()));
@@ -74,5 +74,19 @@ public class ShareController {
         @RequestParam Long sharedPrayId) {
         shareService.deleteSharedPray(user.getUsername(), sharedPrayId);
         return ApiResponseDto.success(SuccessStatus.DELETE_PRAY_SUCCESS);
+    }
+
+    @PostMapping("/save")
+    @ApiResponse(
+        responseCode = "201",
+        description = "공유받은 기도제목 저장",
+        content = @Content(schema = @Schema(implementation = PrayResponseDto.class))
+    )
+    @Operation(summary = "공유받은 기도제목 저장")
+    public ApiResponseDto<?> savePray(
+        @Parameter(hidden = true) @AuthenticationPrincipal User user,
+        @RequestParam Long sharedPrayId) {
+        shareService.saveSharedPray(user.getUsername(), sharedPrayId);
+        return ApiResponseDto.success(SuccessStatus.SHARE_PRAY_AGREE_SUCCESS);
     }
 }

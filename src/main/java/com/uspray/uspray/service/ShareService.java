@@ -84,4 +84,17 @@ public class ShareService {
         }
         throw new CustomException(ErrorStatus.DELETE_NOT_AUTHORIZED_EXCEPTION, ErrorStatus.DELETE_NOT_AUTHORIZED_EXCEPTION.getMessage());
     }
+
+    @Transactional
+    public void saveSharedPray(String userId, Long sharedPrayId) {
+        Member member = memberRepository.getMemberByUserId(userId);
+        SharedPray sharedPray = sharedPrayRepository.findById(sharedPrayId).orElseThrow(
+            () -> new NotFoundException(ErrorStatus.NOT_FOUND_SHARED_PRAY_EXCEPTION, ErrorStatus.NOT_FOUND_SHARED_PRAY_EXCEPTION.getMessage()));
+        Pray pray = Pray.builder()
+            .member(member)
+            .content(sharedPray.getPray().getContent())
+            .build();
+        prayRepository.save(pray);
+        sharedPrayRepository.deleteById(sharedPrayId);
+    }
 }
