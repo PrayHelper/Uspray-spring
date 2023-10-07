@@ -12,5 +12,5 @@ import org.springframework.stereotype.Repository;
 public interface SharedPrayRepository extends JpaRepository<SharedPray, Long>, SharedPrayRepositoryCustom {
 
     // 수신자 기준 모두 찾기 (보관함 조회)
-    List<SharedPray> findAllByMember(Member member);
+    List<SharedPray> findAllByMemberOrderByCreatedAtDesc(Member member);
 }
