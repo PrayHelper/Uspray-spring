@@ -64,7 +64,6 @@ public class PrayController {
       @Parameter(hidden = true) @AuthenticationPrincipal User user,
       @Parameter(description = "기도제목 ID", required = true) @PathVariable("prayId") Long prayId
   ) {
-    String username = "test";
     return ApiResponseDto.success(SuccessStatus.GET_PRAY_SUCCESS,
         prayService.getPrayDetail(prayId, user.getUsername()));
   }
