@@ -55,6 +55,9 @@ public class ShareService {
         }
 
         for (Member receiver : receiverList) {
+            if (receiver.getUserId().equals(userId)) {
+                throw new CustomException(ErrorStatus.SENDER_RECEIVER_SAME_EXCEPTION, ErrorStatus.SENDER_RECEIVER_SAME_EXCEPTION.getMessage());
+            }
             for (Pray pray : prayList) {
                 SharedPray sharedPray = SharedPray.builder()
                     .member(receiver)
