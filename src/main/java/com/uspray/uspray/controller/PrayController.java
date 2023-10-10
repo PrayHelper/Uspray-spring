@@ -39,17 +39,19 @@ public class PrayController {
   private final PrayService prayService;
 
   @Operation(summary = "기도제목 목록 조회")
+
   @ApiResponse(
       responseCode = "200",
       description = "기도제목 목록 반환",
       content = @Content(schema = @Schema(implementation = PrayResponseDto.class)))
+
   @GetMapping()
   public ApiResponseDto<List<PrayResponseDto>> getPrayList(
-      @Parameter(description = "정렬 기준 (date, count)", required = true) String orderType
+      @Parameter(hidden = true) @AuthenticationPrincipal User user,
+      @Parameter(description = "정렬 기준 (date, count)", required = true, example = "date") String orderType
   ) {
-    String username = "test";
     return ApiResponseDto.success(SuccessStatus.GET_PRAY_LIST_SUCCESS,
-        prayService.getPrayList(username, orderType));
+        prayService.getPrayList(user.getUsername(), orderType));
   }
 
   @GetMapping("/{prayId}")
@@ -59,11 +61,11 @@ public class PrayController {
       content = @Content(schema = @Schema(implementation = PrayResponseDto.class)))
   @Operation(summary = "기도제목 조회")
   public ApiResponseDto<PrayResponseDto> getPrayDetail(
+      @Parameter(hidden = true) @AuthenticationPrincipal User user,
       @Parameter(description = "기도제목 ID", required = true) @PathVariable("prayId") Long prayId
   ) {
-    String username = "test";
     return ApiResponseDto.success(SuccessStatus.GET_PRAY_SUCCESS,
-        prayService.getPrayDetail(prayId, username));
+        prayService.getPrayDetail(prayId, user.getUsername()));
   }
 
   @PostMapping()
