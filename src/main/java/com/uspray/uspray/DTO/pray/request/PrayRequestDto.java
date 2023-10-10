@@ -25,14 +25,6 @@ public class PrayRequestDto {
   @Schema(description = "기도제목 마감일", example = "2025-01-01")
   private LocalDate deadline;
 
-  public Pray toPray(Member member) {
-    return Pray.builder()
-        .content(content)
-        .deadline(deadline)
-        .member(member)
-        .build();
-  }
-
   public Pray toEntity(Member member) {
     return Pray.builder()
         .content(content)
