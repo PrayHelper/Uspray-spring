@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface SharedPrayRepository extends JpaRepository<SharedPray, Long>, SharedPrayRepositoryCustom {
+public interface SharedPrayRepository extends JpaRepository<SharedPray, Long> {
 
     // 수신자 기준 모두 찾기 (보관함 조회)
     List<SharedPray> findAllByMemberOrderByCreatedAtDesc(Member member);
