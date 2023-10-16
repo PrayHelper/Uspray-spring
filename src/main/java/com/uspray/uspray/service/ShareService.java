@@ -96,6 +96,8 @@ public class ShareService {
         Pray pray = Pray.builder()
             .member(member)
             .content(sharedPray.getPray().getContent())
+            .deadline(sharedPray.getPray().getDeadline())
+            .originPrayId(sharedPray.getPray().getId())
             .build();
         prayRepository.save(pray);
         sharedPrayRepository.deleteById(sharedPrayId);
