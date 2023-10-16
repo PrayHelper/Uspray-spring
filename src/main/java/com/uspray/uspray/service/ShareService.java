@@ -11,6 +11,7 @@ import com.uspray.uspray.exception.model.NotFoundException;
 import com.uspray.uspray.infrastructure.MemberRepository;
 import com.uspray.uspray.infrastructure.PrayRepository;
 import com.uspray.uspray.infrastructure.SharedPrayRepository;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -101,5 +102,11 @@ public class ShareService {
             .build();
         prayRepository.save(pray);
         sharedPrayRepository.deleteById(sharedPrayId);
+    }
+
+    @Transactional
+    public void cleanSharedPray(LocalDate threshold) {
+        List<SharedPray> sharedPrayList = sharedPrayRepository.findAllByCreatedAtBefore(threshold);
+        sharedPrayRepository.deleteAll(sharedPrayList);
     }
 }

@@ -3,6 +3,7 @@ package com.uspray.uspray.infrastructure;
 import com.uspray.uspray.DTO.pray.PrayDto;
 import com.uspray.uspray.domain.Member;
 import com.uspray.uspray.domain.SharedPray;
+import java.time.LocalDate;
 import java.util.List;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,4 +17,5 @@ public interface SharedPrayRepository extends JpaRepository<SharedPray, Long> {
     @EntityGraph(attributePaths = {"member"})
     List<SharedPray> findAllByMemberOrderByCreatedAtDesc(Member member);
 
+    List<SharedPray> findAllByCreatedAtBefore(LocalDate threshold);
 }
