@@ -53,6 +53,9 @@ public class ShareService {
             if (!pray.getMember().getUserId().equals(userId)) {
                 throw new CustomException(ErrorStatus.SHARE_NOT_AUTHORIZED_EXCEPTION, ErrorStatus.SHARE_NOT_AUTHORIZED_EXCEPTION.getMessage());
             }
+            if (pray.getDeleted()) {
+                throw new CustomException(ErrorStatus.PRAY_ALREADY_DELETED_EXCEPTION, ErrorStatus.PRAY_ALREADY_DELETED_EXCEPTION.getMessage());
+            }
         }
 
         for (Member receiver : receiverList) {
@@ -94,6 +97,10 @@ public class ShareService {
         Member member = memberRepository.getMemberByUserId(userId);
         SharedPray sharedPray = sharedPrayRepository.findById(sharedPrayId).orElseThrow(
             () -> new NotFoundException(ErrorStatus.NOT_FOUND_SHARED_PRAY_EXCEPTION, ErrorStatus.NOT_FOUND_SHARED_PRAY_EXCEPTION.getMessage()));
+        if (sharedPray.getPray().getDeleted()) {
+            sharedPrayRepository.deleteById(sharedPrayId);
+            throw new CustomException(ErrorStatus.PRAY_ALREADY_DELETED_EXCEPTION, ErrorStatus.PRAY_ALREADY_DELETED_EXCEPTION.getMessage());
+        }
         Pray pray = Pray.builder()
             .member(member)
             .content(sharedPray.getPray().getContent())
