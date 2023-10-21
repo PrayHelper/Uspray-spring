@@ -25,7 +25,7 @@ public enum SuccessStatus {
   REISSUE_SUCCESS(HttpStatus.OK, "토큰 재발급에 성공했습니다."),
   PUSH_SUCCESS(HttpStatus.OK, "푸쉬 알림을 성공적으로 전송했습니다."),
   CHANGE_PUSH_AGREE_SUCCESS(HttpStatus.OK, "푸쉬 알림 설정을 성공적으로 변경했습니다."),
-
+  GET_HISTORY_LIST_SUCCESS(HttpStatus.OK, "히스토리 목록 조회에 성공했습니다."),
 
   /*
    * 201 created
