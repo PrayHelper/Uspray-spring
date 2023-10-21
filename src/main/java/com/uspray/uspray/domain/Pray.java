@@ -39,12 +39,19 @@ public class Pray extends AuditingTimeEntity {
 
   private final Boolean deleted = false;
 
+  private Boolean isShared = false;
+
+  @Column(name = "origin_pray_id")
+  private Long originPrayId;
+
   @Builder
-  public Pray(Member member, String content, LocalDate deadline) {
+  public Pray(Member member, String content, LocalDate deadline, Long originPrayId) {
     this.member = member;
     this.content = content;
     this.count = 0;
     this.deadline = deadline;
+    this.originPrayId = originPrayId;
+    this.isShared = (originPrayId != null);
   }
 
   public void update(PrayRequestDto prayRequestDto) {
