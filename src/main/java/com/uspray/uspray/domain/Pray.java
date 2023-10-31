@@ -32,13 +32,9 @@ public class Pray extends AuditingTimeEntity {
   private Member member;
 
   private String content;
-
   private Integer count;
-
   private LocalDate deadline;
-
   private final Boolean deleted = false;
-
   private Boolean isShared = false;
 
   @Column(name = "origin_pray_id")
