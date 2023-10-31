@@ -1,5 +1,6 @@
 package com.uspray.uspray.infrastructure.querydsl;
 
+import static com.uspray.uspray.domain.QCategory.category;
 import static com.uspray.uspray.domain.QPray.pray;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -17,9 +18,11 @@ public class PrayRepositoryImpl implements PrayRepositoryCustom {
 
   @Override
   public List<Pray> findAllWithOrder(String orderType, String username) {
-    return queryFactory.
-        selectFrom(pray)
-        .where(pray.member.userId.eq(username), pray.deleted.eq(false))
+    return queryFactory
+        .select(pray)
+        .from(pray)
+        .join(pray.category, category)
+        .where(category.member.userId.eq(username))
         .orderBy(orderType.equals("date") ? pray.createdAt.desc() : pray.count.asc())
         .fetch();
   }

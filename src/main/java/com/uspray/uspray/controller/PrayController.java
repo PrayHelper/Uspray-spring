@@ -2,6 +2,7 @@ package com.uspray.uspray.controller;
 
 
 import com.uspray.uspray.DTO.ApiResponseDto;
+import com.uspray.uspray.DTO.pray.PrayListResponseDto;
 import com.uspray.uspray.DTO.pray.request.PrayRequestDto;
 import com.uspray.uspray.DTO.pray.request.PrayResponseDto;
 import com.uspray.uspray.exception.SuccessStatus;
@@ -46,7 +47,7 @@ public class PrayController {
       content = @Content(schema = @Schema(implementation = PrayResponseDto.class)))
 
   @GetMapping()
-  public ApiResponseDto<List<PrayResponseDto>> getPrayList(
+  public ApiResponseDto<List<PrayListResponseDto>> getPrayList(
       @Parameter(hidden = true) @AuthenticationPrincipal User user,
       @Parameter(description = "정렬 기준 (date, count)", required = true, example = "date") String orderType
   ) {

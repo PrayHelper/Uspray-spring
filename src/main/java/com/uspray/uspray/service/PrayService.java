@@ -1,5 +1,6 @@
 package com.uspray.uspray.service;
 
+import com.uspray.uspray.DTO.pray.PrayListResponseDto;
 import com.uspray.uspray.DTO.pray.request.PrayRequestDto;
 import com.uspray.uspray.DTO.pray.request.PrayResponseDto;
 import com.uspray.uspray.domain.Category;
@@ -11,6 +12,7 @@ import com.uspray.uspray.infrastructure.CategoryRepository;
 import com.uspray.uspray.infrastructure.MemberRepository;
 import com.uspray.uspray.infrastructure.PrayRepository;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
@@ -80,9 +82,19 @@ public class PrayService {
   }
 
   @Transactional
-  public List<PrayResponseDto> getPrayList(String username, String orderType) {
-    return prayRepository.findAllWithOrder(orderType, username).stream()
-        .map(PrayResponseDto::of)
+  public List<PrayListResponseDto> getPrayList(String username, String orderType) {
+    List<Pray> prays = prayRepository.findAllWithOrder(orderType, username);
+
+    // Pray 엔티티를 categoryId를 기준으로 그룹화한 맵 생성
+    Map<Long, List<Pray>> prayMap = prays.stream()
+        .collect(Collectors.groupingBy(pray -> pray.getCategory().getId()));
+
+    // 그룹화된 맵을 PrayListResponseDto 변환하여 반환
+    return prayMap.entrySet().stream()
+        .map(entry -> new PrayListResponseDto(entry.getKey(),
+            entry.getValue().stream()
+                .map(PrayResponseDto::of)
+                .collect(Collectors.toList())))
         .collect(Collectors.toList());
   }
 }
