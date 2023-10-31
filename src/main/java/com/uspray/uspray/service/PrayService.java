@@ -3,6 +3,7 @@ package com.uspray.uspray.service;
 import com.uspray.uspray.DTO.pray.PrayListResponseDto;
 import com.uspray.uspray.DTO.pray.request.PrayRequestDto;
 import com.uspray.uspray.DTO.pray.request.PrayResponseDto;
+import com.uspray.uspray.Enums.PrayType;
 import com.uspray.uspray.domain.Category;
 import com.uspray.uspray.domain.Member;
 import com.uspray.uspray.domain.Pray;
@@ -35,7 +36,7 @@ public class PrayService {
       throw new NotFoundException(ErrorStatus.CATEGORY_UNAUTHORIZED_EXCEPTION,
           ErrorStatus.CATEGORY_UNAUTHORIZED_EXCEPTION.getMessage());
     }
-    Pray pray = prayRequestDto.toEntity(member, category);
+    Pray pray = prayRequestDto.toEntity(member, category, PrayType.PERSONAL);
     prayRepository.save(pray);
     return PrayResponseDto.of(pray);
   }

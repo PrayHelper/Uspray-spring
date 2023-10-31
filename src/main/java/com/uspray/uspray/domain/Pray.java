@@ -1,10 +1,13 @@
 package com.uspray.uspray.domain;
 
 import com.uspray.uspray.DTO.pray.request.PrayRequestDto;
+import com.uspray.uspray.Enums.PrayType;
 import com.uspray.uspray.common.domain.AuditingTimeEntity;
 import java.time.LocalDate;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -41,13 +44,16 @@ public class Pray extends AuditingTimeEntity {
   @Column(name = "origin_pray_id")
   private Long originPrayId;
 
+  @Enumerated(EnumType.STRING)
+  private PrayType prayType;
+
   @ManyToOne
   @JoinColumn(name = "category_id", nullable = false)
   private Category category;
 
   @Builder
   public Pray(Member member, String content, LocalDate deadline, Long originPrayId,
-      Category category) {
+      Category category, PrayType prayType) {
     this.member = member;
     this.content = content;
     this.count = 0;
@@ -55,6 +61,7 @@ public class Pray extends AuditingTimeEntity {
     this.originPrayId = originPrayId;
     this.isShared = (originPrayId != null);
     this.category = category;
+    this.prayType = prayType;
   }
 
   public void update(PrayRequestDto prayRequestDto) {
