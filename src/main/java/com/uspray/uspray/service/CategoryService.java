@@ -21,6 +21,10 @@ public class CategoryService {
   public CategoryResponseDto createCategory(String username,
       CategoryRequestDto categoryRequestDto) {
     Member member = memberRepository.getMemberByUserId(username);
+    if (categoryRepository.existsCategoryByNameAndMember(categoryRequestDto.getName(), member)) {
+      throw new NotFoundException(ErrorStatus.CATEGORY_ALREADY_EXIST_EXCEPTION,
+          ErrorStatus.CATEGORY_ALREADY_EXIST_EXCEPTION.getMessage());
+    }
     Category category = categoryRequestDto.toEntity(member);
     categoryRepository.save(category);
     return CategoryResponseDto.of(category);

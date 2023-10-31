@@ -16,6 +16,7 @@ public enum ErrorStatus {
   ALREADY_EXIST_ID_EXCEPTION(HttpStatus.BAD_REQUEST, "이미 사용중인 아이디입니다."),
   INVALID_TOKEN_INFO_EXCEPTION(HttpStatus.BAD_REQUEST, "토큰 혹은 만료시간 설정이 잘못되었습니다."),
   SENDER_RECEIVER_SAME_EXCEPTION(HttpStatus.BAD_REQUEST, "자신에게는 기도제목을 공유할 수 없습니다."),
+  CATEGORY_ALREADY_EXIST_EXCEPTION(HttpStatus.BAD_REQUEST, "이미 존재하는 카테고리입니다."),
 
   /*
    * 401 UNAUTHORIZED
