@@ -1,5 +1,6 @@
 package com.uspray.uspray.DTO.pray.request;
 
+import com.uspray.uspray.domain.Category;
 import com.uspray.uspray.domain.Member;
 import com.uspray.uspray.domain.Pray;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -25,11 +26,16 @@ public class PrayRequestDto {
   @Schema(description = "기도제목 마감일", example = "2025-01-01")
   private LocalDate deadline;
 
-  public Pray toEntity(Member member) {
+  @NotNull
+  @Schema(description = "기도제목 카테고리", example = "1")
+  private Long categoryId;
+
+  public Pray toEntity(Member member, Category category) {
     return Pray.builder()
         .content(content)
         .deadline(deadline)
         .member(member)
+        .category(category)
         .build();
   }
 }
