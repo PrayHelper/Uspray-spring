@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/pray")
-@Tag(name = "Pray", description = "기도제목 API")
+@Tag(name = "Pray", description = "기도제목 관련 API")
 @RequiredArgsConstructor
 @SecurityRequirement(name = "JWT Auth")
 public class PrayController {

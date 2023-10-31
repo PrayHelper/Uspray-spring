@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/category")
-@Tag(name = "Category API", description = "카테고리 관련 API")
+@Tag(name = "Category API", description = "Category 관련 API")
 @RequiredArgsConstructor
 @SecurityRequirement(name = "JWT Auth")
 public class CategoryController {
