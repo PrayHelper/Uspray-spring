@@ -40,14 +40,20 @@ public class Pray extends AuditingTimeEntity {
   @Column(name = "origin_pray_id")
   private Long originPrayId;
 
+  @ManyToOne
+  @JoinColumn(name = "category_id", nullable = false)
+  private Category category;
+
   @Builder
-  public Pray(Member member, String content, LocalDate deadline, Long originPrayId) {
+  public Pray(Member member, String content, LocalDate deadline, Long originPrayId,
+      Category category) {
     this.member = member;
     this.content = content;
     this.count = 0;
     this.deadline = deadline;
     this.originPrayId = originPrayId;
     this.isShared = (originPrayId != null);
+    this.category = category;
   }
 
   public void update(PrayRequestDto prayRequestDto) {
