@@ -17,6 +17,7 @@ public enum ErrorStatus {
   INVALID_TOKEN_INFO_EXCEPTION(HttpStatus.BAD_REQUEST, "토큰 혹은 만료시간 설정이 잘못되었습니다."),
   SENDER_RECEIVER_SAME_EXCEPTION(HttpStatus.BAD_REQUEST, "자신에게는 기도제목을 공유할 수 없습니다."),
   CATEGORY_ALREADY_EXIST_EXCEPTION(HttpStatus.BAD_REQUEST, "이미 존재하는 카테고리입니다."),
+  CATEGORY_LIMIT_EXCEPTION(HttpStatus.BAD_REQUEST, "카테고리는 최대 7개까지 생성 가능합니다."),
 
   /*
    * 401 UNAUTHORIZED

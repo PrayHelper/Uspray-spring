@@ -25,6 +25,10 @@ public class CategoryService {
       throw new NotFoundException(ErrorStatus.CATEGORY_ALREADY_EXIST_EXCEPTION,
           ErrorStatus.CATEGORY_ALREADY_EXIST_EXCEPTION.getMessage());
     }
+    if (categoryRepository.countCategoryByMember(member) > 7) {
+      throw new NotFoundException(ErrorStatus.CATEGORY_LIMIT_EXCEPTION,
+          ErrorStatus.CATEGORY_LIMIT_EXCEPTION.getMessage());
+    }
     Category category = categoryRequestDto.toEntity(member);
     categoryRepository.save(category);
     return CategoryResponseDto.of(category);
