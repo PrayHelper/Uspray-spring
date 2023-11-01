@@ -1,5 +1,6 @@
 package com.uspray.uspray;
 
+import com.uspray.uspray.Enums.Authority;
 import com.uspray.uspray.domain.Member;
 import com.uspray.uspray.domain.Pray;
 import java.time.LocalDate;
@@ -37,6 +38,7 @@ public class InitDb {
                 .phone("01012345678")
                 .birth("2002-02-01")
                 .gender("female")
+                .authority(Authority.ROLE_USER)
                 .build();
             em.persist(member);
 
@@ -44,6 +46,7 @@ public class InitDb {
                 .content("테스트 기도")
                 .deadline(LocalDate.parse("2025-01-01"))
                 .member(member)
+                .originPrayId(null)
                 .build();
 
             em.persist(pray);
