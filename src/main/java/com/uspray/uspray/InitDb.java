@@ -1,5 +1,6 @@
 package com.uspray.uspray;
 
+import com.uspray.uspray.Enums.Authority;
 import com.uspray.uspray.domain.Category;
 import com.uspray.uspray.domain.Member;
 import com.uspray.uspray.domain.Pray;
@@ -38,6 +39,7 @@ public class InitDb {
           .name("홍길동")
           .phone("01012345678")
           .birth("2002-02-01")
+          .authority(Authority.ROLE_USER)
           .gender("female")
           .build();
       em.persist(member);
