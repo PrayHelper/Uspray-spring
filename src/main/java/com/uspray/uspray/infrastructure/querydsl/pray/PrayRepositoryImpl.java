@@ -1,11 +1,10 @@
-package com.uspray.uspray.infrastructure.querydsl;
+package com.uspray.uspray.infrastructure.querydsl.pray;
 
 import static com.uspray.uspray.domain.QCategory.category;
 import static com.uspray.uspray.domain.QPray.pray;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.uspray.uspray.domain.Pray;
-import com.uspray.uspray.infrastructure.PrayRepositoryCustom;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
