@@ -4,6 +4,7 @@ import com.uspray.uspray.DTO.pray.request.PrayRequestDto;
 import com.uspray.uspray.Enums.PrayType;
 import com.uspray.uspray.common.domain.AuditingTimeEntity;
 import java.time.LocalDate;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -52,7 +53,7 @@ public class Pray extends AuditingTimeEntity {
   @Enumerated(EnumType.STRING)
   private PrayType prayType;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   @JoinColumn(name = "clubpray_id")
   private ClubPray clubPray;
 
