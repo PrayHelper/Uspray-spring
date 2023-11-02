@@ -1,6 +1,7 @@
 package com.uspray.uspray.service;
 
 import com.uspray.uspray.DTO.clubpray.ClubPrayRequestDto;
+import com.uspray.uspray.DTO.clubpray.ClubPrayUpdateDto;
 import com.uspray.uspray.domain.Club;
 import com.uspray.uspray.domain.ClubPray;
 import com.uspray.uspray.domain.Member;
@@ -29,6 +30,13 @@ public class ClubPrayService {
             .content(clubPrayRequestDto.getContent())
             .build();
         clubPrayRepository.save(clubPray);
+    }
+
+    @Transactional
+    public void updateClubPray(ClubPrayUpdateDto clubPrayUpdateDto) {
+        ClubPray clubpray = clubPrayRepository.getClubPrayById(
+            clubPrayUpdateDto.getClubPrayId());
+        clubpray.changeContent(clubPrayUpdateDto.getContent());
     }
 
 }

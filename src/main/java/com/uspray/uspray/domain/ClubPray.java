@@ -50,4 +50,8 @@ public class ClubPray extends AuditingTimeEntity {
         this.author = author;
         author.getClubPrayList().add(this);
     }
+
+    public void changeContent(String content) {
+        this.content = content;
+    }
 }
