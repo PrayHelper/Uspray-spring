@@ -57,4 +57,9 @@ public class ClubPrayService {
         return clubPrayList;
     }
 
+    @Transactional
+    public void deleteClubPray(Long clubPrayId) {
+        clubPrayRepository.delete(clubPrayRepository.getClubPrayById(clubPrayId));
+    }
+
 }

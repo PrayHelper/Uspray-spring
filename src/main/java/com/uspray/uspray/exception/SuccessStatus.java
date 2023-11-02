@@ -44,6 +44,7 @@ public enum SuccessStatus {
    * 204 deleted
    */
   DELETE_PRAY_SUCCESS(HttpStatus.NO_CONTENT, "기도제목 삭제에 성공했습니다."),
+  DELETE_CLUB_PRAY_SUCCESS(HttpStatus.NO_CONTENT, "모임 기도제목 삭제에 성공했습니다."),
   WITHDRAWAL_SUCCESS(HttpStatus.NO_CONTENT, "회원 탈퇴에 성공했습니다."),
   DELETE_CATEGORY_SUCCESS(HttpStatus.NO_CONTENT, "카테고리 삭제에 성공했습니다.");
 

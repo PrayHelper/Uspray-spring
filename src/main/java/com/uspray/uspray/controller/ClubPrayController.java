@@ -17,6 +17,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -56,9 +57,18 @@ public class ClubPrayController {
         responseCode = "200",
         description = "모임 기도제목 목록 반환",
         content = @Content(schema = @Schema(implementation = ClubPrayResponseDto.class)))
-    public ApiResponseDto<List<ClubPrayResponseDto>> getClubPray(@PathVariable(name = "club-id") Long clubId,
+    public ApiResponseDto<List<ClubPrayResponseDto>> getClubPray(
+        @PathVariable(name = "club-id") Long clubId,
         @Parameter(hidden = true) @AuthenticationPrincipal User user) {
         return ApiResponseDto.success(SuccessStatus.GET_CLUB_PRAY_LIST_SUCCESS,
             clubPrayService.getClubPray(clubId, user.getUsername()));
+    }
+
+    @Operation(summary = "모임 기도제목 삭제")
+    @DeleteMapping("/{clubpray-id}")
+    public ApiResponseDto<?> deleteClubPray(@PathVariable(name = "clubpray-id") Long id) {
+        clubPrayService.deleteClubPray(id);
+        return ApiResponseDto.success(SuccessStatus.DELETE_CLUB_PRAY_SUCCESS,
+            SuccessStatus.DELETE_CLUB_PRAY_SUCCESS.getMessage());
     }
 }
