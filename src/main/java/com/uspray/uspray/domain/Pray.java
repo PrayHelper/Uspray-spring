@@ -13,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -31,6 +32,7 @@ public class Pray extends AuditingTimeEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "pray_id")
   private Long id;
+
   @ManyToOne
   @JoinColumn(name = "member_id", nullable = false)
   private Member member;
@@ -44,11 +46,13 @@ public class Pray extends AuditingTimeEntity {
   @Column(name = "origin_pray_id")
   private Long originPrayId;
 
+  @NotNull
   @Enumerated(EnumType.STRING)
   private PrayType prayType;
 
+  @NotNull
   @ManyToOne
-  @JoinColumn(name = "category_id", nullable = false)
+  @JoinColumn(name = "category_id")
   private Category category;
 
   @Builder

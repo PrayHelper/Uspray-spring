@@ -23,6 +23,7 @@ import org.hibernate.annotations.Where;
 @Where(clause = "deleted=false")
 public class Category extends AuditingTimeEntity {
 
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "category_id")
   @Id
   private Long id;

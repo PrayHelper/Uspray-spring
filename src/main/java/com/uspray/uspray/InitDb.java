@@ -56,8 +56,8 @@ public class InitDb {
           .deadline(LocalDate.parse("2025-01-01"))
           .member(member)
           .category(category)
+          .prayType(com.uspray.uspray.Enums.PrayType.PERSONAL)
           .build();
-
       em.persist(pray);
     }
 
