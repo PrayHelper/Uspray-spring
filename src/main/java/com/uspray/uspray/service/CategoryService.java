@@ -36,8 +36,8 @@ public class CategoryService {
 
   public CategoryResponseDto deleteCategory(String username, Long categoryId) {
     Category category = categoryRepository.getCategoryById(categoryId);
-    if (!category.getMember().getId()
-        .equals(memberRepository.getMemberByUserId(username).getId())) {
+    if (categoryRepository.existsCategoryByIdAndMember(categoryId,
+        memberRepository.getMemberByUserId(username))) {
       throw new NotFoundException(ErrorStatus.CATEGORY_UNAUTHORIZED_EXCEPTION,
           ErrorStatus.CATEGORY_UNAUTHORIZED_EXCEPTION.getMessage());
     }
@@ -47,8 +47,8 @@ public class CategoryService {
   public CategoryResponseDto updateCategory(String username, Long categoryId,
       CategoryRequestDto categoryRequestDto) {
     Category category = categoryRepository.getCategoryById(categoryId);
-    if (!category.getMember().getId()
-        .equals(memberRepository.getMemberByUserId(username).getId())) {
+    if (categoryRepository.existsCategoryByIdAndMember(categoryId,
+        memberRepository.getMemberByUserId(username))) {
       throw new NotFoundException(ErrorStatus.CATEGORY_UNAUTHORIZED_EXCEPTION,
           ErrorStatus.CATEGORY_UNAUTHORIZED_EXCEPTION.getMessage());
     }
@@ -58,8 +58,8 @@ public class CategoryService {
 
   public CategoryResponseDto getCategory(String username, Long categoryId) {
     Category category = categoryRepository.getCategoryById(categoryId);
-    if (!category.getMember().getId()
-        .equals(memberRepository.getMemberByUserId(username).getId())) {
+    if (categoryRepository.existsCategoryByIdAndMember(categoryId,
+        memberRepository.getMemberByUserId(username))) {
       throw new NotFoundException(ErrorStatus.CATEGORY_UNAUTHORIZED_EXCEPTION,
           ErrorStatus.CATEGORY_UNAUTHORIZED_EXCEPTION.getMessage());
     }

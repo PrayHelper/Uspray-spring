@@ -13,4 +13,6 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
   boolean existsCategoryByNameAndMember(String name, Member member);
 
   int countCategoryByMember(Member member);
+
+  boolean existsCategoryByIdAndMember(Long categoryId, Member member);
 }
