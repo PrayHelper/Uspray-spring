@@ -1,5 +1,7 @@
 package com.uspray.uspray;
 
+import com.uspray.uspray.Enums.Authority;
+import com.uspray.uspray.domain.History;
 import com.uspray.uspray.domain.Member;
 import com.uspray.uspray.domain.Pray;
 import java.time.LocalDate;
@@ -37,6 +39,7 @@ public class InitDb {
                 .phone("01012345678")
                 .birth("2002-02-01")
                 .gender("female")
+                    .authority(Authority.ROLE_USER)
                 .build();
             em.persist(member);
 
@@ -47,6 +50,12 @@ public class InitDb {
                 .build();
 
             em.persist(pray);
+
+            History history = History.builder()
+                    .pray(pray)
+                    .build();
+
+            em.persist(history);
         }
 
     }

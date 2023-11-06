@@ -8,8 +8,11 @@ import com.uspray.uspray.service.HistoryService;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+
+import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
@@ -35,8 +38,12 @@ public class HistoryController {
     @GetMapping("/search")
     public ApiResponseDto<List<HistoryResponseDto>> searchHistoryList(
             @Parameter(hidden = true) @AuthenticationPrincipal User user,
-            @RequestBody HistorySearchRequestDto historySearchRequestDto) {
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) Boolean isMine,
+            @RequestParam(required = false) Boolean isShared,
+            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
         return ApiResponseDto.success(SuccessStatus.GET_HISTORY_LIST_SUCCESS,
-            historyService.searchHistoryList(user.getUsername(), historySearchRequestDto));
+            historyService.searchHistoryList(user.getUsername(), keyword, isMine, isShared, startDate, endDate));
     }
 }

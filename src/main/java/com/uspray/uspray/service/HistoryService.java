@@ -6,6 +6,9 @@ import com.uspray.uspray.domain.History;
 import com.uspray.uspray.domain.Member;
 import com.uspray.uspray.infrastructure.HistoryRepository;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -35,26 +38,19 @@ public class HistoryService {
     }
 
     @Transactional(readOnly = true)
-    public List<HistoryResponseDto> searchHistoryList(String username, HistorySearchRequestDto historySearchRequestDto) {
+    public List<HistoryResponseDto> searchHistoryList(String username, String keyword, Boolean isMine, Boolean isShared, LocalDate startDate, LocalDate endDate) {
         Member member = memberRepository.getMemberByUserId(username);
-        Set<History> set;
+        LocalDateTime startDateTime = startDate != null ? startDate.atStartOfDay() : null;
+        LocalDateTime endDateTime = endDate != null ? endDate.atTime(LocalTime.MAX) : null;
+        List<History> historyList = new ArrayList<>();
 
-        if (historySearchRequestDto.getKeyword() == null || historySearchRequestDto.getKeyword().isEmpty()) {
+        if (keyword == null || keyword.isEmpty()) {
             // 키워드 없이 날짜만 입력되었을 경우
-            List<History> createdAtList = historyRepository.findByMemberAndCreatedAtBetween(member, historySearchRequestDto.getStartDate(), historySearchRequestDto.getEndDate());
-            List<History> deadlineList = historyRepository.findByMemberAndDeadlineBetween(member, historySearchRequestDto.getStartDate(), historySearchRequestDto.getEndDate());
-
-            set = new LinkedHashSet<>(createdAtList);
-            set.addAll(deadlineList);
+            historyList = historyRepository.findAllByPeriodOverlap(startDate, endDateTime, member);
         } else {
             // 키워드 있을 경우
-            List<History> createdAtList = historyRepository.findByMemberAndContentContainingAndCreatedAtBetween(member, historySearchRequestDto.getKeyword(), historySearchRequestDto.getStartDate(), historySearchRequestDto.getEndDate());
-            List<History> deadlineList = historyRepository.findByMemberAndContentContainingAndDeadlineBetween(member, historySearchRequestDto.getKeyword(), historySearchRequestDto.getStartDate(), historySearchRequestDto.getEndDate());
-
-            set = new LinkedHashSet<>(createdAtList);
-            set.addAll(deadlineList);
+            historyList = historyRepository.findAllByKeywordAndPeriodOverlap(keyword, startDate, endDateTime, member);
         }
-        List<History> historyList = new ArrayList<>(set);
         return historyList.stream()
             .map(HistoryResponseDto::of)
             .collect(Collectors.toList());

@@ -3,26 +3,28 @@ package com.uspray.uspray.infrastructure;
 import com.uspray.uspray.domain.History;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.uspray.uspray.domain.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface HistoryRepository extends JpaRepository<History, Long> {
 
-//    List<History> getAllByUserIdOrderByDeadlineDesc(String userId);
-
     List<History> findByMemberOrderByDeadlineDesc(Member member);
 
-    List<History> findByMemberAndContentContaining(Member member, String content);
+    @Query("SELECT h FROM History h WHERE h.member = :member AND h.createdAt <= :endDateTime AND h.deadline >= :startDate")
+    List<History> findAllByPeriodOverlap(@Param("startDate") LocalDate startDate,
+                                         @Param("endDateTime") LocalDateTime endDateTime,
+                                         @Param("member") Member member);
 
-    List<History> findByMemberAndCreatedAtBetween(Member member, LocalDate start, LocalDate end);
-
-    List<History> findByMemberAndDeadlineBetween(Member member, LocalDate start, LocalDate end);
-
-    List<History> findByMemberAndContentContainingAndCreatedAtBetween(Member member, String content, LocalDate start, LocalDate end);
-
-    List<History> findByMemberAndContentContainingAndDeadlineBetween(Member member, String content, LocalDate start, LocalDate end);
+    @Query("SELECT h FROM History h WHERE h.member = :member AND h.content LIKE %:keyword% AND h.createdAt <= :endDateTime AND h.deadline >= :startDate")
+    List<History> findAllByKeywordAndPeriodOverlap(@Param("keyword") String keyword,
+                                                   @Param("startDate") LocalDate startDate,
+                                                   @Param("endDateTime") LocalDateTime endDateTime,
+                                                   @Param("member") Member member);
 }
