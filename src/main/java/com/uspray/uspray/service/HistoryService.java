@@ -1,18 +1,17 @@
 package com.uspray.uspray.service;
 
-import com.uspray.uspray.DTO.history.request.HistorySearchRequestDto;
 import com.uspray.uspray.DTO.history.response.HistoryResponseDto;
 import com.uspray.uspray.domain.History;
 import com.uspray.uspray.domain.Member;
+import com.uspray.uspray.domain.Pray;
 import com.uspray.uspray.infrastructure.HistoryRepository;
 
+import com.uspray.uspray.infrastructure.PrayRepository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.uspray.uspray.infrastructure.MemberRepository;
@@ -26,12 +25,12 @@ public class HistoryService {
 
     private final HistoryRepository historyRepository;
     private final MemberRepository memberRepository;
+    private final PrayRepository prayRepository;
 
     @Transactional(readOnly = true)
     public List<HistoryResponseDto> getHistoryList(String username) {
         Member member = memberRepository.getMemberByUserId(username);
         List<History> historyList = historyRepository.findByMemberOrderByDeadlineDesc(member);
-//        List<History> historyList = historyRepository.getAllByUserIdOrderByDeadlineDesc(userId);
         return historyList.stream()
             .map(HistoryResponseDto::of)
             .collect(Collectors.toList());
@@ -54,6 +53,18 @@ public class HistoryService {
         return historyList.stream()
             .map(HistoryResponseDto::of)
             .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void convertPrayToHistory() {
+        List<Pray> prayList = prayRepository.findAllByDeadlineBefore(LocalDate.now());
+        for (Pray pray : prayList) {
+            History history = History.builder()
+                .pray(pray)
+                    .build();
+            historyRepository.save(history);
+            prayRepository.delete(pray);
+        }
     }
 
 }

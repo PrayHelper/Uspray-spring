@@ -1,7 +1,6 @@
 package com.uspray.uspray.service;
 
 import com.uspray.uspray.Enums.NotificationType;
-import com.uspray.uspray.infrastructure.SharedPrayRepository;
 import com.uspray.uspray.infrastructure.query.MemberQueryRepository;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -17,6 +16,7 @@ public class SchedulerService {
     private final MemberQueryRepository memberQueryRepository;
     private final FCMNotificationService fcmNotificationService;
     private final ShareService shareService;
+    private final HistoryService historyService;
 
     @Scheduled(cron = "0 0 8 * * *")
     public void pushPrayNotification() throws IOException {
@@ -31,5 +31,10 @@ public class SchedulerService {
     public void cleanSharedPray() {
         LocalDate thresholdDate = LocalDate.now().minusDays(15);
         shareService.cleanSharedPray(thresholdDate);
+    }
+
+    @Scheduled(cron = "0 0 0 * * ?")
+    public void convertPrayToHistory() {
+        historyService.convertPrayToHistory();
     }
 }

@@ -3,6 +3,7 @@ package com.uspray.uspray.infrastructure;
 import com.uspray.uspray.domain.Pray;
 import com.uspray.uspray.exception.ErrorStatus;
 import com.uspray.uspray.exception.model.NotFoundException;
+import java.time.LocalDate;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -17,4 +18,6 @@ public interface PrayRepository extends JpaRepository<Pray, Long>, PrayRepositor
     }
 
     List<Pray> findAllByIdIn(List<Long> prayIds);
+
+    List<Pray> findAllByDeadlineBefore(LocalDate date);
 }
