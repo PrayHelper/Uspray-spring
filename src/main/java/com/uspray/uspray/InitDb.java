@@ -1,6 +1,7 @@
 package com.uspray.uspray;
 
 import com.uspray.uspray.Enums.Authority;
+import com.uspray.uspray.Enums.PrayType;
 import com.uspray.uspray.domain.Category;
 import com.uspray.uspray.domain.Member;
 import com.uspray.uspray.domain.Pray;
@@ -56,7 +57,7 @@ public class InitDb {
                 .deadline(LocalDate.parse("2025-01-01"))
                 .member(member)
                 .category(category)
-                .prayType(com.uspray.uspray.Enums.PrayType.PERSONAL)
+                .prayType(PrayType.PERSONAL)
                 .build();
             em.persist(pray);
         }
