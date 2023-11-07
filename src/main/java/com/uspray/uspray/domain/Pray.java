@@ -4,6 +4,7 @@ import com.uspray.uspray.DTO.pray.request.PrayRequestDto;
 import com.uspray.uspray.Enums.PrayType;
 import com.uspray.uspray.common.domain.AuditingTimeEntity;
 import java.time.LocalDate;
+import java.util.Base64;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -59,7 +60,7 @@ public class Pray extends AuditingTimeEntity {
   public Pray(Member member, String content, LocalDate deadline, Long originPrayId,
       Category category, PrayType prayType) {
     this.member = member;
-    this.content = content;
+    this.content = new String(Base64.getEncoder().encode(content.getBytes()));
     this.count = 0;
     this.deadline = deadline;
     this.originPrayId = originPrayId;
@@ -71,5 +72,9 @@ public class Pray extends AuditingTimeEntity {
   public void update(PrayRequestDto prayRequestDto) {
     this.content = prayRequestDto.getContent();
     this.deadline = prayRequestDto.getDeadline();
+  }
+
+  public String getContent() {
+    return new String(Base64.getDecoder().decode(content));
   }
 }
