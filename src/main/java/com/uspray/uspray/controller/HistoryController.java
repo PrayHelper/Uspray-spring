@@ -2,6 +2,7 @@ package com.uspray.uspray.controller;
 
 import com.uspray.uspray.DTO.ApiResponseDto;
 import com.uspray.uspray.DTO.history.request.HistorySearchRequestDto;
+import com.uspray.uspray.DTO.history.response.HistoryDetailResponseDto;
 import com.uspray.uspray.DTO.history.response.HistoryResponseDto;
 import com.uspray.uspray.exception.SuccessStatus;
 import com.uspray.uspray.service.HistoryService;
@@ -45,5 +46,13 @@ public class HistoryController {
             @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
         return ApiResponseDto.success(SuccessStatus.GET_HISTORY_LIST_SUCCESS,
             historyService.searchHistoryList(user.getUsername(), keyword, isMine, isShared, startDate, endDate));
+    }
+
+    @GetMapping("/detail/{historyId}")
+    public ApiResponseDto<HistoryDetailResponseDto> getHistoryDetail(
+        @Parameter(hidden = true) @AuthenticationPrincipal User user,
+        @PathVariable Long historyId) {
+        return ApiResponseDto.success(SuccessStatus.GET_HISTORY_DETAIL_SUCCESS,
+            historyService.getHistoryDetail(user.getUsername(), historyId));
     }
 }

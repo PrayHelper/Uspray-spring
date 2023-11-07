@@ -1,5 +1,6 @@
 package com.uspray.uspray.service;
 
+import com.uspray.uspray.DTO.history.response.HistoryDetailResponseDto;
 import com.uspray.uspray.DTO.history.response.HistoryResponseDto;
 import com.uspray.uspray.domain.History;
 import com.uspray.uspray.domain.Member;
@@ -53,6 +54,16 @@ public class HistoryService {
         return historyList.stream()
             .map(HistoryResponseDto::of)
             .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public HistoryDetailResponseDto getHistoryDetail(String username, Long historyId) {
+        Member member = memberRepository.getMemberByUserId(username);
+        History history = historyRepository.findById(historyId).orElseThrow(() -> new IllegalArgumentException("해당 히스토리가 없습니다. id=" + historyId));
+        if (!history.getMember().equals(member)) {
+            throw new IllegalArgumentException("해당 히스토리에 대한 권한이 없습니다.");
+        }
+        return HistoryDetailResponseDto.of(history);
     }
 
     @Transactional
