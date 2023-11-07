@@ -50,7 +50,7 @@ public class Member extends AuditingTimeEntity {
   private Authority authority;
 
   @OneToMany(mappedBy = "author")
-  private List<ClubPray> clubPrayList;
+  private List<GroupPray> groupPrayList;
 
 
   public void changeFirebaseToken(String firebaseToken) {

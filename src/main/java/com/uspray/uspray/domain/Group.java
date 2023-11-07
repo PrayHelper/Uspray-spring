@@ -15,14 +15,14 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Club extends AuditingTimeEntity {
+public class Group extends AuditingTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "club_id")
+    @Column(name = "group_id")
     private Long id;
 
-    @OneToMany(mappedBy = "club", orphanRemoval = true)
-    private List<ClubPray> clubPrayList;
+    @OneToMany(mappedBy = "group", orphanRemoval = true)
+    private List<GroupPray> groupPrayList;
 
 }
