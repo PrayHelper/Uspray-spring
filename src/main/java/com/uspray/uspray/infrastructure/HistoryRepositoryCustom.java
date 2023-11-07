@@ -1,7 +1,6 @@
 package com.uspray.uspray.infrastructure;
 
 import com.uspray.uspray.domain.History;
-import com.uspray.uspray.domain.Member;
 import java.time.LocalDate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

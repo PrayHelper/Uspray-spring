@@ -40,11 +40,11 @@ public class HistoryRepositoryImpl implements HistoryRepositoryCustom {
         }
 
         if (startDate != null) {
-            predicate = predicate.and(history.createdAt.after(startDate.atStartOfDay()));
+            predicate = predicate.and(history.createdAt.before(endDate.atStartOfDay()));
         }
 
         if (endDate != null) {
-            predicate = predicate.and(history.deadline.before(endDate));
+            predicate = predicate.and(history.deadline.after(startDate));
         }
 
         // fetchCount가 deprecated 됐다고 해서 추후 수정 예정

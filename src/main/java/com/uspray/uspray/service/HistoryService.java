@@ -10,10 +10,7 @@ import com.uspray.uspray.infrastructure.HistoryRepository;
 
 import com.uspray.uspray.infrastructure.PrayRepository;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import com.uspray.uspray.infrastructure.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -42,9 +39,6 @@ public class HistoryService {
 
     @Transactional(readOnly = true)
     public HistoryListResponseDto searchHistoryList(String username, String keyword, Boolean isMine, Boolean isShared, LocalDate startDate, LocalDate endDate, int page, int size) {
-        Member member = memberRepository.getMemberByUserId(username);
-        LocalDateTime startDateTime = startDate != null ? startDate.atStartOfDay() : null;
-        LocalDateTime endDateTime = endDate != null ? endDate.atTime(LocalTime.MAX) : null;
 
         // 전체 파라미터가 null 인 경우 예외처리
         if (keyword == null && isMine == null && isShared == null && startDate == null && endDate == null) {
