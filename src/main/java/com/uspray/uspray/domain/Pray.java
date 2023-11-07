@@ -5,10 +5,12 @@ import com.uspray.uspray.Enums.PrayType;
 import com.uspray.uspray.common.domain.AuditingTimeEntity;
 import java.time.LocalDate;
 import java.util.Base64;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -39,9 +41,13 @@ public class Pray extends AuditingTimeEntity {
   private Member member;
 
   private String content;
+
   private Integer count;
+
   private LocalDate deadline;
+
   private final Boolean deleted = false;
+
   private Boolean isShared = false;
 
   @Column(name = "origin_pray_id")
@@ -50,6 +56,10 @@ public class Pray extends AuditingTimeEntity {
   @NotNull
   @Enumerated(EnumType.STRING)
   private PrayType prayType;
+
+  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @JoinColumn(name = "grouppray_id")
+  private GroupPray groupPray;
 
   @NotNull
   @ManyToOne
