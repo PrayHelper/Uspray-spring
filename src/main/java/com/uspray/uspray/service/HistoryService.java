@@ -41,7 +41,7 @@ public class HistoryService {
         Member member = memberRepository.getMemberByUserId(username);
         LocalDateTime startDateTime = startDate != null ? startDate.atStartOfDay() : null;
         LocalDateTime endDateTime = endDate != null ? endDate.atTime(LocalTime.MAX) : null;
-        List<History> historyList = new ArrayList<>();
+        List<History> historyList;
 
         if (keyword == null || keyword.isEmpty()) {
             // 키워드 없이 날짜만 입력되었을 경우
@@ -61,7 +61,7 @@ public class HistoryService {
         for (Pray pray : prayList) {
             History history = History.builder()
                 .pray(pray)
-                    .build();
+                .build();
             historyRepository.save(history);
             prayRepository.delete(pray);
         }

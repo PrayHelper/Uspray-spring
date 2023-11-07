@@ -39,7 +39,7 @@ public class InitDb {
                 .phone("01012345678")
                 .birth("2002-02-01")
                 .gender("female")
-                    .authority(Authority.ROLE_USER)
+                .authority(Authority.ROLE_USER)
                 .build();
             em.persist(member);
 
@@ -52,8 +52,8 @@ public class InitDb {
             em.persist(pray);
 
             History history = History.builder()
-                    .pray(pray)
-                    .build();
+                .pray(pray)
+                .build();
 
             em.persist(history);
         }
