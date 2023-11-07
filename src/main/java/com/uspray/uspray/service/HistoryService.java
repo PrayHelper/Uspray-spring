@@ -1,6 +1,7 @@
 package com.uspray.uspray.service;
 
 import com.uspray.uspray.DTO.history.response.HistoryDetailResponseDto;
+import com.uspray.uspray.DTO.history.response.HistoryListResponseDto;
 import com.uspray.uspray.DTO.history.response.HistoryResponseDto;
 import com.uspray.uspray.domain.History;
 import com.uspray.uspray.domain.Member;
@@ -11,12 +12,15 @@ import com.uspray.uspray.infrastructure.PrayRepository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import com.uspray.uspray.infrastructure.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,31 +33,26 @@ public class HistoryService {
     private final PrayRepository prayRepository;
 
     @Transactional(readOnly = true)
-    public List<HistoryResponseDto> getHistoryList(String username) {
+    public HistoryListResponseDto getHistoryList(String username, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("deadline").descending());
         Member member = memberRepository.getMemberByUserId(username);
-        List<History> historyList = historyRepository.findByMemberOrderByDeadlineDesc(member);
-        return historyList.stream()
-            .map(HistoryResponseDto::of)
-            .collect(Collectors.toList());
+        Page<HistoryResponseDto> historyList = historyRepository.findByMember(member, pageable).map(HistoryResponseDto::of);
+        return new HistoryListResponseDto(historyList.getContent(), historyList.getTotalPages());
     }
 
     @Transactional(readOnly = true)
-    public List<HistoryResponseDto> searchHistoryList(String username, String keyword, Boolean isMine, Boolean isShared, LocalDate startDate, LocalDate endDate) {
+    public HistoryListResponseDto searchHistoryList(String username, String keyword, Boolean isMine, Boolean isShared, LocalDate startDate, LocalDate endDate, int page, int size) {
         Member member = memberRepository.getMemberByUserId(username);
         LocalDateTime startDateTime = startDate != null ? startDate.atStartOfDay() : null;
         LocalDateTime endDateTime = endDate != null ? endDate.atTime(LocalTime.MAX) : null;
-        List<History> historyList;
 
-        if (keyword == null || keyword.isEmpty()) {
-            // 키워드 없이 날짜만 입력되었을 경우
-            historyList = historyRepository.findAllByPeriodOverlap(startDate, endDateTime, member);
-        } else {
-            // 키워드 있을 경우
-            historyList = historyRepository.findAllByKeywordAndPeriodOverlap(keyword, startDate, endDateTime, member);
+        // 전체 파라미터가 null 인 경우 예외처리
+        if (keyword == null && isMine == null && isShared == null && startDate == null && endDate == null) {
+            throw new IllegalArgumentException("검색 조건이 없습니다.");
         }
-        return historyList.stream()
-            .map(HistoryResponseDto::of)
-            .collect(Collectors.toList());
+        Pageable pageable = PageRequest.of(page, size, Sort.by("deadline").descending());
+        Page<HistoryResponseDto> historyList = historyRepository.findBySearchOption(username, keyword, isMine, isShared, startDate, endDate, pageable).map(HistoryResponseDto::of);
+        return new HistoryListResponseDto(historyList.getContent(), historyList.getTotalPages());
     }
 
     @Transactional(readOnly = true)
