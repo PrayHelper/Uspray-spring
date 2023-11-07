@@ -53,8 +53,8 @@ public class Pray extends AuditingTimeEntity {
   private PrayType prayType;
 
   @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-  @JoinColumn(name = "clubpray_id")
-  private ClubPray clubPray;
+  @JoinColumn(name = "grouppray_id")
+  private GroupPray groupPray;
 
   @NotNull
   @ManyToOne

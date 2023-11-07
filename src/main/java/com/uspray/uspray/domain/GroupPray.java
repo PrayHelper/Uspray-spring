@@ -17,38 +17,38 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ClubPray extends AuditingTimeEntity {
+public class GroupPray extends AuditingTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "clubpray_id")
+    @Column(name = "grouppray_id")
     private Long id;
 
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "club_id")
-    private Club club;
+    @JoinColumn(name = "group_id")
+    private Group group;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member author;
 
     @Builder
-    public ClubPray(String content, Club club, Member author) {
+    public GroupPray(String content, Group group, Member author) {
         this.content = content;
-        setClub(club);
+        setGroup(group);
         setAuthor(author);
     }
 
-    private void setClub(Club club) {
-        this.club = club;
-        club.getClubPrayList().add(this);
+    private void setGroup(Group group) {
+        this.group = group;
+        group.getGroupPrayList().add(this);
     }
 
     private void setAuthor(Member author) {
         this.author = author;
-        author.getClubPrayList().add(this);
+        author.getGroupPrayList().add(this);
     }
 
     public void changeContent(String content) {
