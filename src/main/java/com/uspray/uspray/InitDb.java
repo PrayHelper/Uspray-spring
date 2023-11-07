@@ -16,20 +16,20 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class InitDb {
 
-  private final InitService initService;
+    private final InitService initService;
 
-  @PostConstruct
-  public void init() {
-    initService.dbInit();
-  }
+    @PostConstruct
+    public void init() {
+        initService.dbInit();
+    }
 
-  @Component
-  @Transactional
-  @RequiredArgsConstructor
-  static class InitService {
+    @Component
+    @Transactional
+    @RequiredArgsConstructor
+    static class InitService {
 
-    private final EntityManager em;
-    private final PasswordEncoder passwordEncoder;
+        private final EntityManager em;
+        private final PasswordEncoder passwordEncoder;
 
         @Transactional
         public void dbInit() {
@@ -44,21 +44,21 @@ public class InitDb {
                 .build();
             em.persist(member);
 
-          Category category = Category.builder()
-              .name("기타 카테고리")
-              .color("#FFFFFF")
-              .member(member)
-              .build();
-          em.persist(category);
+            Category category = Category.builder()
+                .name("기타 카테고리")
+                .color("#FFFFFF")
+                .member(member)
+                .build();
+            em.persist(category);
 
-          Pray pray = Pray.builder()
-              .content("테스트 기도")
-              .deadline(LocalDate.parse("2025-01-01"))
-              .member(member)
-              .category(category)
-              .prayType(com.uspray.uspray.Enums.PrayType.PERSONAL)
-              .build();
-          em.persist(pray);
+            Pray pray = Pray.builder()
+                .content("테스트 기도")
+                .deadline(LocalDate.parse("2025-01-01"))
+                .member(member)
+                .category(category)
+                .prayType(com.uspray.uspray.Enums.PrayType.PERSONAL)
+                .build();
+            em.persist(pray);
         }
 
     }
