@@ -32,9 +32,12 @@ public class PrayResponseDto {
   @Schema(description = "기도제목 생성일", example = "2021-01-01 00:00:00")
   private LocalDateTime createdAt;
 
+  @Schema(description = "기도제목 카테고리", example = "1")
+  private Long categoryId;
+
   public static PrayResponseDto of(Pray pray) {
     return new PrayResponseDto(pray.getId(), pray.getContent(), pray.getDeadline(),
-        pray.getCount(), pray.getCreatedAt());
+        pray.getCount(), pray.getCreatedAt(), pray.getCategory().getId());
   }
 
 }

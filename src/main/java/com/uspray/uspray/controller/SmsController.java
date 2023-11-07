@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
 @RestController
-@Tag(name = "sms 전송", description = "전화번호 인증 관련 api")
+@Tag(name = "sms 전송", description = "SMS 관련 API")
 public class SmsController {
 
   private final SmsService smsService;
