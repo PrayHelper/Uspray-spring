@@ -1,4 +1,4 @@
-package com.uspray.uspray.infrastructure.querydsl;
+package com.uspray.uspray.infrastructure.querydsl.history;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -20,7 +20,7 @@ public class HistoryRepositoryImpl implements HistoryRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Page<History> findBySearchOption(String username, String keyword, Boolean isMine,
+    public Page<History> findBySearchOption(String username, String keyword, Boolean isPersonal,
         Boolean isShared, LocalDate startDate, LocalDate endDate, Pageable pageable) {
         QHistory history = QHistory.history;
         BooleanExpression predicate = history.member.userId.eq(username);
@@ -29,7 +29,7 @@ public class HistoryRepositoryImpl implements HistoryRepositoryCustom {
             predicate = predicate.and(history.content.containsIgnoreCase(keyword));
         }
 
-        if (Boolean.TRUE.equals(isMine)) {
+        if (Boolean.TRUE.equals(isPersonal)) {
             // 수정 필요
             predicate = predicate.and(history.member.userId.eq(username));
         }

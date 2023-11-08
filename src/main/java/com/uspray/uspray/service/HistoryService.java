@@ -38,14 +38,14 @@ public class HistoryService {
     }
 
     @Transactional(readOnly = true)
-    public HistoryListResponseDto searchHistoryList(String username, String keyword, Boolean isMine, Boolean isShared, LocalDate startDate, LocalDate endDate, int page, int size) {
+    public HistoryListResponseDto searchHistoryList(String username, String keyword, Boolean isPersonal, Boolean isShared, LocalDate startDate, LocalDate endDate, int page, int size) {
 
         // 전체 파라미터가 null 인 경우 예외처리
-        if (keyword == null && isMine == null && isShared == null && startDate == null && endDate == null) {
+        if (keyword == null && isPersonal == null && isShared == null && startDate == null && endDate == null) {
             throw new IllegalArgumentException("검색 조건이 없습니다.");
         }
         Pageable pageable = PageRequest.of(page, size, Sort.by("deadline").descending());
-        Page<HistoryResponseDto> historyList = historyRepository.findBySearchOption(username, keyword, isMine, isShared, startDate, endDate, pageable).map(HistoryResponseDto::of);
+        Page<HistoryResponseDto> historyList = historyRepository.findBySearchOption(username, keyword, isPersonal, isShared, startDate, endDate, pageable).map(HistoryResponseDto::of);
         return new HistoryListResponseDto(historyList.getContent(), historyList.getTotalPages());
     }
 

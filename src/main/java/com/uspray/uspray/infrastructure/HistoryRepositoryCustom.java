@@ -7,6 +7,6 @@ import org.springframework.data.domain.Pageable;
 
 public interface HistoryRepositoryCustom {
 
-    Page<History> findBySearchOption(String username, String keyword, Boolean isMine, Boolean isShared, LocalDate startDate, LocalDate endDate, Pageable pageable);
+    Page<History> findBySearchOption(String username, String keyword, Boolean isPersonal, Boolean isShared, LocalDate startDate, LocalDate endDate, Pageable pageable);
 
 }

@@ -42,14 +42,14 @@ public class HistoryController {
     public ApiResponseDto<HistoryListResponseDto> searchHistoryList(
             @Parameter(hidden = true) @AuthenticationPrincipal User user,
             @RequestParam(required = false) String keyword,
-            @RequestParam(required = false) Boolean isMine,
+            @RequestParam(required = false) Boolean isPersonal,
             @RequestParam(required = false) Boolean isShared,
             @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
             @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "10") int size) {
         return ApiResponseDto.success(SuccessStatus.GET_HISTORY_LIST_SUCCESS,
-            historyService.searchHistoryList(user.getUsername(), keyword, isMine, isShared, startDate, endDate, page, size));
+            historyService.searchHistoryList(user.getUsername(), keyword, isPersonal, isShared, startDate, endDate, page, size));
     }
 
     @GetMapping("/detail/{historyId}")
