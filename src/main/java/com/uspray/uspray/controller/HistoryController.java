@@ -3,7 +3,6 @@ package com.uspray.uspray.controller;
 import com.uspray.uspray.DTO.ApiResponseDto;
 import com.uspray.uspray.DTO.history.response.HistoryDetailResponseDto;
 import com.uspray.uspray.DTO.history.response.HistoryListResponseDto;
-import com.uspray.uspray.DTO.history.response.HistoryResponseDto;
 import com.uspray.uspray.exception.SuccessStatus;
 import com.uspray.uspray.service.HistoryService;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -11,7 +10,6 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import java.time.LocalDate;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -29,10 +27,11 @@ public class HistoryController {
     @GetMapping()
     public ApiResponseDto<HistoryListResponseDto> getHistoryList(
         @Parameter(hidden = true) @AuthenticationPrincipal User user,
+        @RequestParam(value = "type") String type,
         @RequestParam(value = "page", defaultValue = "0") int page,
         @RequestParam(value = "size", defaultValue = "10") int size) {
         return ApiResponseDto.success(SuccessStatus.GET_HISTORY_LIST_SUCCESS,
-            historyService.getHistoryList(user.getUsername(), page, size));
+            historyService.getHistoryList(user.getUsername(), type, page, size));
     }
 
     // 이름, 내용, 카테고리에 해당되는 키워드 전부를 찾아서 검색
@@ -42,8 +41,8 @@ public class HistoryController {
     public ApiResponseDto<HistoryListResponseDto> searchHistoryList(
             @Parameter(hidden = true) @AuthenticationPrincipal User user,
             @RequestParam(required = false) String keyword,
-            @RequestParam(required = false) Boolean isPersonal,
-            @RequestParam(required = false) Boolean isShared,
+            @RequestParam Boolean isPersonal,
+            @RequestParam Boolean isShared,
             @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
             @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
             @RequestParam(value = "page", defaultValue = "0") int page,

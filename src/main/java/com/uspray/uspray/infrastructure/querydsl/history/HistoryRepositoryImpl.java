@@ -29,15 +29,18 @@ public class HistoryRepositoryImpl implements HistoryRepositoryCustom {
             predicate = predicate.and(history.content.containsIgnoreCase(keyword));
         }
 
-        if (Boolean.TRUE.equals(isPersonal)) {
-            // 수정 필요
-            predicate = predicate.and(history.member.userId.eq(username));
+        if (Boolean.TRUE.equals(isPersonal) && !Boolean.TRUE.equals(isShared)) {
+            // Only personal, originPrayID가 null인 것
+            predicate = predicate.and(history.originPrayId.isNull());
         }
 
-        if (Boolean.TRUE.equals(isShared)) {
-            // 수정 필요
-            predicate = predicate.and(history.member.userId.eq(username));
+        if (Boolean.TRUE.equals(isShared) && !Boolean.TRUE.equals(isPersonal)) {
+            // Only shared, originPrayId가 null이 아닌 것
+            predicate = predicate.and(history.originPrayId.isNotNull());
         }
+
+        // 만약 둘 다 true(두 체크박스 모두 선택) 또는 false(두 체크박스 선택 안함) 라면, 아무 조건도 추가하지 않습니다.
+        // 즉, isPersonal과 isShared 둘 다 true, false인 경우 모든 결과를 포함합니다.
 
         if (startDate != null) {
             predicate = predicate.and(history.createdAt.before(endDate.atStartOfDay()));

@@ -3,6 +3,7 @@ package com.uspray.uspray.service;
 import com.uspray.uspray.DTO.history.response.HistoryDetailResponseDto;
 import com.uspray.uspray.DTO.history.response.HistoryListResponseDto;
 import com.uspray.uspray.DTO.history.response.HistoryResponseDto;
+import com.uspray.uspray.Enums.PrayType;
 import com.uspray.uspray.domain.History;
 import com.uspray.uspray.domain.Member;
 import com.uspray.uspray.domain.Pray;
@@ -30,11 +31,22 @@ public class HistoryService {
     private final PrayRepository prayRepository;
 
     @Transactional(readOnly = true)
-    public HistoryListResponseDto getHistoryList(String username, int page, int size) {
+    public HistoryListResponseDto getHistoryList(String username, String type, int page, int size) {
+        // type은 대소문자 구분하지 않습니다
+
         Pageable pageable = PageRequest.of(page, size, Sort.by("deadline").descending());
         Member member = memberRepository.getMemberByUserId(username);
-        Page<HistoryResponseDto> historyList = historyRepository.findByMember(member, pageable).map(HistoryResponseDto::of);
-        return new HistoryListResponseDto(historyList.getContent(), historyList.getTotalPages());
+        Page<HistoryResponseDto> historyList;
+        if (PrayType.PERSONAL.name().equalsIgnoreCase(type)) {
+            historyList = historyRepository.findByMemberAndOriginPrayIdIsNull(member, pageable).map(HistoryResponseDto::of);
+        } else if (PrayType.SHARED.name().equalsIgnoreCase(type)) {
+            historyList = historyRepository.findByMemberAndOriginPrayIdIsNotNull(
+                member, pageable).map(HistoryResponseDto::of);
+        } else {
+            throw new IllegalArgumentException("잘못된 타입입니다.");
+        }
+        return new HistoryListResponseDto(historyList.getContent(),
+            historyList.getTotalPages());
     }
 
     @Transactional(readOnly = true)
