@@ -3,6 +3,7 @@ package com.uspray.uspray.infrastructure;
 import com.uspray.uspray.domain.Pray;
 import com.uspray.uspray.exception.ErrorStatus;
 import com.uspray.uspray.exception.model.NotFoundException;
+import com.uspray.uspray.infrastructure.querydsl.pray.PrayRepositoryCustom;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
