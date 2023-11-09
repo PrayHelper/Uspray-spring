@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
 public class HistoryController {
     private final HistoryService historyService;
 
-    @GetMapping()
+    @GetMapping
     public ApiResponseDto<HistoryListResponseDto> getHistoryList(
         @Parameter(hidden = true) @AuthenticationPrincipal User user,
         @RequestParam(value = "type") String type,
