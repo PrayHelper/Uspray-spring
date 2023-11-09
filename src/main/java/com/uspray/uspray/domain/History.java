@@ -46,7 +46,7 @@ public class History extends AuditingTimeEntity {
     private PrayType prayType;
 
     @NotNull
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
 
