@@ -29,6 +29,8 @@ public enum SuccessStatus {
   CHANGE_PUSH_AGREE_SUCCESS(HttpStatus.OK, "푸쉬 알림 설정을 성공적으로 변경했습니다."),
   UPDATE_CATEGORY_SUCCESS(HttpStatus.OK, "카테고리 수정에 성공했습니다."),
   GET_CATEGORY_SUCCESS(HttpStatus.OK, "카테고리 조회에 성공했습니다."),
+  GET_HISTORY_LIST_SUCCESS(HttpStatus.OK, "히스토리 목록 조회에 성공했습니다."),
+  GET_HISTORY_DETAIL_SUCCESS(HttpStatus.OK, "히스토리 상세 조회에 성공했습니다."),
 
   /*
    * 201 created
