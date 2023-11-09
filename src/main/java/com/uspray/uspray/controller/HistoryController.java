@@ -8,7 +8,6 @@ import com.uspray.uspray.service.HistoryService;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-
 import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -27,7 +26,7 @@ public class HistoryController {
     @GetMapping
     public ApiResponseDto<HistoryListResponseDto> getHistoryList(
         @Parameter(hidden = true) @AuthenticationPrincipal User user,
-        @RequestParam(value = "type") String type,
+        @RequestParam(value = "type", defaultValue = "PERSONAL") String type,
         @RequestParam(value = "page", defaultValue = "0") int page,
         @RequestParam(value = "size", defaultValue = "10") int size) {
         return ApiResponseDto.success(SuccessStatus.GET_HISTORY_LIST_SUCCESS,
