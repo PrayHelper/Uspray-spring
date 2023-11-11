@@ -38,7 +38,7 @@ public enum ErrorStatus {
     PRAY_NOT_FOUND_EXCEPTION(HttpStatus.NOT_FOUND, "해당 기도제목을 찾을 수 없습니다."),
     PRAY_ALREADY_DELETED_EXCEPTION(HttpStatus.NOT_FOUND, "원본 기도제목이 삭제되었습니다."),
     NOT_FOUND_SHARED_PRAY_EXCEPTION(HttpStatus.NOT_FOUND, "해당 공유기도제목을 찾을 수 없습니다."),
-    ;
+    HISTORY_NOT_FOUND_EXCEPTION(HttpStatus.NOT_FOUND, "해당 히스토리를 찾을 수 없습니다.");
     
     private final HttpStatus httpStatus;
     private final String message;
