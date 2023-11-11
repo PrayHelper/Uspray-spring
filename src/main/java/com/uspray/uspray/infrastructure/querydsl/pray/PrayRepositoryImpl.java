@@ -24,6 +24,7 @@ public class PrayRepositoryImpl implements PrayRepositoryCustom {
             .where(category.member.userId.eq(username))
             .where(pray.prayType.stringValue().likeIgnoreCase(prayType))
             .orderBy(pray.createdAt.asc())
+            .orderBy(pray.category.order.asc())
             .fetch();
     }
 }

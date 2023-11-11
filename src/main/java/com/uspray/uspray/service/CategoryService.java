@@ -14,55 +14,57 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class CategoryService {
-
-  private final MemberRepository memberRepository;
-  private final CategoryRepository categoryRepository;
-
-  public CategoryResponseDto createCategory(String username,
-      CategoryRequestDto categoryRequestDto) {
-    Member member = memberRepository.getMemberByUserId(username);
-    if (categoryRepository.existsCategoryByNameAndMember(categoryRequestDto.getName(), member)) {
-      throw new NotFoundException(ErrorStatus.CATEGORY_ALREADY_EXIST_EXCEPTION,
-          ErrorStatus.CATEGORY_ALREADY_EXIST_EXCEPTION.getMessage());
+    
+    private final MemberRepository memberRepository;
+    private final CategoryRepository categoryRepository;
+    
+    public CategoryResponseDto createCategory(String username,
+        CategoryRequestDto categoryRequestDto) {
+        Member member = memberRepository.getMemberByUserId(username);
+        if (categoryRepository.existsCategoryByNameAndMember(categoryRequestDto.getName(),
+            member)) {
+            throw new NotFoundException(ErrorStatus.CATEGORY_ALREADY_EXIST_EXCEPTION,
+                ErrorStatus.CATEGORY_ALREADY_EXIST_EXCEPTION.getMessage());
+        }
+        int categoryCount = categoryRepository.countCategoryByMember(member);
+        if (categoryCount > 7) {
+            throw new NotFoundException(ErrorStatus.CATEGORY_LIMIT_EXCEPTION,
+                ErrorStatus.CATEGORY_LIMIT_EXCEPTION.getMessage());
+        }
+        Category category = categoryRequestDto.toEntity(member, categoryCount);
+        categoryRepository.save(category);
+        return CategoryResponseDto.of(category);
     }
-    if (categoryRepository.countCategoryByMember(member) > 7) {
-      throw new NotFoundException(ErrorStatus.CATEGORY_LIMIT_EXCEPTION,
-          ErrorStatus.CATEGORY_LIMIT_EXCEPTION.getMessage());
+    
+    public CategoryResponseDto deleteCategory(String username, Long categoryId) {
+        Category category = categoryRepository.getCategoryById(categoryId);
+        if (categoryRepository.existsCategoryByIdAndMember(categoryId,
+            memberRepository.getMemberByUserId(username))) {
+            throw new NotFoundException(ErrorStatus.CATEGORY_UNAUTHORIZED_EXCEPTION,
+                ErrorStatus.CATEGORY_UNAUTHORIZED_EXCEPTION.getMessage());
+        }
+        return CategoryResponseDto.of(category);
     }
-    Category category = categoryRequestDto.toEntity(member);
-    categoryRepository.save(category);
-    return CategoryResponseDto.of(category);
-  }
-
-  public CategoryResponseDto deleteCategory(String username, Long categoryId) {
-    Category category = categoryRepository.getCategoryById(categoryId);
-    if (categoryRepository.existsCategoryByIdAndMember(categoryId,
-        memberRepository.getMemberByUserId(username))) {
-      throw new NotFoundException(ErrorStatus.CATEGORY_UNAUTHORIZED_EXCEPTION,
-          ErrorStatus.CATEGORY_UNAUTHORIZED_EXCEPTION.getMessage());
+    
+    public CategoryResponseDto updateCategory(String username, Long categoryId,
+        CategoryRequestDto categoryRequestDto) {
+        Category category = categoryRepository.getCategoryById(categoryId);
+        if (categoryRepository.existsCategoryByIdAndMember(categoryId,
+            memberRepository.getMemberByUserId(username))) {
+            throw new NotFoundException(ErrorStatus.CATEGORY_UNAUTHORIZED_EXCEPTION,
+                ErrorStatus.CATEGORY_UNAUTHORIZED_EXCEPTION.getMessage());
+        }
+        category.update(categoryRequestDto);
+        return CategoryResponseDto.of(category);
     }
-    return CategoryResponseDto.of(category);
-  }
-
-  public CategoryResponseDto updateCategory(String username, Long categoryId,
-      CategoryRequestDto categoryRequestDto) {
-    Category category = categoryRepository.getCategoryById(categoryId);
-    if (categoryRepository.existsCategoryByIdAndMember(categoryId,
-        memberRepository.getMemberByUserId(username))) {
-      throw new NotFoundException(ErrorStatus.CATEGORY_UNAUTHORIZED_EXCEPTION,
-          ErrorStatus.CATEGORY_UNAUTHORIZED_EXCEPTION.getMessage());
+    
+    public CategoryResponseDto getCategory(String username, Long categoryId) {
+        Category category = categoryRepository.getCategoryById(categoryId);
+        if (categoryRepository.existsCategoryByIdAndMember(categoryId,
+            memberRepository.getMemberByUserId(username))) {
+            throw new NotFoundException(ErrorStatus.CATEGORY_UNAUTHORIZED_EXCEPTION,
+                ErrorStatus.CATEGORY_UNAUTHORIZED_EXCEPTION.getMessage());
+        }
+        return CategoryResponseDto.of(category);
     }
-    category.update(categoryRequestDto);
-    return CategoryResponseDto.of(category);
-  }
-
-  public CategoryResponseDto getCategory(String username, Long categoryId) {
-    Category category = categoryRepository.getCategoryById(categoryId);
-    if (categoryRepository.existsCategoryByIdAndMember(categoryId,
-        memberRepository.getMemberByUserId(username))) {
-      throw new NotFoundException(ErrorStatus.CATEGORY_UNAUTHORIZED_EXCEPTION,
-          ErrorStatus.CATEGORY_UNAUTHORIZED_EXCEPTION.getMessage());
-    }
-    return CategoryResponseDto.of(category);
-  }
 }
