@@ -68,8 +68,9 @@ public class PrayService {
     }
     
     @Transactional
-    public List<PrayListResponseDto> getPrayList(String username, String orderType) {
-        List<Pray> prays = prayRepository.findAllWithOrder(orderType, username);
+    public List<PrayListResponseDto> getPrayList(String username, String prayType) {
+        
+        List<Pray> prays = prayRepository.findAllWithOrderAndType(username, prayType);
         
         // Pray 엔티티를 categoryId를 기준으로 그룹화한 맵 생성
         Map<Long, List<Pray>> prayMap = prays.stream()
@@ -78,6 +79,7 @@ public class PrayService {
         // 그룹화된 맵을 PrayListResponseDto 변환하여 반환
         return prayMap.entrySet().stream()
             .map(entry -> new PrayListResponseDto(entry.getKey(),
+                entry.getValue().get(0).getCategory().getName(),
                 entry.getValue().stream()
                     .map(PrayResponseDto::of)
                     .collect(Collectors.toList())))
@@ -88,12 +90,12 @@ public class PrayService {
     public List<PrayListResponseDto> todayPray(Long prayId, String username) {
         Pray pray = prayRepository.getPrayByIdAndMemberId(prayId, username);
         LocalDate today = LocalDate.now();
-        if (pray.getUpdatedAt().toLocalDate().isBefore(today)) {
+        if (pray.getLastPrayedAt() == null || !pray.getLastPrayedAt().equals(today)) {
             pray.countUp();
         } else {
             throw new NotFoundException(ErrorStatus.ALREADY_PRAYED_TODAY,
                 ErrorStatus.ALREADY_PRAYED_TODAY.getMessage());
         }
-        return getPrayList(username, "date");
+        return getPrayList(username, PrayType.PERSONAL.stringValue());
     }
 }

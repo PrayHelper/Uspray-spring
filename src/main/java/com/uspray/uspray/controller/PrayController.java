@@ -47,10 +47,10 @@ public class PrayController {
     @GetMapping()
     public ApiResponseDto<List<PrayListResponseDto>> getPrayList(
         @Parameter(hidden = true) @AuthenticationPrincipal User user,
-        @Parameter(description = "정렬 기준 (date, count)", required = true, example = "date") String orderType
+        @Parameter(description = "기도제목 종류(personal, shared)", required = true, example = "personal") String prayType
     ) {
         return ApiResponseDto.success(SuccessStatus.GET_PRAY_LIST_SUCCESS,
-            prayService.getPrayList(user.getUsername(), orderType));
+            prayService.getPrayList(user.getUsername(), prayType));
     }
     
     @GetMapping("/{prayId}")

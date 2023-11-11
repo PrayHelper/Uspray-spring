@@ -4,7 +4,7 @@ import com.uspray.uspray.domain.Pray;
 import java.util.List;
 
 public interface PrayRepositoryCustom {
-
-  List<Pray> findAllWithOrder(String orderType, String username);
-
+    
+    List<Pray> findAllWithOrderAndType(String username, String prayType);
+    
 }

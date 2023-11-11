@@ -31,7 +31,7 @@ public enum SuccessStatus {
     GET_CATEGORY_SUCCESS(HttpStatus.OK, "카테고리 조회에 성공했습니다."),
     GET_HISTORY_LIST_SUCCESS(HttpStatus.OK, "히스토리 목록 조회에 성공했습니다."),
     GET_HISTORY_DETAIL_SUCCESS(HttpStatus.OK, "히스토리 상세 조회에 성공했습니다."),
-    INCREASE_PRAY_COUNT_SUCCESS(HttpStatus.OK, "기도제목 카운트 증가에 성공했습니다."),
+    INCREASE_PRAY_COUNT_SUCCESS(HttpStatus.OK, "기도 횟수 추가에 성공했습니다."),
     
     /*
      * 201 created
