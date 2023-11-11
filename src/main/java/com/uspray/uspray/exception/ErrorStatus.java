@@ -18,7 +18,7 @@ public enum ErrorStatus {
     SENDER_RECEIVER_SAME_EXCEPTION(HttpStatus.BAD_REQUEST, "자신에게는 기도제목을 공유할 수 없습니다."),
     CATEGORY_ALREADY_EXIST_EXCEPTION(HttpStatus.BAD_REQUEST, "이미 존재하는 카테고리입니다."),
     CATEGORY_LIMIT_EXCEPTION(HttpStatus.BAD_REQUEST, "카테고리는 최대 7개까지 생성 가능합니다."),
-    ALREADY_PRAYED_TODAY(HttpStatus.BAD_REQUEST, "오늘은 이미 기도하셨습니다."),
+    ALREADY_PRAYED_TODAY(HttpStatus.BAD_REQUEST, "오늘 이미 기도한 기도제목입니다."),
     
     /*
      * 401 UNAUTHORIZED
