@@ -6,6 +6,7 @@ import com.uspray.uspray.DTO.pray.PrayListResponseDto;
 import com.uspray.uspray.DTO.pray.request.PrayRequestDto;
 import com.uspray.uspray.DTO.pray.request.PrayResponseDto;
 import com.uspray.uspray.exception.SuccessStatus;
+import com.uspray.uspray.service.HistoryService;
 import com.uspray.uspray.service.PrayService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -38,6 +39,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class PrayController {
     
     private final PrayService prayService;
+    private final HistoryService historyService;
     
     @Operation(summary = "기도제목 목록 조회")
     @ApiResponse(
@@ -120,5 +122,20 @@ public class PrayController {
     ) {
         return ApiResponseDto.success(SuccessStatus.INCREASE_PRAY_COUNT_SUCCESS,
             prayService.todayPray(prayId, user.getUsername()));
+    }
+    
+    @Operation(summary = "기도 완료하기")
+    @ApiResponse(
+        responseCode = "200",
+        description = "기도 완료하기",
+        content = @Content(schema = @Schema(implementation = PrayResponseDto.class)))
+    @PutMapping("/{prayId}/complete")
+    public ApiResponseDto<List<PrayListResponseDto>> completePray(
+        @Parameter(description = "기도제목 ID", required = true) @PathVariable("prayId") Long prayId,
+        @Parameter(hidden = true) @AuthenticationPrincipal User user
+    ) {
+        historyService.createHistory(user.getUsername(), prayId);
+        return ApiResponseDto.success(SuccessStatus.GET_PRAY_LIST_SUCCESS,
+            prayService.completePray(prayId, user.getUsername()));
     }
 }

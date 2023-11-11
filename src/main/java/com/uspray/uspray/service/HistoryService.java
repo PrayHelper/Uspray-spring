@@ -90,6 +90,15 @@ public class HistoryService {
         }
     }
     
+    public void createHistory(String username, Long prayId) {
+        Pray pray = prayRepository.getPrayByIdAndMemberId(prayId, username);
+        pray.complete();
+        History history = History.builder()
+            .pray(pray)
+            .build();
+        historyRepository.save(history);
+    }
+    
     public void deleteHistory(Long historyId, String username) {
         Member member = memberRepository.getMemberByUserId(username);
         History history = historyRepository.findByIdAndMember(historyId, member);
