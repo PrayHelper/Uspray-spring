@@ -35,6 +35,9 @@ public class PrayResponseDto {
     @Schema(description = "기도제목 카테고리", example = "1")
     private Long categoryId;
     
+    @Schema(description = "기도제목 카테고리 이름", example = "카테고리 이름")
+    private String categoryName;
+    
     @Schema(description = "기도제목 마지막 기도일, example = 2021-01-01")
     private LocalDate lastPrayDate;
     
@@ -42,6 +45,7 @@ public class PrayResponseDto {
     public static PrayResponseDto of(Pray pray) {
         return new PrayResponseDto(pray.getId(), pray.getContent(), pray.getDeadline(),
             pray.getCount(), pray.getCreatedAt(), pray.getCategory().getId(),
+            pray.getCategory().getName(),
             pray.getLastPrayedAt());
     }
     
