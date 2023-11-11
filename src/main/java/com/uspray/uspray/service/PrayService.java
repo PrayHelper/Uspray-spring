@@ -98,12 +98,4 @@ public class PrayService {
         }
         return getPrayList(username, PrayType.PERSONAL.stringValue());
     }
-    
-    @Transactional
-    public List<PrayListResponseDto> completePray(Long prayId, String username) {
-        Pray pray = prayRepository.getPrayByIdAndMemberId(prayId, username);
-        prayRepository.delete(pray);
-        
-        return getPrayList(username, pray.getPrayType().stringValue());
-    }
 }

@@ -88,8 +88,4 @@ public class Pray extends AuditingTimeEntity {
         this.count++;
         this.lastPrayedAt = LocalDate.now();
     }
-    
-    public void complete() {
-        this.deadline = LocalDate.now();
-    }
 }
