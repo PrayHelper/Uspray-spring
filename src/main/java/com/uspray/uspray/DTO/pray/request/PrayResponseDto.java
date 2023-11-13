@@ -3,7 +3,6 @@ package com.uspray.uspray.DTO.pray.request;
 import com.uspray.uspray.domain.Pray;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,12 +25,6 @@ public class PrayResponseDto {
     @Schema(description = "기도제목 마감일", example = "2025-01-01")
     private LocalDate deadline;
     
-    @Schema(description = "기도 횟수", example = "10")
-    private Integer count;
-    
-    @Schema(description = "기도제목 생성일", example = "2021-01-01 00:00:00")
-    private LocalDateTime createdAt;
-    
     @Schema(description = "기도제목 카테고리", example = "1")
     private Long categoryId;
     
@@ -44,7 +37,7 @@ public class PrayResponseDto {
     
     public static PrayResponseDto of(Pray pray) {
         return new PrayResponseDto(pray.getId(), pray.getContent(), pray.getDeadline(),
-            pray.getCount(), pray.getCreatedAt(), pray.getCategory().getId(),
+            pray.getCategory().getId(),
             pray.getCategory().getName(),
             pray.getLastPrayedAt());
     }
