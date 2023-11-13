@@ -15,7 +15,6 @@ import com.uspray.uspray.infrastructure.PrayRepository;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -32,11 +31,9 @@ public class PrayService {
     @Transactional
     public PrayResponseDto createPray(PrayRequestDto prayRequestDto, String username) {
         Member member = memberRepository.getMemberByUserId(username);
-        Category category = categoryRepository.getCategoryById(prayRequestDto.getCategoryId());
-        if (!Objects.equals(category.getMember().getId(), member.getId())) {
-            throw new NotFoundException(ErrorStatus.CATEGORY_UNAUTHORIZED_EXCEPTION,
-                ErrorStatus.CATEGORY_UNAUTHORIZED_EXCEPTION.getMessage());
-        }
+        Category category = categoryRepository.getCategoryByIdAndMember(
+            prayRequestDto.getCategoryId(),
+            member);
         Pray pray = prayRequestDto.toEntity(member, category, PrayType.PERSONAL);
         prayRepository.save(pray);
         return PrayResponseDto.of(pray);
@@ -58,11 +55,9 @@ public class PrayService {
     @Transactional
     public PrayResponseDto updatePray(Long prayId, String username, PrayRequestDto prayRequestDto) {
         Pray pray = prayRepository.getPrayByIdAndMemberId(prayId, username);
-        Category category = categoryRepository.getCategoryById(prayRequestDto.getCategoryId());
-        if (!Objects.equals(category.getMember().getId(), pray.getMember().getId())) {
-            throw new NotFoundException(ErrorStatus.CATEGORY_UNAUTHORIZED_EXCEPTION,
-                ErrorStatus.CATEGORY_UNAUTHORIZED_EXCEPTION.getMessage());
-        }
+        categoryRepository.getCategoryByIdAndMember(
+            prayRequestDto.getCategoryId(),
+            pray.getMember());
         pray.update(prayRequestDto);
         return PrayResponseDto.of(pray);
     }
