@@ -36,7 +36,7 @@ public class Pray extends AuditingTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "pray_id")
     private Long id;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
     private String content;
@@ -56,7 +56,7 @@ public class Pray extends AuditingTimeEntity {
     private GroupPray groupPray;
     
     @NotNull
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
     
