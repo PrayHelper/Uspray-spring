@@ -12,10 +12,10 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class CategoryService {
-    
+
     private final MemberRepository memberRepository;
     private final CategoryRepository categoryRepository;
-    
+
     public CategoryResponseDto createCategory(String username,
         CategoryRequestDto categoryRequestDto) {
         Member member = memberRepository.getMemberByUserId(username);
@@ -25,13 +25,14 @@ public class CategoryService {
         categoryRepository.save(category);
         return CategoryResponseDto.of(category);
     }
-    
+
     public CategoryResponseDto deleteCategory(String username, Long categoryId) {
         Category category = categoryRepository.getCategoryByIdAndMember(categoryId,
             memberRepository.getMemberByUserId(username));
+        categoryRepository.delete(category);
         return CategoryResponseDto.of(category);
     }
-    
+
     public CategoryResponseDto updateCategory(String username, Long categoryId,
         CategoryRequestDto categoryRequestDto) {
         Category category = categoryRepository.getCategoryByIdAndMember(categoryId,
@@ -39,7 +40,7 @@ public class CategoryService {
         category.update(categoryRequestDto);
         return CategoryResponseDto.of(category);
     }
-    
+
     public CategoryResponseDto getCategory(String username, Long categoryId) {
         Category category = categoryRepository.getCategoryByIdAndMember(categoryId,
             memberRepository.getMemberByUserId(username));
