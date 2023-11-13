@@ -19,7 +19,7 @@ public enum ErrorStatus {
     CATEGORY_ALREADY_EXIST_EXCEPTION(HttpStatus.BAD_REQUEST, "이미 존재하는 카테고리입니다."),
     CATEGORY_LIMIT_EXCEPTION(HttpStatus.BAD_REQUEST, "카테고리는 최대 7개까지 생성 가능합니다."),
     ALREADY_PRAYED_TODAY(HttpStatus.BAD_REQUEST, "오늘 이미 기도한 기도제목입니다."),
-    
+    CATEGORY_DUPLICATE_EXCEPTION(HttpStatus.BAD_REQUEST, "이미 존재하는 카테고리입니다."),
     /*
      * 401 UNAUTHORIZED
      */
@@ -38,7 +38,8 @@ public enum ErrorStatus {
     PRAY_NOT_FOUND_EXCEPTION(HttpStatus.NOT_FOUND, "해당 기도제목을 찾을 수 없습니다."),
     PRAY_ALREADY_DELETED_EXCEPTION(HttpStatus.NOT_FOUND, "원본 기도제목이 삭제되었습니다."),
     NOT_FOUND_SHARED_PRAY_EXCEPTION(HttpStatus.NOT_FOUND, "해당 공유기도제목을 찾을 수 없습니다."),
-    HISTORY_NOT_FOUND_EXCEPTION(HttpStatus.NOT_FOUND, "해당 히스토리를 찾을 수 없습니다.");
+    HISTORY_NOT_FOUND_EXCEPTION(HttpStatus.NOT_FOUND, "해당 히스토리를 찾을 수 없습니다."),
+    CATEGORY_NOT_FOUND_EXCEPTION(HttpStatus.NOT_FOUND, "해당 카테고리를 찾을 수 없습니다.");
     
     private final HttpStatus httpStatus;
     private final String message;
