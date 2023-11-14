@@ -12,18 +12,20 @@ import org.springframework.stereotype.Repository;
 @Repository
 @RequiredArgsConstructor
 public class PrayRepositoryImpl implements PrayRepositoryCustom {
-
-  private final JPAQueryFactory queryFactory;
-
-  @Override
-  public List<Pray> findAllWithOrder(String orderType, String username) {
-    return queryFactory
-        .select(pray)
-        .from(pray)
-        .join(pray.category, category)
-        .where(category.member.userId.eq(username))
-        .orderBy(orderType.equals("date") ? pray.createdAt.desc() : pray.count.asc())
-        .fetch();
-  }
+    
+    private final JPAQueryFactory queryFactory;
+    
+    @Override
+    public List<Pray> findAllWithOrderAndType(String username, String prayType) {
+        return queryFactory
+            .select(pray)
+            .from(pray)
+            .join(pray.category, category)
+            .where(category.member.userId.eq(username))
+            .where(pray.prayType.stringValue().likeIgnoreCase(prayType))
+            .orderBy(pray.createdAt.asc())
+            .orderBy(pray.category.order.asc())
+            .fetch();
+    }
 }
 

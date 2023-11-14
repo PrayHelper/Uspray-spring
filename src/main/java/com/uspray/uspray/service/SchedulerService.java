@@ -16,14 +16,15 @@ public class SchedulerService {
     private final MemberQueryRepository memberQueryRepository;
     private final FCMNotificationService fcmNotificationService;
     private final ShareService shareService;
-    private final HistoryService historyService;
+    private final PrayFacadeService prayFacadeService;
 
     @Scheduled(cron = "0 0 8 * * *")
     public void pushPrayNotification() throws IOException {
         List<String> deviceTokens = memberQueryRepository.getDeviceTokensByFirstNotiAgree(
             true);
         for (String device : deviceTokens) {
-            fcmNotificationService.sendMessageTo(device, NotificationType.PRAY_TIME.getTitle(), NotificationType.PRAY_TIME.getBody());
+            fcmNotificationService.sendMessageTo(device, NotificationType.PRAY_TIME.getTitle(),
+                NotificationType.PRAY_TIME.getBody());
         }
     }
 
@@ -35,6 +36,6 @@ public class SchedulerService {
 
     @Scheduled(cron = "0 0 0 * * ?")
     public void convertPrayToHistory() {
-        historyService.convertPrayToHistory();
+        prayFacadeService.convertPrayToHistory();
     }
 }
