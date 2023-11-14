@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/grouppray")
-@Tag(name = "GroupPray", description = "모임 기도제목 API")
+@Tag(name = "Group pray", description = "모임 기도제목 API")
 @RequiredArgsConstructor
 @SecurityRequirement(name = "JWT Auth")
 public class GroupPrayController {
