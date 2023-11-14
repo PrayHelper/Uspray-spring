@@ -6,7 +6,7 @@ import com.uspray.uspray.DTO.pray.PrayListResponseDto;
 import com.uspray.uspray.DTO.pray.request.PrayRequestDto;
 import com.uspray.uspray.DTO.pray.request.PrayResponseDto;
 import com.uspray.uspray.exception.SuccessStatus;
-import com.uspray.uspray.service.HistoryService;
+import com.uspray.uspray.service.PrayFacadeService;
 import com.uspray.uspray.service.PrayService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -37,10 +37,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @SecurityRequirement(name = "JWT Auth")
 public class PrayController {
-    
+
     private final PrayService prayService;
-    private final HistoryService historyService;
-    
+    private final PrayFacadeService prayFacadeService;
+
     @Operation(summary = "기도제목 목록 조회")
     @ApiResponse(
         responseCode = "200",
@@ -54,7 +54,7 @@ public class PrayController {
         return ApiResponseDto.success(SuccessStatus.GET_PRAY_LIST_SUCCESS,
             prayService.getPrayList(user.getUsername(), prayType));
     }
-    
+
     @GetMapping("/{prayId}")
     @ApiResponse(
         responseCode = "200",
@@ -68,7 +68,7 @@ public class PrayController {
         return ApiResponseDto.success(SuccessStatus.GET_PRAY_SUCCESS,
             prayService.getPrayDetail(prayId, user.getUsername()));
     }
-    
+
     @PostMapping()
     @ApiResponse(
         responseCode = "201",
@@ -81,9 +81,9 @@ public class PrayController {
         @Parameter(hidden = true) @AuthenticationPrincipal User user
     ) {
         return ApiResponseDto.success(SuccessStatus.CREATE_PRAY_SUCCESS,
-            prayService.createPray(prayRequestDto, user.getUsername()));
+            prayFacadeService.createPray(prayRequestDto, user.getUsername()));
     }
-    
+
     @DeleteMapping("/{prayId}")
     @ApiResponse(responseCode = "204", description = "기도제목 삭제")
     @Operation(summary = "기도제목 삭제")
@@ -94,7 +94,7 @@ public class PrayController {
         return ApiResponseDto.success(SuccessStatus.DELETE_PRAY_SUCCESS,
             prayService.deletePray(prayId, user.getUsername()));
     }
-    
+
     @PutMapping("/{prayId}")
     @ApiResponse(
         responseCode = "200",
@@ -107,9 +107,9 @@ public class PrayController {
         @Parameter(hidden = true) @AuthenticationPrincipal User user
     ) {
         return ApiResponseDto.success(SuccessStatus.UPDATE_PRAY_SUCCESS,
-            prayService.updatePray(prayId, user.getUsername(), prayRequestDto));
+            prayFacadeService.updatePray(prayId, user.getUsername(), prayRequestDto));
     }
-    
+
     @Operation(summary = "오늘 기도하기")
     @ApiResponse(
         responseCode = "200",
@@ -123,7 +123,7 @@ public class PrayController {
         return ApiResponseDto.success(SuccessStatus.INCREASE_PRAY_COUNT_SUCCESS,
             prayService.todayPray(prayId, user.getUsername()));
     }
-    
+
     @Operation(summary = "기도 완료하기")
     @ApiResponse(
         responseCode = "200",
@@ -134,7 +134,7 @@ public class PrayController {
         @Parameter(description = "기도제목 ID", required = true) @PathVariable("prayId") Long prayId,
         @Parameter(hidden = true) @AuthenticationPrincipal User user
     ) {
-        historyService.createHistory(user.getUsername(), prayId);
+        prayFacadeService.createHistory(user.getUsername(), prayId);
         return ApiResponseDto.success(SuccessStatus.GET_PRAY_LIST_SUCCESS,
             prayService.completePray(prayId, user.getUsername()));
     }

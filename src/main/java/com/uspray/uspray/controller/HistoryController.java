@@ -6,7 +6,7 @@ import com.uspray.uspray.DTO.history.response.HistoryListResponseDto;
 import com.uspray.uspray.DTO.pray.request.PrayRequestDto;
 import com.uspray.uspray.exception.SuccessStatus;
 import com.uspray.uspray.service.HistoryService;
-import com.uspray.uspray.service.PrayService;
+import com.uspray.uspray.service.PrayFacadeService;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -30,10 +30,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @SecurityRequirement(name = "JWT Auth")
 public class HistoryController {
-    
+
     private final HistoryService historyService;
-    private final PrayService prayService;
-    
+    private final PrayFacadeService prayFacadeService;
+
     @GetMapping
     public ApiResponseDto<HistoryListResponseDto> getHistoryList(
         @Parameter(hidden = true) @AuthenticationPrincipal User user,
@@ -43,7 +43,7 @@ public class HistoryController {
         return ApiResponseDto.success(SuccessStatus.GET_HISTORY_LIST_SUCCESS,
             historyService.getHistoryList(user.getUsername(), type, page, size));
     }
-    
+
     // 이름, 내용, 카테고리에 해당되는 키워드 전부를 찾아서 검색
     // 내가 쓴 기도제목, 공유받은 기도제목 체크박스 (최소 한 개 이상 선택)
     // 날짜까지 (옵션)
@@ -61,7 +61,7 @@ public class HistoryController {
             historyService.searchHistoryList(user.getUsername(), keyword, isPersonal, isShared,
                 startDate, endDate, page, size));
     }
-    
+
     @GetMapping("/detail/{historyId}")
     public ApiResponseDto<HistoryDetailResponseDto> getHistoryDetail(
         @Parameter(hidden = true) @AuthenticationPrincipal User user,
@@ -69,13 +69,13 @@ public class HistoryController {
         return ApiResponseDto.success(SuccessStatus.GET_HISTORY_DETAIL_SUCCESS,
             historyService.getHistoryDetail(user.getUsername(), historyId));
     }
-    
+
     @PostMapping("/pray/{historyId}")
     public ApiResponseDto<HistoryListResponseDto> createPray(
         @Parameter(hidden = true) @AuthenticationPrincipal User user,
         @PathVariable Long historyId,
         @RequestBody @Valid PrayRequestDto prayRequestDto) {
-        prayService.createPray(prayRequestDto, user.getUsername());
+        prayFacadeService.createPray(prayRequestDto, user.getUsername());
         historyService.deleteHistory(historyId, user.getUsername());
         return ApiResponseDto.success(SuccessStatus.CREATE_PRAY_SUCCESS,
             historyService.getHistoryList(user.getUsername(), "PERSONAL", 0, 10));
