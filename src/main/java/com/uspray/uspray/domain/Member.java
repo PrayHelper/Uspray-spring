@@ -26,56 +26,53 @@ import org.hibernate.annotations.Where;
 @Where(clause = "deleted=false")
 public class Member extends AuditingTimeEntity {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "member_id")
-  private Long id;
+    private final Boolean deleted = false;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "member_id")
+    private Long id;
+    private String userId;
+    private String password;
+    private String name;
+    private String phone;
+    private String birth;
+    private String gender;
+    private String firebaseToken;
+    private Boolean firstNotiAgree = true;
+    private Boolean secondNotiAgree = true;
+    private Boolean thirdNotiAgree = true;
+    private String socialId;
+    @Enumerated(EnumType.STRING)
+    private Authority authority;
 
-  private String userId;
-  private String password;
-
-  private String name;
-  private String phone;
-  private String birth;
-  private String gender;
-  private String firebaseToken;
-
-  private Boolean firstNotiAgree = true;
-  private Boolean secondNotiAgree= true;
-  private Boolean thirdNotiAgree = true;
-  
-  private final Boolean deleted = false;
-
-  @Enumerated(EnumType.STRING)
-  private Authority authority;
-
-  @OneToMany(mappedBy = "author")
-  private List<GroupPray> groupPrayList;
+    @OneToMany(mappedBy = "author")
+    private List<GroupPray> groupPrayList;
 
 
-  public void changeFirebaseToken(String firebaseToken) {
-      this.firebaseToken = firebaseToken;
-  }
-  
-  public void changePhone(String phone) {
-    this.phone = phone;
-  }
+    @Builder
+    public Member(String userId, String password, String name, String phone, String birth,
+        String gender, Authority authority, String socialId) {
+        this.userId = userId;
+        this.password = password;
+        this.name = name;
+        this.phone = phone;
+        this.birth = birth;
+        this.gender = gender;
+        this.socialId = socialId;
+        this.authority = authority;
+    }
 
-  public void changePw(String pw) {
-    this.password = pw;
-  }
+    public void changeFirebaseToken(String firebaseToken) {
+        this.firebaseToken = firebaseToken;
+    }
 
-  @Builder
-  public Member(String userId, String password, String name, String phone, String birth,
-      String gender, Authority authority) {
-    this.userId = userId;
-    this.password = password;
-    this.name = name;
-    this.phone = phone;
-    this.birth = birth;
-    this.gender = gender;
-    this.authority = authority;
-  }
+    public void changePhone(String phone) {
+        this.phone = phone;
+    }
+
+    public void changePw(String pw) {
+        this.password = pw;
+    }
 
     public void changeNotificationSetting(NotificationAgreeDto notificationAgreeDto) {
         switch (notificationAgreeDto.getNotificationType()) {
