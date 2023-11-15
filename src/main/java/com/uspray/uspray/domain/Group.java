@@ -24,6 +24,8 @@ public class Group extends AuditingTimeEntity {
 
     private String name;
 
+    private String description;
+
     @OneToOne
     @JoinColumn(name = "leader_id", referencedColumnName = "member_id")
     private Member leader;

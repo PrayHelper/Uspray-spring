@@ -12,8 +12,12 @@ import lombok.NoArgsConstructor;
 @Schema(description = "모임 응답 DTO")
 public class GroupResponseDto {
 
-    private Group group;
+    private Long id;
 
-    private Boolean isLeader;
+    private String name;
+
+    private String description;
+
+    private Integer memberCount;
 
 }
