@@ -8,6 +8,7 @@ import java.util.Set;
 import javax.persistence.*;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -35,5 +36,25 @@ public class Group extends AuditingTimeEntity {
 
     @OneToMany(mappedBy = "group", orphanRemoval = true)
     private List<GroupPray> groupPrayList;
+
+    @Builder
+    public Group(String name, String description, Member leader) {
+        this.name = name;
+        this.description = description;
+        this.members.add(leader);
+        this.leader = leader;
+    }
+
+    private void changeName(String name) {
+        this.name = name;
+    }
+
+    private void changeDescription(String description) {
+        this.description = description;
+    }
+
+    private void changeLeader(Member leader) {
+        this.leader = leader;
+    }
 
 }

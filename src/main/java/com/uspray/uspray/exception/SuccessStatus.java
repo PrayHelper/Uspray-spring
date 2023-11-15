@@ -34,6 +34,7 @@ public enum SuccessStatus {
     INCREASE_PRAY_COUNT_SUCCESS(HttpStatus.OK, "기도 횟수 추가에 성공했습니다."),
     COMPLETE_PRAY_SUCCESS(HttpStatus.OK, "기도제목 완료에 성공했습니다."),
     GET_GROUP_LIST_SUCCESS(HttpStatus.OK, "모임 목록 조회에 성공했습니다."),
+
     /*
      * 201 created
      */
@@ -43,6 +44,7 @@ public enum SuccessStatus {
     CREATE_CATEGORY_SUCCESS(HttpStatus.CREATED, "카테고리 생성에 성공했습니다."),
     SHARE_PRAY_SUCCESS(HttpStatus.CREATED, "기도제목 공유에 성공했습니다."),
     SHARE_PRAY_AGREE_SUCCESS(HttpStatus.CREATED, "기도제목 공유 수락에 성공했습니다."),
+    CREATE_GROUP_SUCCESS(HttpStatus.CREATED, "모임 생성에 성공했습니다."),
     
     /*
      * 204 deleted
