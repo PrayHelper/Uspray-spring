@@ -25,7 +25,11 @@ public class GroupRepositoryImpl implements GroupRepositoryCustom {
         QMember memberEntity = QMember.member;
 
         return queryFactory
-                .select(Projections.constructor(GroupResponseDto.class, group, group.leader.eq(member)))
+                .select(Projections.constructor(GroupResponseDto.class,
+                        group.id,
+                        group.name,
+                        group.description,
+                        group.members.size()))
                 .from(group)
                 .leftJoin(group.members, memberEntity)
                 .where(group.members.contains(member))
