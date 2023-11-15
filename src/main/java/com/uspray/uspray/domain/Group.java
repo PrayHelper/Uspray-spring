@@ -45,15 +45,15 @@ public class Group extends AuditingTimeEntity {
         this.leader = leader;
     }
 
-    private void changeName(String name) {
+    public void changeName(String name) {
         this.name = name;
     }
 
-    private void changeDescription(String description) {
+    public void changeDescription(String description) {
         this.description = description;
     }
 
-    private void changeLeader(Member leader) {
+    public void changeLeader(Member leader) {
         this.leader = leader;
     }
 

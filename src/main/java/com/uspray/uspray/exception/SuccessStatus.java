@@ -36,6 +36,7 @@ public enum SuccessStatus {
     GET_GROUP_LIST_SUCCESS(HttpStatus.OK, "모임 목록 조회에 성공했습니다."),
     GET_CATEGORY_LIST_SUCCESS(HttpStatus.OK, "카테고리 목록 조회에 성공했습니다."),
 
+
     /*
      * 201 created
      */
