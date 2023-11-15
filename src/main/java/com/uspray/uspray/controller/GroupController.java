@@ -1,8 +1,9 @@
 package com.uspray.uspray.controller;
 
 import com.uspray.uspray.DTO.ApiResponseDto;
+import com.uspray.uspray.DTO.group.request.GroupKickRequestDto;
+import com.uspray.uspray.DTO.group.request.GroupLeaderRequestDto;
 import com.uspray.uspray.DTO.group.request.GroupRequestDto;
-import com.uspray.uspray.DTO.group.response.GroupDetailResponseDto;
 import com.uspray.uspray.DTO.group.response.GroupListResponseDto;
 import com.uspray.uspray.exception.SuccessStatus;
 import com.uspray.uspray.service.GroupService;
@@ -39,5 +40,44 @@ public class GroupController {
         groupService.createGroup(user.getUsername(), groupRequestDto);
         return ApiResponseDto.success(SuccessStatus.CREATE_GROUP_SUCCESS,
                 SuccessStatus.CREATE_GROUP_SUCCESS.getMessage());
+    }
+
+    @PutMapping("/{groupId}/change-name")
+    public ApiResponseDto<?> changeGroupName(
+            @Parameter(hidden = true) @AuthenticationPrincipal User user,
+            @PathVariable Long groupId,
+            @Valid @RequestBody GroupRequestDto groupRequestDto) {
+        groupService.changeGroupName(user.getUsername(), groupId, groupRequestDto);
+        return ApiResponseDto.success(SuccessStatus.CHANGE_GROUP_NAME_SUCCESS,
+                SuccessStatus.CHANGE_GROUP_NAME_SUCCESS.getMessage());
+    }
+
+    @PutMapping("/{groupId}/change-leader")
+    public ApiResponseDto<?> changeGroupLeader(
+        @Parameter(hidden = true) @AuthenticationPrincipal User user,
+        @PathVariable Long groupId,
+        @Valid @RequestBody GroupLeaderRequestDto groupLeaderRequestDto) {
+        groupService.changeGroupLeader(user.getUsername(), groupId, groupLeaderRequestDto);
+        return ApiResponseDto.success(SuccessStatus.CHANGE_GROUP_LEADER_SUCCESS,
+                SuccessStatus.CHANGE_GROUP_LEADER_SUCCESS.getMessage());
+    }
+
+    @DeleteMapping("/{groupId}/kick")
+    public ApiResponseDto<?> kickGroupMember(
+            @Parameter(hidden = true) @AuthenticationPrincipal User user,
+            @PathVariable Long groupId,
+            @Valid @RequestBody GroupKickRequestDto groupKickRequestDto) {
+        groupService.kickGroupMember(user.getUsername(), groupId, groupKickRequestDto);
+        return ApiResponseDto.success(SuccessStatus.KICK_GROUP_MEMBER_SUCCESS,
+                SuccessStatus.KICK_GROUP_MEMBER_SUCCESS.getMessage());
+    }
+
+    @DeleteMapping("/{groupId}")
+    public ApiResponseDto<?> deleteGroup(
+            @Parameter(hidden = true) @AuthenticationPrincipal User user,
+            @PathVariable Long groupId) {
+        groupService.deleteGroup(user.getUsername(), groupId);
+        return ApiResponseDto.success(SuccessStatus.DELETE_GROUP_SUCCESS,
+                SuccessStatus.DELETE_GROUP_SUCCESS.getMessage());
     }
 }

@@ -67,6 +67,10 @@ public class Member extends AuditingTimeEntity {
         this.password = pw;
     }
 
+    public void leaveGroup(Group group) {
+        this.groups.remove(group);
+    }
+
     @Builder
     public Member(String userId, String password, String name, String phone, String birth,
                   String gender, Authority authority) {
