@@ -32,6 +32,7 @@ public class GroupPrayService {
             .content(groupPrayRequestDto.getContent())
             .build();
         groupPrayRepository.save(groupPray);
+        group.changeUpdatedAt();
     }
 
     @Transactional

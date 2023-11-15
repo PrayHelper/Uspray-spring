@@ -25,8 +25,6 @@ public class Group extends AuditingTimeEntity {
 
     private String name;
 
-    private String description;
-
     @OneToOne
     @JoinColumn(name = "leader_id", referencedColumnName = "member_id")
     private Member leader;
@@ -38,19 +36,14 @@ public class Group extends AuditingTimeEntity {
     private List<GroupPray> groupPrayList;
 
     @Builder
-    public Group(String name, String description, Member leader) {
+    public Group(String name, Member leader) {
         this.name = name;
-        this.description = description;
         this.members.add(leader);
         this.leader = leader;
     }
 
     public void changeName(String name) {
         this.name = name;
-    }
-
-    public void changeDescription(String description) {
-        this.description = description;
     }
 
     public void changeLeader(Member leader) {
