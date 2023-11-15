@@ -3,7 +3,7 @@ package com.uspray.uspray.infrastructure.querydsl.history;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.uspray.uspray.domain.History;
 import com.uspray.uspray.domain.QHistory;
-import com.uspray.uspray.infrastructure.HistoryRepositoryCustom;
+
 import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package com.uspray.uspray.infrastructure;
+package com.uspray.uspray.infrastructure.querydsl.history;
 
 import com.uspray.uspray.domain.History;
 import java.time.LocalDate;
