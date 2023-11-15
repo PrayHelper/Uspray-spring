@@ -14,6 +14,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/group")
 @Tag(name = "Group", description = "모임 API")
@@ -33,7 +35,7 @@ public class GroupController {
     @PostMapping
     public ApiResponseDto<?> createGroup(
             @Parameter(hidden = true) @AuthenticationPrincipal User user,
-            @RequestBody GroupRequestDto groupRequestDto) {
+            @Valid @RequestBody GroupRequestDto groupRequestDto) {
         groupService.createGroup(user.getUsername(), groupRequestDto);
         return ApiResponseDto.success(SuccessStatus.CREATE_GROUP_SUCCESS,
                 SuccessStatus.CREATE_GROUP_SUCCESS.getMessage());
