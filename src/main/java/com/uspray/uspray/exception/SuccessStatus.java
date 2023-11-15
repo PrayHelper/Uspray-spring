@@ -34,6 +34,7 @@ public enum SuccessStatus {
     INCREASE_PRAY_COUNT_SUCCESS(HttpStatus.OK, "기도 횟수 추가에 성공했습니다."),
     COMPLETE_PRAY_SUCCESS(HttpStatus.OK, "기도제목 완료에 성공했습니다."),
     GET_GROUP_LIST_SUCCESS(HttpStatus.OK, "모임 목록 조회에 성공했습니다."),
+    GET_GROUP_DETAIL_SUCCESS(HttpStatus.OK, "모임 상세 조회에 성공했습니다."),
 
     /*
      * 201 created
