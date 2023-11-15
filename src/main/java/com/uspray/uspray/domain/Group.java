@@ -1,14 +1,12 @@
 package com.uspray.uspray.domain;
 
 import com.uspray.uspray.common.domain.AuditingTimeEntity;
+
+import java.util.HashSet;
 import java.util.List;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import java.util.Set;
+import javax.persistence.*;
+
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,6 +21,15 @@ public class Group extends AuditingTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "group_id")
     private Long id;
+
+    private String name;
+
+    @OneToOne
+    @JoinColumn(name = "leader_id", referencedColumnName = "member_id")
+    private Member leader;
+
+    @ManyToMany(mappedBy = "groups")
+    private Set<Member> members = new HashSet<>();
 
     @OneToMany(mappedBy = "group", orphanRemoval = true)
     private List<GroupPray> groupPrayList;

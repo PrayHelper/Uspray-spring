@@ -3,15 +3,12 @@ package com.uspray.uspray.domain;
 import com.uspray.uspray.DTO.notification.NotificationAgreeDto;
 import com.uspray.uspray.Enums.Authority;
 import com.uspray.uspray.common.domain.AuditingTimeEntity;
+
+import java.util.HashSet;
 import java.util.List;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import java.util.Set;
+import javax.persistence.*;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -49,9 +46,14 @@ public class Member extends AuditingTimeEntity {
   @Enumerated(EnumType.STRING)
   private Authority authority;
 
+  @ManyToMany
+  @JoinTable(name = "member_group",
+      joinColumns = @JoinColumn(name = "member_id"),
+      inverseJoinColumns = @JoinColumn(name = "group_id"))
+  private Set<Group> groups = new HashSet<>();
+
   @OneToMany(mappedBy = "author")
   private List<GroupPray> groupPrayList;
-
 
   public void changeFirebaseToken(String firebaseToken) {
       this.firebaseToken = firebaseToken;
