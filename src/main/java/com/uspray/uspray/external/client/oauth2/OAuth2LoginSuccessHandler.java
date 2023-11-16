@@ -27,14 +27,6 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
     private final RedisTemplate redisTemplate;
     private final ObjectMapper mapper = new ObjectMapper();
 
-    /**
-     * 현재 로직
-     * 1. 로그인 성공 but 처음 온 회원
-     * 2. access token주고 회원 가입 페이지로 리다이렉트
-     * 3. post를 보내면 token의 이메일로 Member 찾기
-     * 4. Request Dto의 값들로 Member 값 변경 (더티체킹으로 트랜잭션이 끝날 때 자동으로 업뎃 쿼리 나감)
-     * 5. 소셜 로그인 회원가입 끝~~
-     */
     @Override
     @Transactional
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,

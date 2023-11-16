@@ -9,7 +9,6 @@ import com.uspray.uspray.DTO.auth.request.MemberLoginRequestDto;
 import com.uspray.uspray.DTO.auth.request.MemberRequestDto;
 import com.uspray.uspray.DTO.auth.response.MemberResponseDto;
 import com.uspray.uspray.exception.SuccessStatus;
-import com.uspray.uspray.jwt.TokenProvider;
 import com.uspray.uspray.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -36,8 +35,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @Tag(name = "회원 관리", description = "Auth 관련 API")
 public class AuthController {
-
-  private final TokenProvider tokenProvider;
   private final AuthService authService;
 
   @PostMapping("/signup")
