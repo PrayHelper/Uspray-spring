@@ -71,4 +71,13 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         return memberRepository.save(member);
     }
 
+    private String generateRandomId() {
+        while (true) {
+            String randomId = RandomStringUtils.random(15, true, true);
+            if (!memberRepository.existsByUserId(randomId)) {
+                return randomId;
+            }
+        }
+    }
+
 }
