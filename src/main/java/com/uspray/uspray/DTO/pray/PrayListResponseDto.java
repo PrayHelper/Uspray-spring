@@ -13,8 +13,11 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 public class PrayListResponseDto {
-
-  @Schema(description = "카테고리 ID", example = "1")
-  private Long categoryId;
-  private List<PrayResponseDto> prays;
+    
+    @Schema(description = "카테고리 ID", example = "1")
+    private Long categoryId;
+    @Schema(description = "카테고리 이름", example = "카테고리 이름")
+    private String categoryName;
+    private List<PrayResponseDto> prays;
+    
 }

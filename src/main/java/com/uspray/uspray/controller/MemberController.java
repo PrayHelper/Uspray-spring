@@ -1,7 +1,7 @@
 package com.uspray.uspray.controller;
 
-import com.uspray.uspray.DTO.notification.NotificationAgreeDto;
 import com.uspray.uspray.DTO.ApiResponseDto;
+import com.uspray.uspray.DTO.notification.NotificationAgreeDto;
 import com.uspray.uspray.exception.SuccessStatus;
 import com.uspray.uspray.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/member")
 @SecurityRequirement(name = "JWT Auth")
-@Tag(name = "Member API", description = "유저 관련 api")
+@Tag(name = "Member", description = "유저 관련 api")
 public class MemberController {
 
     private final MemberService memberService;
