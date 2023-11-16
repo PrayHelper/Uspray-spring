@@ -4,7 +4,10 @@ import com.uspray.uspray.domain.Member;
 import com.uspray.uspray.infrastructure.MemberRepository;
 import java.util.Collections;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
@@ -53,10 +56,16 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
     private Member getMember(OAuthAttributes attributes) {
         Member findMember = memberRepository.findBySocialId(
             attributes.getOAuth2UserInfo().getId()).orElse(null);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication != null) { //소셜 로그인 연동
+            return saveMember(attributes, authentication.getName());
+        }
 
         if (findMember == null) {
             return saveMember(attributes);
         }
+
         return findMember;
     }
 
@@ -64,10 +73,18 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
      * 이미 존재하는 회원이라면 이름과 프로필이미지를 업데이트해줍니다.
      * 처음 가입하는 회원이라면 Member 테이블을 생성합니다. (소셜 회원가입)
      **/
+    private Member saveMember(OAuthAttributes attributes, String userId) {
+        //기존 유저와 아이디가 같으면 같은 유저임
+        // update는 기존 유저의 소셜 ID 컬럼에 값을 추가하는 것 정도만 있으면 될듯
+        Member member = memberRepository.getMemberByUserId(userId);
+        member.changeSocialId(attributes.getOAuth2UserInfo().getId());
+        return memberRepository.save(member);
+    }
+
     private Member saveMember(OAuthAttributes attributes) {
         //기존 유저와 아이디가 같으면 같은 유저임
         // update는 기존 유저의 소셜 ID 컬럼에 값을 추가하는 것 정도만 있으면 될듯
-        Member member = attributes.toEntity(attributes.getOAuth2UserInfo());
+        Member member = attributes.toEntity(attributes.getOAuth2UserInfo(), generateRandomId());
         return memberRepository.save(member);
     }
 
