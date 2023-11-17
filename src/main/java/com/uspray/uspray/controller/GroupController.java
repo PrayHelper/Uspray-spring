@@ -1,8 +1,7 @@
 package com.uspray.uspray.controller;
 
 import com.uspray.uspray.DTO.ApiResponseDto;
-import com.uspray.uspray.DTO.group.request.GroupKickRequestDto;
-import com.uspray.uspray.DTO.group.request.GroupLeaderRequestDto;
+import com.uspray.uspray.DTO.group.request.GroupMemberRequestDto;
 import com.uspray.uspray.DTO.group.request.GroupRequestDto;
 import com.uspray.uspray.DTO.group.response.GroupListResponseDto;
 import com.uspray.uspray.exception.SuccessStatus;
@@ -11,6 +10,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
@@ -56,7 +56,7 @@ public class GroupController {
     public ApiResponseDto<?> changeGroupLeader(
         @Parameter(hidden = true) @AuthenticationPrincipal User user,
         @PathVariable Long groupId,
-        @Valid @RequestBody GroupLeaderRequestDto groupLeaderRequestDto) {
+        @Valid @RequestBody GroupMemberRequestDto groupLeaderRequestDto) {
         groupService.changeGroupLeader(user.getUsername(), groupId, groupLeaderRequestDto);
         return ApiResponseDto.success(SuccessStatus.CHANGE_GROUP_LEADER_SUCCESS,
             SuccessStatus.CHANGE_GROUP_LEADER_SUCCESS.getMessage());
@@ -66,10 +66,29 @@ public class GroupController {
     public ApiResponseDto<?> kickGroupMember(
         @Parameter(hidden = true) @AuthenticationPrincipal User user,
         @PathVariable Long groupId,
-        @Valid @RequestBody GroupKickRequestDto groupKickRequestDto) {
-        groupService.kickGroupMember(user.getUsername(), groupId, groupKickRequestDto);
+        @Valid @RequestBody GroupMemberRequestDto groupMemberRequestDto) {
+        groupService.kickGroupMember(user.getUsername(), groupId, groupMemberRequestDto);
         return ApiResponseDto.success(SuccessStatus.KICK_GROUP_MEMBER_SUCCESS,
             SuccessStatus.KICK_GROUP_MEMBER_SUCCESS.getMessage());
+    }
+
+    @PostMapping("/{groupId}/member")
+    public ApiResponseDto<?> addGroupMember(
+        @Parameter(hidden = true) @AuthenticationPrincipal User user,
+        @PathVariable Long groupId,
+        @Valid @RequestBody GroupMemberRequestDto groupMemberRequestDto) {
+        groupService.addGroupMember(user.getUsername(), groupId, groupMemberRequestDto);
+        return ApiResponseDto.success(SuccessStatus.ADD_GROUP_MEMBER_SUCCESS,
+            SuccessStatus.ADD_GROUP_MEMBER_SUCCESS.getMessage());
+    }
+
+    @DeleteMapping("/{groupId}/leave")
+    public ApiResponseDto<?> leaveGroup(
+        @Parameter(hidden = true) @AuthenticationPrincipal User user,
+        @PathVariable Long groupId) {
+        groupService.leaveGroup(user.getUsername(), groupId);
+        return ApiResponseDto.success(SuccessStatus.LEAVE_GROUP_SUCCESS,
+            SuccessStatus.LEAVE_GROUP_SUCCESS.getMessage());
     }
 
     @DeleteMapping("/{groupId}")

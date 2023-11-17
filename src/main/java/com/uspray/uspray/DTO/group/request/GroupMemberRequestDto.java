@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class GroupKickRequestDto {
+public class GroupMemberRequestDto {
 
     @NotNull
     private String username;

@@ -21,6 +21,8 @@ public enum ErrorStatus {
     ALREADY_PRAYED_TODAY(HttpStatus.BAD_REQUEST, "오늘 이미 기도한 기도제목입니다."),
     CATEGORY_DUPLICATE_EXCEPTION(HttpStatus.BAD_REQUEST, "이미 존재하는 카테고리입니다."),
     ALREADY_EXIST_GROUP_NAME_EXCEPTION(HttpStatus.BAD_REQUEST, "이미 존재하는 모임 이름입니다."),
+    ALREADY_EXIST_GROUP_MEMBER_EXCEPTION(HttpStatus.BAD_REQUEST, "이미 존재하는 모임 회원입니다."),
+    LEADER_CANNOT_LEAVE_GROUP_EXCEPTION(HttpStatus.BAD_REQUEST, "모임장은 모임을 떠날 수 없습니다."),
 
     /*
      * 401 UNAUTHORIZED

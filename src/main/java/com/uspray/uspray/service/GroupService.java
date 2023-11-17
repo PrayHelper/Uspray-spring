@@ -1,7 +1,6 @@
 package com.uspray.uspray.service;
 
-import com.uspray.uspray.DTO.group.request.GroupKickRequestDto;
-import com.uspray.uspray.DTO.group.request.GroupLeaderRequestDto;
+import com.uspray.uspray.DTO.group.request.GroupMemberRequestDto;
 import com.uspray.uspray.DTO.group.request.GroupRequestDto;
 import com.uspray.uspray.DTO.group.response.GroupListResponseDto;
 import com.uspray.uspray.DTO.group.response.GroupResponseDto;
@@ -61,7 +60,7 @@ public class GroupService {
     }
 
     @Transactional
-    public void changeGroupLeader(String username, Long groupId, GroupLeaderRequestDto groupLeaderRequestDto) {
+    public void changeGroupLeader(String username, Long groupId, GroupMemberRequestDto groupLeaderRequestDto) {
         Member member = memberRepository.getMemberByUserId(username);
         Group group = groupRepository.getGroupById(groupId);
 
@@ -75,7 +74,7 @@ public class GroupService {
     }
 
     @Transactional
-    public void kickGroupMember(String username, Long groupId, GroupKickRequestDto groupKickRequestDto) {
+    public void kickGroupMember(String username, Long groupId, GroupMemberRequestDto groupKickRequestDto) {
         Member leader = memberRepository.getMemberByUserId(username);
         Group group = groupRepository.getGroupById(groupId);
         Member kickedMember = memberRepository.getMemberByUserId(groupKickRequestDto.getUsername());
@@ -86,8 +85,38 @@ public class GroupService {
         if (!group.getMembers().contains(kickedMember)) {
             throw new NotFoundException(ErrorStatus.GROUP_MEMBER_NOT_FOUND_EXCEPTION, ErrorStatus.GROUP_MEMBER_NOT_FOUND_EXCEPTION.getMessage());
         }
-        group.kickMember(memberRepository.getMemberByUserId(groupKickRequestDto.getUsername()));
         kickedMember.leaveGroup(group);
+        group.kickMember(kickedMember);
+    }
+
+    // 일단은 관리자만 회원을 추가할 수 있게끔 설정해두었습니다
+    // 추후 수정될 수 있음 -> 초대 링크 생성하고 링크 방문시 수락으로 변경 예정
+    @Transactional
+    public void addGroupMember(String username, Long groupId, GroupMemberRequestDto groupAddRequestDto) {
+        Member member = memberRepository.getMemberByUserId(username);
+        Group group = groupRepository.getGroupById(groupId);
+        Member addedMember = memberRepository.getMemberByUserId(groupAddRequestDto.getUsername());
+
+        if (!group.getMembers().contains(member)) {
+            throw new CustomException(ErrorStatus.GROUP_MEMBER_NOT_FOUND_EXCEPTION, ErrorStatus.GROUP_MEMBER_NOT_FOUND_EXCEPTION.getMessage());
+        }
+        if (group.getMembers().contains(addedMember)) {
+            throw new CustomException(ErrorStatus.ALREADY_EXIST_GROUP_MEMBER_EXCEPTION, ErrorStatus.ALREADY_EXIST_GROUP_MEMBER_EXCEPTION.getMessage());
+        }
+        addedMember.joinGroup(group);
+        group.addMember(addedMember);
+    }
+
+    @Transactional
+    public void leaveGroup(String username, Long groupId) {
+        Member member = memberRepository.getMemberByUserId(username);
+        Group group = groupRepository.getGroupById(groupId);
+
+        if (group.getLeader().equals(member)) {
+            throw new CustomException(ErrorStatus.LEADER_CANNOT_LEAVE_GROUP_EXCEPTION, ErrorStatus.LEADER_CANNOT_LEAVE_GROUP_EXCEPTION.getMessage());
+        }
+        member.leaveGroup(group);
+        group.kickMember(member);
     }
 
     @Transactional

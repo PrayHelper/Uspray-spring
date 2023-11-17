@@ -50,6 +50,10 @@ public class Group extends AuditingTimeEntity {
         this.leader = leader;
     }
 
+    public void addMember(Member member) {
+        this.members.add(member);
+    }
+
     public void kickMember(Member member) {
         this.members.remove(member);
     }
