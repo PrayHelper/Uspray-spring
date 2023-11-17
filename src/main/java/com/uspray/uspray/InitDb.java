@@ -46,6 +46,12 @@ public class InitDb {
                 .build();
             em.persist(member);
 
+            Group group = Group.builder()
+                .leader(member)
+                .name("테스트 모임")
+                .build();
+            em.persist(group);
+
             Category category = Category.builder()
                 .name("기타 카테고리")
                 .color("#FFFFFF")
