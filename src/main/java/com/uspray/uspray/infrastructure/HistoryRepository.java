@@ -10,11 +10,11 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface HistoryRepository extends JpaRepository<History, Long>, HistoryRepositoryCustom {
-    
+
     Page<History> findByMemberAndOriginPrayIdIsNull(Member member, Pageable pageable);
-    
+
     Page<History> findByMemberAndOriginPrayIdIsNotNull(Member member, Pageable pageable);
-    
-    
+
+
     History findByIdAndMember(Long historyId, Member member);
 }
