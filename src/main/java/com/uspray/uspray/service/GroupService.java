@@ -39,9 +39,9 @@ public class GroupService {
     public void createGroup(String username, GroupRequestDto groupRequestDto) {
         Member member = memberRepository.getMemberByUserId(username);
         Group group = Group.builder()
-                .name(groupRequestDto.getName())
-                .leader(member)
-                .build();
+            .name(groupRequestDto.getName())
+            .leader(member)
+            .build();
         member.getGroups().add(group);
         groupRepository.save(group);
     }
