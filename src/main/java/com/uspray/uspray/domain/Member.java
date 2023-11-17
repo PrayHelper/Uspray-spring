@@ -67,6 +67,10 @@ public class Member extends AuditingTimeEntity {
         this.password = pw;
     }
 
+    public void joinGroup(Group group) {
+        this.groups.add(group);
+    }
+
     public void leaveGroup(Group group) {
         this.groups.remove(group);
     }
