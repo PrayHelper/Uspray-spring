@@ -82,6 +82,9 @@ public class GroupService {
         if (!group.getLeader().equals(leader)) {
             throw new CustomException(ErrorStatus.GROUP_UNAUTHORIZED_EXCEPTION, ErrorStatus.GROUP_UNAUTHORIZED_EXCEPTION.getMessage());
         }
+        if (group.getLeader().equals(kickedMember)) {
+            throw new CustomException(ErrorStatus.LEADER_CANNOT_LEAVE_GROUP_EXCEPTION, ErrorStatus.LEADER_CANNOT_LEAVE_GROUP_EXCEPTION.getMessage());
+        }
         if (!group.getMembers().contains(kickedMember)) {
             throw new NotFoundException(ErrorStatus.GROUP_MEMBER_NOT_FOUND_EXCEPTION, ErrorStatus.GROUP_MEMBER_NOT_FOUND_EXCEPTION.getMessage());
         }
@@ -89,8 +92,6 @@ public class GroupService {
         group.kickMember(kickedMember);
     }
 
-    // 일단은 관리자만 회원을 추가할 수 있게끔 설정해두었습니다
-    // 추후 수정될 수 있음 -> 초대 링크 생성하고 링크 방문시 수락으로 변경 예정
     @Transactional
     public void addGroupMember(String username, Long groupId, GroupMemberRequestDto groupAddRequestDto) {
         Member member = memberRepository.getMemberByUserId(username);
