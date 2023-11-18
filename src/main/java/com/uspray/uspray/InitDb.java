@@ -48,6 +48,8 @@ public class InitDb {
                 .leader(member)
                 .name("테스트 모임")
                 .build();
+            group.addMember(member);
+            member.joinGroup(group);
             em.persist(group);
 
             Category category = Category.builder()
