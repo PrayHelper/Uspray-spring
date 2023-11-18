@@ -12,7 +12,7 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 public class GroupRequestDto {
 
-        @NotBlank(message = "모임 이름을 입력해주세요.")
-        @Size(min = 1, max = 15, message = "모임 이름은 공백 포함 15자 이내로 입력해주세요.")
+        @NotBlank
+        @Size(min = 1, max = 15, message = "공백 포함 15자 이내로 입력해주세요.")
         private String name;
 }
