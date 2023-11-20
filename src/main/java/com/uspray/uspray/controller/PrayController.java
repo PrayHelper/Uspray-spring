@@ -4,7 +4,8 @@ package com.uspray.uspray.controller;
 import com.uspray.uspray.DTO.ApiResponseDto;
 import com.uspray.uspray.DTO.pray.PrayListResponseDto;
 import com.uspray.uspray.DTO.pray.request.PrayRequestDto;
-import com.uspray.uspray.DTO.pray.request.PrayResponseDto;
+import com.uspray.uspray.DTO.pray.request.PrayUpdateRequestDto;
+import com.uspray.uspray.DTO.pray.response.PrayResponseDto;
 import com.uspray.uspray.exception.SuccessStatus;
 import com.uspray.uspray.service.PrayFacadeService;
 import com.uspray.uspray.service.PrayService;
@@ -99,15 +100,15 @@ public class PrayController {
     @ApiResponse(
         responseCode = "200",
         description = "기도제목 수정",
-        content = @Content(schema = @Schema(implementation = PrayResponseDto.class)))
+        content = @Content(schema = @Schema(implementation = PrayUpdateRequestDto.class)))
     @Operation(summary = "기도제목 수정")
     public ApiResponseDto<PrayResponseDto> updatePray(
         @Parameter(description = "기도제목 ID", required = true) @PathVariable("prayId") Long prayId,
-        @RequestBody @Valid PrayRequestDto prayRequestDto,
+        @RequestBody @Valid PrayUpdateRequestDto prayUpdateRequestDto,
         @Parameter(hidden = true) @AuthenticationPrincipal User user
     ) {
         return ApiResponseDto.success(SuccessStatus.UPDATE_PRAY_SUCCESS,
-            prayFacadeService.updatePray(prayId, user.getUsername(), prayRequestDto));
+            prayFacadeService.updatePray(prayId, user.getUsername(), prayUpdateRequestDto));
     }
 
     @Operation(summary = "오늘 기도하기")

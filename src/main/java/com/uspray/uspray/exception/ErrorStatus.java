@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public enum ErrorStatus {
-    
+
     /*
      * 400 BAD_REQUEST
      */
@@ -20,6 +20,7 @@ public enum ErrorStatus {
     CATEGORY_LIMIT_EXCEPTION(HttpStatus.BAD_REQUEST, "카테고리는 최대 7개까지 생성 가능합니다."),
     ALREADY_PRAYED_TODAY(HttpStatus.BAD_REQUEST, "오늘 이미 기도한 기도제목입니다."),
     CATEGORY_DUPLICATE_EXCEPTION(HttpStatus.BAD_REQUEST, "이미 존재하는 카테고리입니다."),
+    ALREADY_SHARED_EXCEPTION(HttpStatus.BAD_REQUEST, "이미 공유된 기도제목입니다."),
     /*
      * 401 UNAUTHORIZED
      */
@@ -28,7 +29,7 @@ public enum ErrorStatus {
     SHARE_NOT_AUTHORIZED_EXCEPTION(HttpStatus.UNAUTHORIZED, "기도제목을 공유할 권한이 없습니다."),
     DELETE_NOT_AUTHORIZED_EXCEPTION(HttpStatus.UNAUTHORIZED, "기도제목을 삭제할 권한이 없습니다."),
     CATEGORY_UNAUTHORIZED_EXCEPTION(HttpStatus.UNAUTHORIZED, "해당 카테고리에 대한 권한이 없습니다."),
-    
+
     /**
      * 404 NOT FOUND
      */
@@ -40,10 +41,10 @@ public enum ErrorStatus {
     NOT_FOUND_SHARED_PRAY_EXCEPTION(HttpStatus.NOT_FOUND, "해당 공유기도제목을 찾을 수 없습니다."),
     HISTORY_NOT_FOUND_EXCEPTION(HttpStatus.NOT_FOUND, "해당 히스토리를 찾을 수 없습니다."),
     CATEGORY_NOT_FOUND_EXCEPTION(HttpStatus.NOT_FOUND, "해당 카테고리를 찾을 수 없습니다.");
-    
+
     private final HttpStatus httpStatus;
     private final String message;
-    
+
     public int getHttpStatusCode() {
         return httpStatus.value();
     }
