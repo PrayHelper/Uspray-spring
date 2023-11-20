@@ -11,13 +11,13 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PrayRepository extends JpaRepository<Pray, Long>, PrayRepositoryCustom {
-    
+
     default Pray getPrayById(Long id) {
         return findById(id).orElseThrow(
             () -> new NotFoundException(ErrorStatus.PRAY_NOT_FOUND_EXCEPTION,
                 ErrorStatus.PRAY_NOT_FOUND_EXCEPTION.getMessage()));
     }
-    
+
     default Pray getPrayByIdAndMemberId(Long prayId, String username) throws NotFoundException {
         return findById(prayId)
             .filter(pray -> pray.getMember().getUserId().equals(username))
@@ -26,8 +26,10 @@ public interface PrayRepository extends JpaRepository<Pray, Long>, PrayRepositor
                 ErrorStatus.PRAY_NOT_FOUND_EXCEPTION.getMessage()
             ));
     }
-    
+
     List<Pray> findAllByIdIn(List<Long> prayIds);
-    
+
     List<Pray> findAllByDeadlineBefore(LocalDate date);
+
+    Pray getPrayByOriginPrayId(Long prayId);
 }
