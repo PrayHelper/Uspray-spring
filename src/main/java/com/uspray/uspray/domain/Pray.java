@@ -82,7 +82,8 @@ public class Pray extends AuditingTimeEntity {
         if (isShared && prayUpdateRequestDto.getContent() != null) {
             throw new NotFoundException(ErrorStatus.ALREADY_SHARED_EXCEPTION,
                 ErrorStatus.ALREADY_SHARED_EXCEPTION.getMessage());
-        } else if (prayUpdateRequestDto.getContent() != null) {
+        }
+        if (prayUpdateRequestDto.getContent() != null) {
             this.content = new String(
                 Base64.getEncoder().encode(prayUpdateRequestDto.getContent().getBytes()));
         }
