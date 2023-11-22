@@ -3,14 +3,12 @@ package com.uspray.uspray.DTO.pray.request;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Schema(description = "기도제목 수정 DTO")
 public class PrayUpdateRequestDto {
 
