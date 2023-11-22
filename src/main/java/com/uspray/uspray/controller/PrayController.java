@@ -7,7 +7,7 @@ import com.uspray.uspray.DTO.pray.request.PrayRequestDto;
 import com.uspray.uspray.DTO.pray.request.PrayUpdateRequestDto;
 import com.uspray.uspray.DTO.pray.response.PrayResponseDto;
 import com.uspray.uspray.exception.SuccessStatus;
-import com.uspray.uspray.service.PrayFacadeService;
+import com.uspray.uspray.service.PrayFacade;
 import com.uspray.uspray.service.PrayService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -40,7 +40,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class PrayController {
 
     private final PrayService prayService;
-    private final PrayFacadeService prayFacadeService;
+    private final PrayFacade prayFacadeService;
 
     @Operation(summary = "기도제목 목록 조회")
     @ApiResponse(

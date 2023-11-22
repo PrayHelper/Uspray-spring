@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class PrayFacadeService {
+public class PrayFacade {
 
     private final MemberRepository memberRepository;
     private final PrayRepository prayRepository;

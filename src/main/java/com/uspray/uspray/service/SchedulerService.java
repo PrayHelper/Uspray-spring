@@ -16,7 +16,7 @@ public class SchedulerService {
     private final MemberQueryRepository memberQueryRepository;
     private final FCMNotificationService fcmNotificationService;
     private final ShareService shareService;
-    private final PrayFacadeService prayFacadeService;
+    private final PrayFacade prayFacadeService;
 
     @Scheduled(cron = "0 0 8 * * *")
     public void pushPrayNotification() throws IOException {
