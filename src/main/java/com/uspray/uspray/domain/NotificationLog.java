@@ -22,6 +22,10 @@ public class NotificationLog extends AuditingTimeEntity {
     @ManyToOne
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
+
+    @ManyToOne
+    @JoinColumn(name = "pray_id", nullable = false)
+    private Pray pray;
     private String title;
 
 }
