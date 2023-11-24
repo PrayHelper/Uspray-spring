@@ -78,7 +78,7 @@ public class Pray extends AuditingTimeEntity {
     }
 
     public void update(PrayUpdateRequestDto prayUpdateRequestDto,
-        boolean isShared) {
+        boolean isShared, Category category) {
         if (isShared && prayUpdateRequestDto.getContent() != null) {
             throw new NotFoundException(ErrorStatus.ALREADY_SHARED_EXCEPTION,
                 ErrorStatus.ALREADY_SHARED_EXCEPTION.getMessage());
@@ -88,9 +88,9 @@ public class Pray extends AuditingTimeEntity {
                 Base64.getEncoder().encode(prayUpdateRequestDto.getContent().getBytes()));
         }
         this.deadline = prayUpdateRequestDto.getDeadline();
-        this.category = Category.builder()
-            .id(prayUpdateRequestDto.getCategoryId())
-            .build();
+        if (category != null) {
+            this.category = category;
+        }
     }
 
     public String getContent() {
