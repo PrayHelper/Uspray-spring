@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public enum ErrorStatus {
-    
+
     /*
      * 400 BAD_REQUEST
      */
@@ -23,7 +23,7 @@ public enum ErrorStatus {
     ALREADY_EXIST_GROUP_NAME_EXCEPTION(HttpStatus.BAD_REQUEST, "이미 존재하는 모임 이름입니다."),
     ALREADY_EXIST_GROUP_MEMBER_EXCEPTION(HttpStatus.BAD_REQUEST, "이미 존재하는 모임 회원입니다."),
     LEADER_CANNOT_LEAVE_GROUP_EXCEPTION(HttpStatus.BAD_REQUEST, "모임장은 모임을 떠날 수 없습니다."),
-
+    ALREADY_SHARED_EXCEPTION(HttpStatus.BAD_REQUEST, "이미 공유된 기도제목입니다."),
     /*
      * 401 UNAUTHORIZED
      */
@@ -49,7 +49,7 @@ public enum ErrorStatus {
     
     private final HttpStatus httpStatus;
     private final String message;
-    
+
     public int getHttpStatusCode() {
         return httpStatus.value();
     }

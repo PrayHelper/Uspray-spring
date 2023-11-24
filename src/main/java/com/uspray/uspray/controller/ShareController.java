@@ -2,7 +2,7 @@ package com.uspray.uspray.controller;
 
 
 import com.uspray.uspray.DTO.ApiResponseDto;
-import com.uspray.uspray.DTO.pray.request.PrayResponseDto;
+import com.uspray.uspray.DTO.pray.response.PrayResponseDto;
 import com.uspray.uspray.DTO.sharedpray.request.SharedPrayRequestDto;
 import com.uspray.uspray.DTO.sharedpray.response.SharedPrayListResponseDto;
 import com.uspray.uspray.DTO.sharedpray.response.SharedPrayResponseDto;
