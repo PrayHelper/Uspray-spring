@@ -1,8 +1,7 @@
 package com.uspray.uspray.DTO.group.response;
 
-import com.uspray.uspray.domain.Group;
+import com.querydsl.core.annotations.QueryProjection;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +10,6 @@ import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
 @Builder
 @Schema(description = "모임 응답 DTO")
 public class GroupResponseDto {
@@ -28,4 +26,13 @@ public class GroupResponseDto {
 
     private LocalDateTime updatedAt;
 
+    @QueryProjection
+    public GroupResponseDto(Long id, String name, String lastPrayContent, Integer memberCount, Integer prayCount, LocalDateTime updatedAt) {
+        this.id = id;
+        this.name = name;
+        this.lastPrayContent = lastPrayContent;
+        this.memberCount = memberCount;
+        this.prayCount = prayCount;
+        this.updatedAt = updatedAt;
+    }
 }
