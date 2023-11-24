@@ -100,6 +100,7 @@ public class GroupFacadeService {
         if (group.getLeader().equals(member)) {
             throw new CustomException(ErrorStatus.LEADER_CANNOT_LEAVE_GROUP_EXCEPTION, ErrorStatus.LEADER_CANNOT_LEAVE_GROUP_EXCEPTION.getMessage());
         }
+        group.checkGroupMember(member);
         member.leaveGroup(group);
         group.kickMember(member);
     }
