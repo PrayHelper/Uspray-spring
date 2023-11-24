@@ -9,7 +9,6 @@ import com.uspray.uspray.domain.Member;
 import com.uspray.uspray.exception.ErrorStatus;
 import com.uspray.uspray.exception.model.CustomException;
 import com.uspray.uspray.exception.model.NotFoundException;
-import com.uspray.uspray.infrastructure.GroupPrayRepository;
 import com.uspray.uspray.infrastructure.GroupRepository;
 import com.uspray.uspray.infrastructure.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,11 +20,10 @@ import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
-public class GroupService {
+public class GroupFacadeService {
 
     private final GroupRepository groupRepository;
     private final MemberRepository memberRepository;
-    private final GroupPrayRepository groupPrayRepository;
 
     @Transactional(readOnly = true)
     public GroupListResponseDto getGroupList(String username) {
@@ -134,6 +132,5 @@ public class GroupService {
             group.kickMember(member);
         }
         groupRepository.delete(group);
-        groupPrayRepository.deleteAllByGroup(group);
     }
 }
