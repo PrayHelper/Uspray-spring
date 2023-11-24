@@ -4,9 +4,9 @@ import static com.uspray.uspray.domain.QGroup.group;
 import static com.uspray.uspray.domain.QMember.member;
 import static com.uspray.uspray.domain.QGroupPray.groupPray;
 
-import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.uspray.uspray.DTO.group.response.GroupResponseDto;
+import com.uspray.uspray.DTO.group.response.QGroupResponseDto;
 import com.uspray.uspray.domain.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -23,8 +23,7 @@ public class GroupRepositoryImpl implements GroupRepositoryCustom {
     public List<GroupResponseDto> findGroupListByMember(Member target) {
 
         return queryFactory
-            .select(Projections.constructor(
-                GroupResponseDto.class,
+            .select(new QGroupResponseDto(
                 group.id,
                 group.name,
                 groupPray.content.max(),
