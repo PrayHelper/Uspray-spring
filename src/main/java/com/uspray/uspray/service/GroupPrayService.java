@@ -42,6 +42,7 @@ public class GroupPrayService {
     }
 
     //groupId와 자신의 Id를 이용해 group pray들 반환 + 작성자인지 and 좋아요를 눌렀는지 확인 가능
+    @Transactional(readOnly = true)
     public List<GroupPrayResponseDto> getGroupPray(Long groupId, String userId) {
         Member member = memberRepository.getMemberByUserId(userId);
         Group group = groupRepository.getGroupById(groupId);
