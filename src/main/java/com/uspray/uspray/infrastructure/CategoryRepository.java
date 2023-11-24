@@ -25,26 +25,16 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     }
 
 
-    default boolean checkDuplicateByNameAndMember(String name, Member member) {
+    default int checkDuplicateAndReturnMaxOrder(String name, Member member) {
         boolean isDuplicate = existsByNameAndMember(name, member);
         if (isDuplicate) {
             throw new NotFoundException(ErrorStatus.CATEGORY_DUPLICATE_EXCEPTION,
                 ErrorStatus.CATEGORY_DUPLICATE_EXCEPTION.getMessage());
         }
-        return false;
+        return getMaxCategoryOrder(member);
     }
 
     boolean existsByNameAndMember(String name, Member member);
-
-    default int countCategoryByMember(Member member) {
-        List<Category> categories = getCategoriesByMemberOrderByOrder(member);
-        int count = categories.size();
-        if (count > 7) {
-            throw new NotFoundException(ErrorStatus.CATEGORY_LIMIT_EXCEPTION,
-                ErrorStatus.CATEGORY_LIMIT_EXCEPTION.getMessage());
-        }
-        return count;
-    }
 
     default int getMaxCategoryOrder(Member member) {
         Category category = getCategoriesByMemberOrderByOrder(member).stream()
