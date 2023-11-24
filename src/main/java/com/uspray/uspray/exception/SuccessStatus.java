@@ -33,8 +33,8 @@ public enum SuccessStatus {
     GET_HISTORY_DETAIL_SUCCESS(HttpStatus.OK, "히스토리 상세 조회에 성공했습니다."),
     INCREASE_PRAY_COUNT_SUCCESS(HttpStatus.OK, "기도 횟수 추가에 성공했습니다."),
     COMPLETE_PRAY_SUCCESS(HttpStatus.OK, "기도제목 완료에 성공했습니다."),
-    GET_GROUP_LIST_SUCCESS(HttpStatus.OK, "모임 목록 조회에 성공했습니다."),
     GET_CATEGORY_LIST_SUCCESS(HttpStatus.OK, "카테고리 목록 조회에 성공했습니다."),
+    GET_GROUP_LIST_SUCCESS(HttpStatus.OK, "모임 목록 조회에 성공했습니다."),
     GET_GROUP_DETAIL_SUCCESS(HttpStatus.OK, "모임 상세 조회에 성공했습니다."),
     CHANGE_GROUP_NAME_SUCCESS(HttpStatus.OK, "모임 이름 변경에 성공했습니다."),
     CHANGE_GROUP_LEADER_SUCCESS(HttpStatus.OK, "모임 리더 위임에 성공했습니다."),
@@ -52,7 +52,6 @@ public enum SuccessStatus {
     SHARE_PRAY_AGREE_SUCCESS(HttpStatus.CREATED, "기도제목 공유 수락에 성공했습니다."),
     CREATE_GROUP_SUCCESS(HttpStatus.CREATED, "모임 생성에 성공했습니다."),
 
-
     /*
      * 204 deleted
      */
@@ -62,8 +61,8 @@ public enum SuccessStatus {
     DELETE_CATEGORY_SUCCESS(HttpStatus.NO_CONTENT, "카테고리 삭제에 성공했습니다."),
     DELETE_GROUP_SUCCESS(HttpStatus.NO_CONTENT, "모임 삭제에 성공했습니다."),
     LEAVE_GROUP_SUCCESS(HttpStatus.NO_CONTENT, "모임 탈퇴에 성공했습니다.");
-
-
+    
+    
     private final HttpStatus httpStatus;
     private final String message;
 
