@@ -101,7 +101,7 @@ public class CategoryController {
     }
 
 
-    @PutMapping("/{categoryId}/order/{order}")
+    @PutMapping("/{categoryId}/order/{index}")
     @ApiResponse(
         responseCode = "200",
         description = "카테고리 순서 수정",
@@ -109,10 +109,10 @@ public class CategoryController {
     @Operation(summary = "카테고리 순서 수정")
     public ApiResponseDto<CategoryResponseDto> updatePrayOrder(
         @Parameter(description = "카테고리 ID", required = true) @PathVariable("categoryId") Long categoryId,
-        @Parameter(description = "카테고리 순서", required = true) @PathVariable("order") int order,
+        @Parameter(description = "카테고리 순서", required = true) @PathVariable("index") int index,
         @Parameter(hidden = true) @AuthenticationPrincipal User user
     ) {
         return ApiResponseDto.success(SuccessStatus.UPDATE_CATEGORY_SUCCESS,
-            categoryService.updateCategoryOrder(user.getUsername(), categoryId, order));
+            categoryService.updateCategoryOrder(user.getUsername(), categoryId, index));
     }
 }

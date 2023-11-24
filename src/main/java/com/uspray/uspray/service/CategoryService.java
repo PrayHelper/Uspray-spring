@@ -50,10 +50,24 @@ public class CategoryService {
         return CategoryResponseDto.of(category);
     }
 
-    public CategoryResponseDto updateCategoryOrder(String username, Long categoryId, int order) {
-        Category category = categoryRepository.getCategoryByIdAndMember(categoryId,
-            memberRepository.getMemberByUserId(username));
-        category.updateOrder(order);
+    public CategoryResponseDto updateCategoryOrder(String username, Long categoryId, int index) {
+        Member member = memberRepository.getMemberByUserId(username);
+        Category category = categoryRepository.getCategoryByIdAndMember(categoryId, member);
+        List<Category> categories = categoryRepository.getCategoriesByMemberOrderByOrder(member);
+
+        Category nextCategory = categories.get(index);
+        Category prevCategory = (index > 0) ? categories.get(index - 1) : null;
+
+        int newOrder = (index == 0)
+            ? nextCategory.getOrder() / 2
+            : (index == categories.size() - 1)
+                ? prevCategory.getOrder() + 1024
+                : (prevCategory.getOrder() + nextCategory.getOrder()) / 2;
+
+        category.updateOrder(newOrder);
+
+        categoryRepository.save(category);
+
         return CategoryResponseDto.of(category);
     }
 
