@@ -100,7 +100,7 @@ public class PrayController {
     @ApiResponse(
         responseCode = "200",
         description = "기도제목 수정",
-        content = @Content(schema = @Schema(implementation = PrayUpdateRequestDto.class)))
+        content = @Content(schema = @Schema(implementation = PrayRequestDto.class)))
     @Operation(summary = "기도제목 수정")
     public ApiResponseDto<PrayResponseDto> updatePray(
         @Parameter(description = "기도제목 ID", required = true) @PathVariable("prayId") Long prayId,
