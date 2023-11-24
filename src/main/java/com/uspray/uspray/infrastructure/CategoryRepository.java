@@ -46,4 +46,11 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
         return count;
     }
 
+    default int getMaxCategoryOrder(Member member) {
+        Category category = getCategoriesByMemberOrderByOrder(member).stream()
+            .reduce((first, second) -> second)
+            .orElseThrow(() -> new NotFoundException(ErrorStatus.CATEGORY_NOT_FOUND_EXCEPTION,
+                ErrorStatus.CATEGORY_NOT_FOUND_EXCEPTION.getMessage()));
+        return category.getOrder();
+    }
 }

@@ -22,8 +22,8 @@ public class CategoryService {
         CategoryRequestDto categoryRequestDto) {
         Member member = memberRepository.getMemberByUserId(username);
         categoryRepository.checkDuplicateByNameAndMember(categoryRequestDto.getName(), member);
-        int categoryCount = categoryRepository.countCategoryByMember(member);
-        Category category = categoryRequestDto.toEntity(member, categoryCount);
+        int maxCategoryOrder = categoryRepository.getMaxCategoryOrder(member);
+        Category category = categoryRequestDto.toEntity(member, maxCategoryOrder + 1024);
         categoryRepository.save(category);
         return CategoryResponseDto.of(category);
     }
