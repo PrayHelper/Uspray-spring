@@ -5,12 +5,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.common.net.HttpHeaders;
 import com.uspray.uspray.domain.FCMMessage;
+import com.uspray.uspray.domain.Notification;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import okhttp3.*;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +30,8 @@ public class FCMNotificationService {
         String message = makeMessage(targetToken, title, body);
 
         OkHttpClient client = new OkHttpClient();
-        RequestBody requestBody = RequestBody.create(message, MediaType.get("application/json; charset=utf-8"));
+        RequestBody requestBody = RequestBody.create(message,
+            MediaType.get("application/json; charset=utf-8"));
         String API_URL = "https://fcm.googleapis.com/v1/projects/prayhelper-8563a/messages:send";
         Request request = new Request.Builder()
             .url(API_URL)
@@ -39,11 +45,12 @@ public class FCMNotificationService {
         log.info(Objects.requireNonNull(response.body()).string());
     }
 
-    private String makeMessage(String targetToken, String title, String body) throws JsonProcessingException {
+    private String makeMessage(String targetToken, String title, String body)
+        throws JsonProcessingException {
         FCMMessage fcmMessage = FCMMessage.builder()
             .message(FCMMessage.Message.builder()
                 .token(targetToken)
-                .notification(FCMMessage.Notification.builder()
+                .notification(Notification.builder()
                     .title(title)
                     .body(body)
                     .image(null)
