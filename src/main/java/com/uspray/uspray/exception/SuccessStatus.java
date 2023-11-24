@@ -61,8 +61,7 @@ public enum SuccessStatus {
     DELETE_CATEGORY_SUCCESS(HttpStatus.NO_CONTENT, "카테고리 삭제에 성공했습니다."),
     DELETE_GROUP_SUCCESS(HttpStatus.NO_CONTENT, "모임 삭제에 성공했습니다."),
     LEAVE_GROUP_SUCCESS(HttpStatus.NO_CONTENT, "모임 탈퇴에 성공했습니다.");
-    
-    
+
     private final HttpStatus httpStatus;
     private final String message;
 

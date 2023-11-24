@@ -20,10 +20,9 @@ public enum ErrorStatus {
     CATEGORY_LIMIT_EXCEPTION(HttpStatus.BAD_REQUEST, "카테고리는 최대 7개까지 생성 가능합니다."),
     ALREADY_PRAYED_TODAY(HttpStatus.BAD_REQUEST, "오늘 이미 기도한 기도제목입니다."),
     CATEGORY_DUPLICATE_EXCEPTION(HttpStatus.BAD_REQUEST, "이미 존재하는 카테고리입니다."),
-    ALREADY_EXIST_GROUP_NAME_EXCEPTION(HttpStatus.BAD_REQUEST, "이미 존재하는 모임 이름입니다."),
-    ALREADY_SHARED_EXCEPTION(HttpStatus.BAD_REQUEST, "이미 공유된 기도제목입니다."),
     ALREADY_EXIST_GROUP_MEMBER_EXCEPTION(HttpStatus.BAD_REQUEST, "이미 존재하는 모임 회원입니다."),
     LEADER_CANNOT_LEAVE_GROUP_EXCEPTION(HttpStatus.BAD_REQUEST, "모임장은 모임을 떠날 수 없습니다."),
+    ALREADY_SHARED_EXCEPTION(HttpStatus.BAD_REQUEST, "이미 공유된 기도제목입니다."),
 
     /*
      * 401 UNAUTHORIZED
@@ -34,7 +33,7 @@ public enum ErrorStatus {
     DELETE_NOT_AUTHORIZED_EXCEPTION(HttpStatus.UNAUTHORIZED, "기도제목을 삭제할 권한이 없습니다."),
     CATEGORY_UNAUTHORIZED_EXCEPTION(HttpStatus.UNAUTHORIZED, "해당 카테고리에 대한 권한이 없습니다."),
     GROUP_UNAUTHORIZED_EXCEPTION(HttpStatus.UNAUTHORIZED, "해당 모임에 대한 권한이 없습니다."),
-
+  
     /**
      * 404 NOT FOUND
      */
@@ -47,7 +46,7 @@ public enum ErrorStatus {
     HISTORY_NOT_FOUND_EXCEPTION(HttpStatus.NOT_FOUND, "해당 히스토리를 찾을 수 없습니다."),
     CATEGORY_NOT_FOUND_EXCEPTION(HttpStatus.NOT_FOUND, "해당 카테고리를 찾을 수 없습니다."),
     GROUP_MEMBER_NOT_FOUND_EXCEPTION(HttpStatus.NOT_FOUND, "해당 멤버를 모임에서 찾을 수 없습니다.");
-
+  
     private final HttpStatus httpStatus;
     private final String message;
     
