@@ -6,6 +6,8 @@ import com.uspray.uspray.domain.Category;
 import com.uspray.uspray.domain.Member;
 import com.uspray.uspray.infrastructure.CategoryRepository;
 import com.uspray.uspray.infrastructure.MemberRepository;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -45,5 +47,27 @@ public class CategoryService {
         Category category = categoryRepository.getCategoryByIdAndMember(categoryId,
             memberRepository.getMemberByUserId(username));
         return CategoryResponseDto.of(category);
+    }
+
+    public CategoryResponseDto updateCategoryOrder(String username, Long categoryId, int order) {
+        Category category = categoryRepository.getCategoryByIdAndMember(categoryId,
+            memberRepository.getMemberByUserId(username));
+        category.updateOrder(order);
+        return CategoryResponseDto.of(category);
+    }
+
+    public List<CategoryResponseDto> getCategoryList(String username) {
+        Member member = memberRepository.getMemberByUserId(username);
+        List<Category> categories = categoryRepository.getCategoriesByMemberOrderByOrder(member);
+        return categories.stream()
+            .map(category -> {
+                CategoryResponseDto dto = new CategoryResponseDto();
+                dto.setId(category.getId());
+                dto.setName(category.getName());
+                dto.setColor(category.getColor());
+                dto.setOrder(category.getOrder());
+                return dto;
+            })
+            .collect(Collectors.toList());
     }
 }

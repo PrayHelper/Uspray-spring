@@ -29,12 +29,7 @@ public enum ErrorStatus {
     SHARE_NOT_AUTHORIZED_EXCEPTION(HttpStatus.UNAUTHORIZED, "기도제목을 공유할 권한이 없습니다."),
     DELETE_NOT_AUTHORIZED_EXCEPTION(HttpStatus.UNAUTHORIZED, "기도제목을 삭제할 권한이 없습니다."),
     CATEGORY_UNAUTHORIZED_EXCEPTION(HttpStatus.UNAUTHORIZED, "해당 카테고리에 대한 권한이 없습니다."),
-
-    /**
-     * 401 UNAUTHORIZED
-     */
-    TOKEN_NOT_VALID_EXCEPTION(HttpStatus.UNAUTHORIZED, "유효하지 않는 토큰입니다."),
-
+    
     /**
      * 404 NOT FOUND
      */
