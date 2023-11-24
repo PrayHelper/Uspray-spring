@@ -1,5 +1,9 @@
 package com.uspray.uspray.infrastructure.querydsl.group;
 
+import static com.uspray.uspray.domain.QGroup.group;
+import static com.uspray.uspray.domain.QMember.member;
+import static com.uspray.uspray.domain.QGroupPray.groupPray;
+
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.uspray.uspray.DTO.group.response.GroupResponseDto;
@@ -16,11 +20,7 @@ public class GroupRepositoryImpl implements GroupRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<GroupResponseDto> findGroupListByMember(Member member) {
-
-        QGroup group = QGroup.group;
-        QMember memberEntity = QMember.member;
-        QGroupPray groupPray = QGroupPray.groupPray;
+    public List<GroupResponseDto> findGroupListByMember(Member target) {
 
         return queryFactory
             .select(Projections.constructor(
@@ -34,8 +34,8 @@ public class GroupRepositoryImpl implements GroupRepositoryCustom {
             ))
             .from(group)
             .leftJoin(group.groupPrayList, groupPray)
-            .leftJoin(group.members, memberEntity)
-            .where(group.members.contains(member))
+            .leftJoin(group.members, member)
+            .where(group.members.contains(target))
             .groupBy(group.id)
             .fetch();
     }
