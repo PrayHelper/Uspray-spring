@@ -1,7 +1,7 @@
 package com.uspray.uspray.service;
 
 import com.uspray.uspray.DTO.pray.PrayListResponseDto;
-import com.uspray.uspray.DTO.pray.request.PrayResponseDto;
+import com.uspray.uspray.DTO.pray.response.PrayResponseDto;
 import com.uspray.uspray.Enums.PrayType;
 import com.uspray.uspray.domain.Pray;
 import com.uspray.uspray.exception.ErrorStatus;

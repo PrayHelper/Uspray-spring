@@ -6,7 +6,7 @@ import com.uspray.uspray.DTO.history.response.HistoryListResponseDto;
 import com.uspray.uspray.DTO.pray.request.PrayRequestDto;
 import com.uspray.uspray.exception.SuccessStatus;
 import com.uspray.uspray.service.HistoryService;
-import com.uspray.uspray.service.PrayFacadeService;
+import com.uspray.uspray.service.PrayFacade;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class HistoryController {
 
     private final HistoryService historyService;
-    private final PrayFacadeService prayFacadeService;
+    private final PrayFacade prayFacadeService;
 
     @GetMapping
     public ApiResponseDto<HistoryListResponseDto> getHistoryList(
