@@ -60,14 +60,7 @@ public class CategoryService {
         Member member = memberRepository.getMemberByUserId(username);
         List<Category> categories = categoryRepository.getCategoriesByMemberOrderByOrder(member);
         return categories.stream()
-            .map(category -> {
-                CategoryResponseDto dto = new CategoryResponseDto();
-                dto.setId(category.getId());
-                dto.setName(category.getName());
-                dto.setColor(category.getColor());
-                dto.setOrder(category.getOrder());
-                return dto;
-            })
+            .map(CategoryResponseDto::of)
             .collect(Collectors.toList());
     }
 }
