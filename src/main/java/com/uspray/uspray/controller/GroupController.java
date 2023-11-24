@@ -5,12 +5,11 @@ import com.uspray.uspray.DTO.group.request.GroupMemberRequestDto;
 import com.uspray.uspray.DTO.group.request.GroupRequestDto;
 import com.uspray.uspray.DTO.group.response.GroupListResponseDto;
 import com.uspray.uspray.exception.SuccessStatus;
-import com.uspray.uspray.service.GroupService;
+import com.uspray.uspray.service.GroupFacadeService;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
@@ -24,20 +23,20 @@ import javax.validation.Valid;
 @SecurityRequirement(name = "JWT Auth")
 public class GroupController {
 
-    private final GroupService groupService;
+    private final GroupFacadeService groupFacadeService;
 
     @GetMapping
     public ApiResponseDto<GroupListResponseDto> getGroupList(
         @Parameter(hidden = true) @AuthenticationPrincipal User user) {
         return ApiResponseDto.success(SuccessStatus.GET_GROUP_LIST_SUCCESS,
-            groupService.getGroupList(user.getUsername()));
+            groupFacadeService.getGroupList(user.getUsername()));
     }
 
     @PostMapping
     public ApiResponseDto<?> createGroup(
         @Parameter(hidden = true) @AuthenticationPrincipal User user,
         @Valid @RequestBody GroupRequestDto groupRequestDto) {
-        groupService.createGroup(user.getUsername(), groupRequestDto);
+        groupFacadeService.createGroup(user.getUsername(), groupRequestDto);
         return ApiResponseDto.success(SuccessStatus.CREATE_GROUP_SUCCESS,
             SuccessStatus.CREATE_GROUP_SUCCESS.getMessage());
     }
@@ -47,7 +46,7 @@ public class GroupController {
         @Parameter(hidden = true) @AuthenticationPrincipal User user,
         @PathVariable Long groupId,
         @Valid @RequestBody GroupRequestDto groupRequestDto) {
-        groupService.changeGroupName(user.getUsername(), groupId, groupRequestDto);
+        groupFacadeService.changeGroupName(user.getUsername(), groupId, groupRequestDto);
         return ApiResponseDto.success(SuccessStatus.CHANGE_GROUP_NAME_SUCCESS,
             SuccessStatus.CHANGE_GROUP_NAME_SUCCESS.getMessage());
     }
@@ -57,7 +56,7 @@ public class GroupController {
         @Parameter(hidden = true) @AuthenticationPrincipal User user,
         @PathVariable Long groupId,
         @Valid @RequestBody GroupMemberRequestDto groupLeaderRequestDto) {
-        groupService.changeGroupLeader(user.getUsername(), groupId, groupLeaderRequestDto);
+        groupFacadeService.changeGroupLeader(user.getUsername(), groupId, groupLeaderRequestDto);
         return ApiResponseDto.success(SuccessStatus.CHANGE_GROUP_LEADER_SUCCESS,
             SuccessStatus.CHANGE_GROUP_LEADER_SUCCESS.getMessage());
     }
@@ -67,7 +66,7 @@ public class GroupController {
         @Parameter(hidden = true) @AuthenticationPrincipal User user,
         @PathVariable Long groupId,
         @Valid @RequestBody GroupMemberRequestDto groupMemberRequestDto) {
-        groupService.kickGroupMember(user.getUsername(), groupId, groupMemberRequestDto);
+        groupFacadeService.kickGroupMember(user.getUsername(), groupId, groupMemberRequestDto);
         return ApiResponseDto.success(SuccessStatus.KICK_GROUP_MEMBER_SUCCESS,
             SuccessStatus.KICK_GROUP_MEMBER_SUCCESS.getMessage());
     }
@@ -77,7 +76,7 @@ public class GroupController {
         @Parameter(hidden = true) @AuthenticationPrincipal User user,
         @PathVariable Long groupId,
         @Valid @RequestBody GroupMemberRequestDto groupMemberRequestDto) {
-        groupService.addGroupMember(user.getUsername(), groupId, groupMemberRequestDto);
+        groupFacadeService.addGroupMember(user.getUsername(), groupId, groupMemberRequestDto);
         return ApiResponseDto.success(SuccessStatus.ADD_GROUP_MEMBER_SUCCESS,
             SuccessStatus.ADD_GROUP_MEMBER_SUCCESS.getMessage());
     }
@@ -86,7 +85,7 @@ public class GroupController {
     public ApiResponseDto<?> leaveGroup(
         @Parameter(hidden = true) @AuthenticationPrincipal User user,
         @PathVariable Long groupId) {
-        groupService.leaveGroup(user.getUsername(), groupId);
+        groupFacadeService.leaveGroup(user.getUsername(), groupId);
         return ApiResponseDto.success(SuccessStatus.LEAVE_GROUP_SUCCESS,
             SuccessStatus.LEAVE_GROUP_SUCCESS.getMessage());
     }
@@ -95,7 +94,7 @@ public class GroupController {
     public ApiResponseDto<?> deleteGroup(
         @Parameter(hidden = true) @AuthenticationPrincipal User user,
         @PathVariable Long groupId) {
-        groupService.deleteGroup(user.getUsername(), groupId);
+        groupFacadeService.deleteGroup(user.getUsername(), groupId);
         return ApiResponseDto.success(SuccessStatus.DELETE_GROUP_SUCCESS,
             SuccessStatus.DELETE_GROUP_SUCCESS.getMessage());
     }
