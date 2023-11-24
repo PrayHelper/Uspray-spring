@@ -2,8 +2,8 @@ package com.uspray.uspray.external.client.oauth2;
 
 import com.uspray.uspray.Enums.Authority;
 import com.uspray.uspray.domain.Member;
-import com.uspray.uspray.external.client.oauth2.dto.GoogleOAuth2UserInfo;
 import com.uspray.uspray.external.client.oauth2.dto.KakaoOAuth2UserInfo;
+import com.uspray.uspray.external.client.oauth2.dto.NaverOAuth2UserInfo;
 import com.uspray.uspray.external.client.oauth2.dto.OAuth2UserInfo;
 import java.util.Map;
 import lombok.Builder;
@@ -22,17 +22,17 @@ public class OAuthAttributes {
 
     public static OAuthAttributes of(String registrationId, String userNameAttributeName,
         Map<String, Object> attributes) {
-        if ("kakao".equals(registrationId)) {
-            return ofKakao(userNameAttributeName, attributes);
+        if ("naver".equals(registrationId)) {
+            return ofNaver(userNameAttributeName, attributes);
         }
-        return ofGoogle(userNameAttributeName, attributes);
+        return ofKakao(userNameAttributeName, attributes);
     }
 
-    private static OAuthAttributes ofGoogle(String userNameAttributeName,
+    private static OAuthAttributes ofNaver(String userNameAttributeName,
         Map<String, Object> attributes) {
         return OAuthAttributes.builder()
             .nameAttributeKey(userNameAttributeName)
-            .oAuth2UserInfo(new GoogleOAuth2UserInfo(attributes))
+            .oAuth2UserInfo(new NaverOAuth2UserInfo(attributes))
             .build();
     }
 
