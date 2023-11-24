@@ -3,15 +3,12 @@ package com.uspray.uspray.domain;
 import com.uspray.uspray.DTO.notification.NotificationAgreeDto;
 import com.uspray.uspray.Enums.Authority;
 import com.uspray.uspray.common.domain.AuditingTimeEntity;
+
+import java.util.HashSet;
 import java.util.List;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import java.util.Set;
+import javax.persistence.*;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,56 +23,69 @@ import org.hibernate.annotations.Where;
 @Where(clause = "deleted=false")
 public class Member extends AuditingTimeEntity {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "member_id")
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "member_id")
+    private Long id;
 
-  private String userId;
-  private String password;
+    private String userId;
+    private String password;
 
-  private String name;
-  private String phone;
-  private String birth;
-  private String gender;
-  private String firebaseToken;
+    private String name;
+    private String phone;
+    private String birth;
+    private String gender;
+    private String firebaseToken;
 
-  private Boolean firstNotiAgree = true;
-  private Boolean secondNotiAgree= true;
-  private Boolean thirdNotiAgree = true;
-  
-  private final Boolean deleted = false;
+    private Boolean firstNotiAgree = true;
+    private Boolean secondNotiAgree = true;
+    private Boolean thirdNotiAgree = true;
 
-  @Enumerated(EnumType.STRING)
-  private Authority authority;
+    private final Boolean deleted = false;
 
-  @OneToMany(mappedBy = "author")
-  private List<GroupPray> groupPrayList;
+    @Enumerated(EnumType.STRING)
+    private Authority authority;
 
+    @ManyToMany
+    @JoinTable(name = "member_group",
+        joinColumns = @JoinColumn(name = "member_id"),
+        inverseJoinColumns = @JoinColumn(name = "group_id"))
+    private Set<Group> groups = new HashSet<>();
 
-  public void changeFirebaseToken(String firebaseToken) {
-      this.firebaseToken = firebaseToken;
-  }
-  
-  public void changePhone(String phone) {
-    this.phone = phone;
-  }
+    @OneToMany(mappedBy = "author")
+    private List<GroupPray> groupPrayList;
 
-  public void changePw(String pw) {
-    this.password = pw;
-  }
+    public void changeFirebaseToken(String firebaseToken) {
+        this.firebaseToken = firebaseToken;
+    }
 
-  @Builder
-  public Member(String userId, String password, String name, String phone, String birth,
-      String gender, Authority authority) {
-    this.userId = userId;
-    this.password = password;
-    this.name = name;
-    this.phone = phone;
-    this.birth = birth;
-    this.gender = gender;
-    this.authority = authority;
-  }
+    public void changePhone(String phone) {
+        this.phone = phone;
+    }
+
+    public void changePw(String pw) {
+        this.password = pw;
+    }
+
+    public void joinGroup(Group group) {
+        this.groups.add(group);
+    }
+
+    public void leaveGroup(Group group) {
+        this.groups.remove(group);
+    }
+
+    @Builder
+    public Member(String userId, String password, String name, String phone, String birth,
+                  String gender, Authority authority) {
+        this.userId = userId;
+        this.password = password;
+        this.name = name;
+        this.phone = phone;
+        this.birth = birth;
+        this.gender = gender;
+        this.authority = authority;
+    }
 
     public void changeNotificationSetting(NotificationAgreeDto notificationAgreeDto) {
         switch (notificationAgreeDto.getNotificationType()) {
