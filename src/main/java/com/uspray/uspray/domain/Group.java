@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Set;
 import javax.persistence.*;
 
+import com.uspray.uspray.exception.ErrorStatus;
+import com.uspray.uspray.exception.model.CustomException;
+import com.uspray.uspray.exception.model.NotFoundException;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -58,4 +61,21 @@ public class Group extends AuditingTimeEntity {
         this.members.remove(member);
     }
 
+    public void validateGroupName(String newName) {
+        if (this.name.equals(newName)) {
+            throw new CustomException(ErrorStatus.ALREADY_EXIST_GROUP_NAME_EXCEPTION, ErrorStatus.ALREADY_EXIST_GROUP_NAME_EXCEPTION.getMessage());
+        }
+    }
+
+    public void checkLeaderAuthorization(Member member) {
+        if (!this.leader.equals(member)) {
+            throw new CustomException(ErrorStatus.GROUP_UNAUTHORIZED_EXCEPTION, ErrorStatus.GROUP_UNAUTHORIZED_EXCEPTION.getMessage());
+        }
+    }
+
+    public void checkGroupMember(Member member) {
+        if (!this.members.contains(member)) {
+            throw new NotFoundException(ErrorStatus.GROUP_MEMBER_NOT_FOUND_EXCEPTION, ErrorStatus.GROUP_MEMBER_NOT_FOUND_EXCEPTION.getMessage());
+        }
+    }
 }

@@ -8,7 +8,6 @@ import com.uspray.uspray.domain.Group;
 import com.uspray.uspray.domain.Member;
 import com.uspray.uspray.exception.ErrorStatus;
 import com.uspray.uspray.exception.model.CustomException;
-import com.uspray.uspray.exception.model.NotFoundException;
 import com.uspray.uspray.infrastructure.GroupRepository;
 import com.uspray.uspray.infrastructure.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -48,26 +47,19 @@ public class GroupFacadeService {
         Member member = memberRepository.getMemberByUserId(username);
         Group group = groupRepository.getGroupById(groupId);
 
-        if (!group.getLeader().equals(member)) {
-            throw new CustomException(ErrorStatus.GROUP_UNAUTHORIZED_EXCEPTION, ErrorStatus.GROUP_UNAUTHORIZED_EXCEPTION.getMessage());
-        }
-        if (group.getName().equals(groupRequestDto.getName()) || groupRepository.existsByName(groupRequestDto.getName())) {
-            throw new CustomException(ErrorStatus.ALREADY_EXIST_GROUP_NAME_EXCEPTION, ErrorStatus.ALREADY_EXIST_GROUP_NAME_EXCEPTION.getMessage());
-        }
+        group.validateGroupName(groupRequestDto.getName());
+        group.checkLeaderAuthorization(member);
         group.changeName(groupRequestDto.getName());
     }
 
     @Transactional
     public void changeGroupLeader(String username, Long groupId, GroupMemberRequestDto groupLeaderRequestDto) {
         Member member = memberRepository.getMemberByUserId(username);
+        Member newLeader = memberRepository.getMemberByUserId(groupLeaderRequestDto.getUsername());
         Group group = groupRepository.getGroupById(groupId);
 
-        if (!group.getLeader().equals(member)) {
-            throw new CustomException(ErrorStatus.GROUP_UNAUTHORIZED_EXCEPTION, ErrorStatus.GROUP_UNAUTHORIZED_EXCEPTION.getMessage());
-        }
-        if (!group.getMembers().contains(memberRepository.getMemberByUserId(groupLeaderRequestDto.getUsername()))) {
-            throw new NotFoundException(ErrorStatus.GROUP_MEMBER_NOT_FOUND_EXCEPTION, ErrorStatus.GROUP_MEMBER_NOT_FOUND_EXCEPTION.getMessage());
-        }
+        group.checkLeaderAuthorization(member);
+        group.checkGroupMember(newLeader);
         group.changeLeader(memberRepository.getMemberByUserId(groupLeaderRequestDto.getUsername()));
     }
 
@@ -77,15 +69,11 @@ public class GroupFacadeService {
         Group group = groupRepository.getGroupById(groupId);
         Member kickedMember = memberRepository.getMemberByUserId(groupKickRequestDto.getUsername());
 
-        if (!group.getLeader().equals(leader)) {
-            throw new CustomException(ErrorStatus.GROUP_UNAUTHORIZED_EXCEPTION, ErrorStatus.GROUP_UNAUTHORIZED_EXCEPTION.getMessage());
-        }
+        group.checkLeaderAuthorization(leader);
         if (group.getLeader().equals(kickedMember)) {
             throw new CustomException(ErrorStatus.LEADER_CANNOT_LEAVE_GROUP_EXCEPTION, ErrorStatus.LEADER_CANNOT_LEAVE_GROUP_EXCEPTION.getMessage());
         }
-        if (!group.getMembers().contains(kickedMember)) {
-            throw new NotFoundException(ErrorStatus.GROUP_MEMBER_NOT_FOUND_EXCEPTION, ErrorStatus.GROUP_MEMBER_NOT_FOUND_EXCEPTION.getMessage());
-        }
+        group.checkGroupMember(kickedMember);
         kickedMember.leaveGroup(group);
         group.kickMember(kickedMember);
     }
@@ -96,9 +84,7 @@ public class GroupFacadeService {
         Group group = groupRepository.getGroupById(groupId);
         Member addedMember = memberRepository.getMemberByUserId(groupAddRequestDto.getUsername());
 
-        if (!group.getMembers().contains(member)) {
-            throw new CustomException(ErrorStatus.GROUP_MEMBER_NOT_FOUND_EXCEPTION, ErrorStatus.GROUP_MEMBER_NOT_FOUND_EXCEPTION.getMessage());
-        }
+        group.checkGroupMember(member);
         if (group.getMembers().contains(addedMember)) {
             throw new CustomException(ErrorStatus.ALREADY_EXIST_GROUP_MEMBER_EXCEPTION, ErrorStatus.ALREADY_EXIST_GROUP_MEMBER_EXCEPTION.getMessage());
         }
@@ -123,9 +109,7 @@ public class GroupFacadeService {
         Member leader = memberRepository.getMemberByUserId(username);
         Group group = groupRepository.getGroupById(groupId);
 
-        if (!group.getLeader().equals(leader)) {
-            throw new CustomException(ErrorStatus.GROUP_UNAUTHORIZED_EXCEPTION, ErrorStatus.GROUP_UNAUTHORIZED_EXCEPTION.getMessage());
-        }
+        group.checkLeaderAuthorization(leader);
         Set<Member> members = group.getMembers();
         for (Member member : members) {
             member.leaveGroup(group);
