@@ -50,6 +50,7 @@ public class InitDb {
                 .name("기타 카테고리")
                 .color("#FFFFFF")
                 .member(member)
+                .order(1024)
                 .build();
             em.persist(category);
 
@@ -57,7 +58,7 @@ public class InitDb {
                 .name("가족")
                 .color("#408CFF")
                 .member(member)
-                .order(1024)
+                .order(2048)
                 .build();
             em.persist(category1);
 
