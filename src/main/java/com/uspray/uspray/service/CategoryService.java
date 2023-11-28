@@ -6,6 +6,8 @@ import com.uspray.uspray.domain.Category;
 import com.uspray.uspray.domain.Member;
 import com.uspray.uspray.infrastructure.CategoryRepository;
 import com.uspray.uspray.infrastructure.MemberRepository;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,9 +21,10 @@ public class CategoryService {
     public CategoryResponseDto createCategory(String username,
         CategoryRequestDto categoryRequestDto) {
         Member member = memberRepository.getMemberByUserId(username);
-        categoryRepository.checkDuplicateByNameAndMember(categoryRequestDto.getName(), member);
-        int categoryCount = categoryRepository.countCategoryByMember(member);
-        Category category = categoryRequestDto.toEntity(member, categoryCount);
+
+        int maxCategoryOrder = categoryRepository.checkDuplicateAndReturnMaxOrder(
+            categoryRequestDto.getName(), member);
+        Category category = categoryRequestDto.toEntity(member, maxCategoryOrder + 1024);
         categoryRepository.save(category);
         return CategoryResponseDto.of(category);
     }
@@ -45,5 +48,34 @@ public class CategoryService {
         Category category = categoryRepository.getCategoryByIdAndMember(categoryId,
             memberRepository.getMemberByUserId(username));
         return CategoryResponseDto.of(category);
+    }
+
+    public CategoryResponseDto updateCategoryOrder(String username, Long categoryId, int index) {
+        Member member = memberRepository.getMemberByUserId(username);
+        Category category = categoryRepository.getCategoryByIdAndMember(categoryId, member);
+        List<Category> categories = categoryRepository.getCategoriesByMemberOrderByOrder(member);
+
+        Category nextCategory = categories.get(index);
+        Category prevCategory = (index > 0) ? categories.get(index - 1) : null;
+
+        int newOrder = (index == 0)
+            ? nextCategory.getOrder() / 2
+            : (index == categories.size() - 1)
+                ? prevCategory.getOrder() + 1024
+                : (prevCategory.getOrder() + nextCategory.getOrder()) / 2;
+
+        category.updateOrder(newOrder);
+
+        categoryRepository.save(category);
+
+        return CategoryResponseDto.of(category);
+    }
+
+    public List<CategoryResponseDto> getCategoryList(String username) {
+        Member member = memberRepository.getMemberByUserId(username);
+        List<Category> categories = categoryRepository.getCategoriesByMemberOrderByOrder(member);
+        return categories.stream()
+            .map(CategoryResponseDto::of)
+            .collect(Collectors.toList());
     }
 }

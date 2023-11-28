@@ -12,11 +12,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -45,6 +47,19 @@ public class CategoryController {
     ) {
         return ApiResponseDto.success(SuccessStatus.GET_CATEGORY_SUCCESS,
             categoryService.getCategory(user.getUsername(), categoryId));
+    }
+
+    @Operation(summary = "카테고리 목록 조회")
+    @ApiResponse(
+        responseCode = "200",
+        description = "카테고리 목록 조회",
+        content = @Content(schema = @Schema(implementation = CategoryResponseDto.class)))
+    @GetMapping
+    public ApiResponseDto<List<CategoryResponseDto>> getCategoryList(
+        @Parameter(hidden = true) @AuthenticationPrincipal User user
+    ) {
+        return ApiResponseDto.success(SuccessStatus.GET_CATEGORY_LIST_SUCCESS,
+            categoryService.getCategoryList(user.getUsername()));
     }
 
     @Operation(summary = "카테고리 생성")
@@ -83,5 +98,21 @@ public class CategoryController {
     ) {
         return ApiResponseDto.success(SuccessStatus.UPDATE_CATEGORY_SUCCESS,
             categoryService.updateCategory(user.getUsername(), categoryId, categoryRequestDto));
+    }
+
+
+    @PutMapping("/{categoryId}/order/{index}")
+    @ApiResponse(
+        responseCode = "200",
+        description = "카테고리 순서 수정",
+        content = @Content(schema = @Schema(implementation = CategoryResponseDto.class)))
+    @Operation(summary = "카테고리 순서 수정")
+    public ApiResponseDto<CategoryResponseDto> updatePrayOrder(
+        @Parameter(description = "카테고리 ID", required = true) @PathVariable("categoryId") Long categoryId,
+        @Parameter(description = "카테고리 순서", required = true) @PathVariable("index") int index,
+        @Parameter(hidden = true) @AuthenticationPrincipal User user
+    ) {
+        return ApiResponseDto.success(SuccessStatus.UPDATE_CATEGORY_SUCCESS,
+            categoryService.updateCategoryOrder(user.getUsername(), categoryId, index));
     }
 }
