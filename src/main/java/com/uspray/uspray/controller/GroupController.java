@@ -5,7 +5,7 @@ import com.uspray.uspray.DTO.group.request.GroupMemberRequestDto;
 import com.uspray.uspray.DTO.group.request.GroupRequestDto;
 import com.uspray.uspray.DTO.group.response.GroupListResponseDto;
 import com.uspray.uspray.exception.SuccessStatus;
-import com.uspray.uspray.service.GroupFacadeService;
+import com.uspray.uspray.service.GroupFacade;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,7 +23,7 @@ import javax.validation.Valid;
 @SecurityRequirement(name = "JWT Auth")
 public class GroupController {
 
-    private final GroupFacadeService groupFacadeService;
+    private final GroupFacade groupFacadeService;
 
     @GetMapping
     public ApiResponseDto<GroupListResponseDto> getGroupList(
@@ -71,12 +71,11 @@ public class GroupController {
             SuccessStatus.KICK_GROUP_MEMBER_SUCCESS.getMessage());
     }
 
-    @PostMapping("/{groupId}/member")
+    @PostMapping("/{groupId}/join")
     public ApiResponseDto<?> addGroupMember(
         @Parameter(hidden = true) @AuthenticationPrincipal User user,
-        @PathVariable Long groupId,
-        @Valid @RequestBody GroupMemberRequestDto groupMemberRequestDto) {
-        groupFacadeService.addGroupMember(user.getUsername(), groupId, groupMemberRequestDto);
+        @PathVariable Long groupId) {
+        groupFacadeService.addGroupMember(user.getUsername(), groupId, false);
         return ApiResponseDto.success(SuccessStatus.ADD_GROUP_MEMBER_SUCCESS,
             SuccessStatus.ADD_GROUP_MEMBER_SUCCESS.getMessage());
     }
