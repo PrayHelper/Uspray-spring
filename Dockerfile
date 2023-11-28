@@ -1,9 +1,19 @@
-FROM openjdk:11-jdk
+FROM gradle:jdk11 AS build
+WORKDIR /home/gradle/src
+COPY --chown=gradle:gradle . /home/gradle/src
+RUN gradle clean build --no-daemon
 
-WORKDIR /app
+FROM adoptopenjdk:11-jre-hotspot
 
-ARG JAR_FILE=build/libs/uspray-0.0.1-SNAPSHOT.jar
+ARG JAR_FILE=build/libs/*.jar
 
-COPY ${JAR_FILE} .
+WORKDIR /opt/app
 
-ENTRYPOINT ["java","-jar","uspray-0.0.1-SNAPSHOT.jar"]
+COPY --from=build /home/gradle/src/build/libs/*.jar app.jar
+
+COPY src/main/resources/application.yml config/
+COPY src/main/resources/firebase/service-account-file.json config/firebase/
+
+ENTRYPOINT ["java","-jar","app.jar"]
+
+EXPOSE 8080

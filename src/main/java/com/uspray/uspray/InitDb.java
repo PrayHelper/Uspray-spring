@@ -57,6 +57,19 @@ public class InitDb {
                 .authority(Authority.ROLE_USER)
                 .build();
             em.persist(member2);
+          
+          
+            Member member_mook = Member.builder()
+                .userId("wjdanr0869")
+                .password(passwordEncoder.encode("wjdanr0869"))
+                .name("김정묵")
+                .phone("01057770869")
+                .birth("2001-11-07")
+                .gender("male")
+                .authority(Authority.ROLE_USER)
+                .build();
+            em.persist(member_mook);
+          
 
             Group group = Group.builder()
                 .leader(member)
