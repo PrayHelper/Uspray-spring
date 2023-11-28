@@ -3,9 +3,13 @@ package com.uspray.uspray.service;
 import com.uspray.uspray.DTO.pray.PrayListResponseDto;
 import com.uspray.uspray.DTO.pray.response.PrayResponseDto;
 import com.uspray.uspray.Enums.PrayType;
+import com.uspray.uspray.domain.NotificationLog;
+import com.uspray.uspray.domain.NotificationLogId;
 import com.uspray.uspray.domain.Pray;
 import com.uspray.uspray.exception.ErrorStatus;
 import com.uspray.uspray.exception.model.NotFoundException;
+import com.uspray.uspray.infrastructure.MemberRepository;
+import com.uspray.uspray.infrastructure.NotificationLogRepository;
 import com.uspray.uspray.infrastructure.PrayRepository;
 import java.time.LocalDate;
 import java.util.List;
@@ -20,6 +24,8 @@ import org.springframework.stereotype.Service;
 public class PrayService {
 
     private final PrayRepository prayRepository;
+    private final NotificationLogRepository notificationLogRepository;
+    private final MemberRepository memberRepository;
 
     @Transactional
     public PrayResponseDto getPrayDetail(Long prayId, String username) {
@@ -57,13 +63,44 @@ public class PrayService {
     public List<PrayListResponseDto> todayPray(Long prayId, String username) {
         Pray pray = prayRepository.getPrayByIdAndMemberId(prayId, username);
         LocalDate today = LocalDate.now();
-        if (pray.getLastPrayedAt() == null || !pray.getLastPrayedAt().equals(today)) {
-            pray.countUp();
-        } else {
-            throw new NotFoundException(ErrorStatus.ALREADY_PRAYED_TODAY,
-                ErrorStatus.ALREADY_PRAYED_TODAY.getMessage());
+        if (isAlreadyPrayedToday(pray, today)) {
+            handleAlreadyPrayedToday(pray);
         }
+        handleNotPrayedToday(pray);
         return getPrayList(username, PrayType.PERSONAL.stringValue());
+    }
+
+    private void sendNotificationAndSaveLog(Pray pray, String username) {
+        // TODO: notification 보내는 로직 추가
+        System.out.println("send notification to " + memberRepository.getMemberByUserId(username));
+        NotificationLogId notificationLogId = NotificationLogId.builder()
+            .pray(pray)
+            .member(memberRepository.getMemberByUserId(username))
+            .build();
+        NotificationLog notificationLog = NotificationLog.builder()
+            .id(notificationLogId)
+            .build();
+        notificationLogRepository.save(notificationLog);
+    }
+
+    private boolean isAlreadyPrayedToday(Pray pray, LocalDate today) {
+        return pray.getLastPrayedAt() != null && pray.getLastPrayedAt().equals(today);
+    }
+
+    private void handleAlreadyPrayedToday(Pray pray) {
+        throw new NotFoundException(ErrorStatus.ALREADY_PRAYED_TODAY,
+            ErrorStatus.ALREADY_PRAYED_TODAY.getMessage());
+    }
+
+    private void handleNotPrayedToday(Pray pray) {
+        pray.countUp();
+
+        if (pray.getPrayType() == PrayType.SHARED) {
+            Pray originPray = prayRepository.getPrayById(pray.getOriginPrayId());
+            System.out.println(originPray.getMember().getName());
+            System.out.println(pray.getMember().getName());
+            sendNotificationAndSaveLog(pray, originPray.getMember().getUserId());
+        }
     }
 
     @Transactional
