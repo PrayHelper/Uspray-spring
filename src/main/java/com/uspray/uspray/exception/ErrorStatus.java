@@ -24,6 +24,7 @@ public enum ErrorStatus {
     LEADER_CANNOT_LEAVE_GROUP_EXCEPTION(HttpStatus.BAD_REQUEST, "모임장은 모임을 떠날 수 없습니다."),
     ALREADY_SHARED_EXCEPTION(HttpStatus.BAD_REQUEST, "이미 공유된 기도제목입니다."),
     ALREADY_EXIST_GROUP_NAME_EXCEPTION(HttpStatus.BAD_REQUEST, "이미 존재하는 모임 이름입니다."),
+    ALREADY_CANCEL_EXCEPTION(HttpStatus.BAD_REQUEST, "이미 취소된 기도제목입니다."),
 
     /*
      * 401 UNAUTHORIZED

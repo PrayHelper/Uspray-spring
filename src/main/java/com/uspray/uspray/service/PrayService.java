@@ -110,4 +110,12 @@ public class PrayService {
 
         return getPrayList(username, pray.getPrayType().stringValue());
     }
+
+    @Transactional
+    public List<PrayListResponseDto> cancelPray(Long prayId, String username) {
+        Pray pray = prayRepository.getPrayByIdAndMemberId(prayId, username);
+        prayRepository.cancelPray(pray);
+
+        return getPrayList(username, PrayType.SHARED.stringValue());
+    }
 }

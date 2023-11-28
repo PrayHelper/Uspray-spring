@@ -38,6 +38,7 @@ public class Pray extends AuditingTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "pray_id")
     private Long id;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
@@ -79,10 +80,7 @@ public class Pray extends AuditingTimeEntity {
 
     public void update(PrayUpdateRequestDto prayUpdateRequestDto,
         boolean isShared, Category category) {
-        if (isShared && prayUpdateRequestDto.getContent() != null) {
-            throw new NotFoundException(ErrorStatus.ALREADY_SHARED_EXCEPTION,
-                ErrorStatus.ALREADY_SHARED_EXCEPTION.getMessage());
-        }
+        handleUpdateContentSharedPray(isShared, prayUpdateRequestDto.getContent());
         if (prayUpdateRequestDto.getContent() != null) {
             this.content = new String(
                 Base64.getEncoder().encode(prayUpdateRequestDto.getContent().getBytes()));
@@ -90,6 +88,13 @@ public class Pray extends AuditingTimeEntity {
         this.deadline = prayUpdateRequestDto.getDeadline();
         if (category != null) {
             this.category = category;
+        }
+    }
+
+    private void handleUpdateContentSharedPray(boolean isShared, String content) {
+        if (isShared && content != null) {
+            throw new NotFoundException(ErrorStatus.ALREADY_SHARED_EXCEPTION,
+                ErrorStatus.ALREADY_SHARED_EXCEPTION.getMessage());
         }
     }
 
@@ -104,5 +109,10 @@ public class Pray extends AuditingTimeEntity {
 
     public void complete() {
         this.deadline = LocalDate.now();
+    }
+
+    public void deleteLastPrayedAt() {
+        this.lastPrayedAt = null;
+        this.count--;
     }
 }
