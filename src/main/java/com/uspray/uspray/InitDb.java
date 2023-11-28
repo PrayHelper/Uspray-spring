@@ -47,6 +47,17 @@ public class InitDb {
                 .build();
             em.persist(member);
 
+            Member member2 = Member.builder()
+                .userId("test2")
+                .password(passwordEncoder.encode("test2"))
+                .name("홍길동")
+                .phone("01012345670")
+                .birth("2002-02-24")
+                .gender("male")
+                .authority(Authority.ROLE_USER)
+                .build();
+            em.persist(member2);
+
             Group group = Group.builder()
                 .leader(member)
                 .name("테스트 모임")
@@ -71,6 +82,14 @@ public class InitDb {
                 .build();
             em.persist(category1);
 
+            Category category2 = Category.builder()
+                .name("친구")
+                .color("#408CFF")
+                .member(member2)
+                .order(2048)
+                .build();
+            em.persist(category2);
+
             Pray pray = Pray.builder()
                 .content("테스트 기도")
                 .deadline(LocalDate.parse("2025-01-01"))
@@ -80,21 +99,32 @@ public class InitDb {
                 .build();
             em.persist(pray);
 
+            Pray pray_1 = Pray.builder()
+                .content("공유 테스트 기도")
+                .deadline(LocalDate.parse("2025-01-01"))
+                .member(member2)
+                .category(category)
+                .prayType(PrayType.PERSONAL)
+                .build();
+            em.persist(pray_1);
+
             Pray pray1 = Pray.builder()
                 .content("기도합니다")
                 .deadline(LocalDate.parse("2025-02-24"))
                 .member(member)
                 .category(category)
                 .prayType(PrayType.SHARED)
+                .originPrayId(pray_1.getId())
                 .build();
             em.persist(pray1);
 
             Pray pray2 = Pray.builder()
                 .content("기도할게요")
                 .deadline(LocalDate.parse("2024-02-24"))
-                .member(member)
-                .category(category1)
+                .member(member2)
+                .category(category2)
                 .prayType(PrayType.SHARED)
+                .originPrayId(pray.getId())
                 .build();
             em.persist(pray2);
 
