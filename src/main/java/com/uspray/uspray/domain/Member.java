@@ -64,6 +64,10 @@ public class Member extends AuditingTimeEntity {
         this.socialId = socialId;
         this.authority = authority;
     }
+    public void changeSocialId(String socialId) {
+        this.socialId = socialId;
+    }
+
     public void changeFirebaseToken(String firebaseToken) {
         this.firebaseToken = firebaseToken;
     }
