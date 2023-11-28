@@ -45,12 +45,16 @@ public class InitDb {
             em.persist(member);
 
             Group group = Group.builder()
-                .leader(member)
                 .name("테스트 모임")
                 .build();
-            group.addMember(member);
-            member.joinGroup(group);
             em.persist(group);
+
+            GroupMember groupMember = GroupMember.builder()
+                .group(group)
+                .member(member)
+                .isLeader(true)
+                .build();
+            em.persist(groupMember);
 
             Category category = Category.builder()
                 .name("기타 카테고리")
