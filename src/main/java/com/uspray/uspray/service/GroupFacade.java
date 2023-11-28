@@ -1,5 +1,6 @@
 package com.uspray.uspray.service;
 
+import com.uspray.uspray.DTO.auth.response.MemberResponseDto;
 import com.uspray.uspray.DTO.group.request.GroupMemberRequestDto;
 import com.uspray.uspray.DTO.group.request.GroupRequestDto;
 import com.uspray.uspray.DTO.group.response.GroupListResponseDto;
@@ -113,5 +114,13 @@ public class GroupFacade {
 
         group.checkLeaderAuthorization(leader);
         groupRepository.delete(group);
+    }
+
+    @Transactional(readOnly = true)
+    public List<MemberResponseDto> searchGroupMembers(String username, Long groupId, String name) {
+        if (name == null) {
+            return groupRepository.findGroupMembers(groupId);
+        }
+        return groupRepository.findGroupMembersByGroupAndNameLike(groupId, name);
     }
 }

@@ -1,5 +1,6 @@
 package com.uspray.uspray.DTO.auth.response;
 
+import com.querydsl.core.annotations.QueryProjection;
 import com.uspray.uspray.domain.Member;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -7,7 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor
 public class MemberResponseDto {
 
@@ -19,6 +19,13 @@ public class MemberResponseDto {
 
     @Schema(description = "전화번호", example = "01012345678")
     private String phone;
+
+    @QueryProjection
+    public MemberResponseDto(String userId, String name, String phone){
+        this.userId = userId;
+        this.name = name;
+        this.phone = phone;
+    }
 
     public static MemberResponseDto of(Member member) {
         return new MemberResponseDto(member.getUserId(), member.getName(), member.getPhone());

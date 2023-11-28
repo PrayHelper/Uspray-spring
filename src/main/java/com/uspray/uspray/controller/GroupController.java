@@ -1,6 +1,7 @@
 package com.uspray.uspray.controller;
 
 import com.uspray.uspray.DTO.ApiResponseDto;
+import com.uspray.uspray.DTO.auth.response.MemberResponseDto;
 import com.uspray.uspray.DTO.group.request.GroupMemberRequestDto;
 import com.uspray.uspray.DTO.group.request.GroupRequestDto;
 import com.uspray.uspray.DTO.group.response.GroupListResponseDto;
@@ -15,6 +16,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/group")
@@ -96,5 +98,14 @@ public class GroupController {
         groupFacadeService.deleteGroup(user.getUsername(), groupId);
         return ApiResponseDto.success(SuccessStatus.DELETE_GROUP_SUCCESS,
             SuccessStatus.DELETE_GROUP_SUCCESS.getMessage());
+    }
+
+    @GetMapping("/{groupId}/member/search")
+    public ApiResponseDto<List<MemberResponseDto>> searchGroupMembers(
+        @Parameter(hidden = true) @AuthenticationPrincipal User user,
+        @PathVariable Long groupId,
+        @RequestParam(required = false) String name) {
+        return ApiResponseDto.success(SuccessStatus.GET_MEMBER_LIST_SUCCESS,
+            groupFacadeService.searchGroupMembers(user.getUsername(), groupId, name));
     }
 }
