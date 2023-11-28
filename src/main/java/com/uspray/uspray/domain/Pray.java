@@ -1,8 +1,10 @@
 package com.uspray.uspray.domain;
 
-import com.uspray.uspray.DTO.pray.request.PrayRequestDto;
+import com.uspray.uspray.DTO.pray.request.PrayUpdateRequestDto;
 import com.uspray.uspray.Enums.PrayType;
 import com.uspray.uspray.common.domain.AuditingTimeEntity;
+import com.uspray.uspray.exception.ErrorStatus;
+import com.uspray.uspray.exception.model.NotFoundException;
 import java.time.LocalDate;
 import java.util.Base64;
 import javax.persistence.CascadeType;
@@ -30,7 +32,7 @@ import org.hibernate.annotations.Where;
 @SQLDelete(sql = "UPDATE pray SET deleted = true WHERE pray_id = ?")
 @Where(clause = "deleted=false")
 public class Pray extends AuditingTimeEntity {
-    
+
     private final Boolean deleted = false;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,25 +45,25 @@ public class Pray extends AuditingTimeEntity {
     private Integer count;
     private LocalDate deadline;
     private Boolean isShared = false;
-    
+
     @Column(name = "origin_pray_id")
     private Long originPrayId;
-    
+
     @NotNull
     @Enumerated(EnumType.STRING)
     private PrayType prayType;
-    
+
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "group_pray_id")
     private GroupPray groupPray;
-    
+
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
-    
+
     private LocalDate lastPrayedAt;
-    
+
     @Builder
     public Pray(Member member, String content, LocalDate deadline, Long originPrayId,
         Category category, PrayType prayType) {
@@ -74,21 +76,32 @@ public class Pray extends AuditingTimeEntity {
         this.category = category;
         this.prayType = prayType;
     }
-    
-    public void update(PrayRequestDto prayRequestDto) {
-        this.content = prayRequestDto.getContent();
-        this.deadline = prayRequestDto.getDeadline();
+
+    public void update(PrayUpdateRequestDto prayUpdateRequestDto,
+        boolean isShared) {
+        if (isShared && prayUpdateRequestDto.getContent() != null) {
+            throw new NotFoundException(ErrorStatus.ALREADY_SHARED_EXCEPTION,
+                ErrorStatus.ALREADY_SHARED_EXCEPTION.getMessage());
+        }
+        if (prayUpdateRequestDto.getContent() != null) {
+            this.content = new String(
+                Base64.getEncoder().encode(prayUpdateRequestDto.getContent().getBytes()));
+        }
+        this.deadline = prayUpdateRequestDto.getDeadline();
+        this.category = Category.builder()
+            .id(prayUpdateRequestDto.getCategoryId())
+            .build();
     }
-    
+
     public String getContent() {
         return new String(Base64.getDecoder().decode(content));
     }
-    
+
     public void countUp() {
         this.count++;
         this.lastPrayedAt = LocalDate.now();
     }
-    
+
     public void complete() {
         this.deadline = LocalDate.now();
     }
