@@ -4,9 +4,8 @@ import com.uspray.uspray.DTO.notification.NotificationAgreeDto;
 import com.uspray.uspray.Enums.Authority;
 import com.uspray.uspray.common.domain.AuditingTimeEntity;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import javax.persistence.*;
 
 import lombok.AccessLevel;
@@ -46,11 +45,8 @@ public class Member extends AuditingTimeEntity {
     @Enumerated(EnumType.STRING)
     private Authority authority;
 
-    @ManyToMany
-    @JoinTable(name = "member_group",
-        joinColumns = @JoinColumn(name = "member_id"),
-        inverseJoinColumns = @JoinColumn(name = "group_id"))
-    private Set<Group> groups = new HashSet<>();
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<GroupMember> groupMemberList = new ArrayList<>();
 
     @OneToMany(mappedBy = "author")
     private List<GroupPray> groupPrayList;
@@ -65,14 +61,6 @@ public class Member extends AuditingTimeEntity {
 
     public void changePw(String pw) {
         this.password = pw;
-    }
-
-    public void joinGroup(Group group) {
-        this.groups.add(group);
-    }
-
-    public void leaveGroup(Group group) {
-        this.groups.remove(group);
     }
 
     @Builder

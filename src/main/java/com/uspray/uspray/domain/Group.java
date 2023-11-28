@@ -2,14 +2,12 @@ package com.uspray.uspray.domain;
 
 import com.uspray.uspray.common.domain.AuditingTimeEntity;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import javax.persistence.*;
 
 import com.uspray.uspray.exception.ErrorStatus;
 import com.uspray.uspray.exception.model.CustomException;
-import com.uspray.uspray.exception.model.NotFoundException;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,37 +26,38 @@ public class Group extends AuditingTimeEntity {
 
     private String name;
 
-    @OneToOne
-    @JoinColumn(name = "leader_id", referencedColumnName = "member_id")
-    private Member leader;
-
-    @ManyToMany(mappedBy = "groups")
-    private Set<Member> members = new HashSet<>();
+    @OneToMany(mappedBy = "group", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<GroupMember> groupMemberList = new ArrayList<>();
 
     @OneToMany(mappedBy = "group", orphanRemoval = true)
     private List<GroupPray> groupPrayList;
 
     @Builder
-    public Group(String name, Member leader) {
+    public Group(String name) {
         this.name = name;
-        this.members.add(leader);
-        this.leader = leader;
     }
 
     public void changeName(String name) {
         this.name = name;
     }
 
+    public Member getLeader() {
+        for (GroupMember gm : this.groupMemberList) {
+            if (gm.isLeader()) {
+                return gm.getMember();
+            }
+        }
+        return null;
+    }
+
     public void changeLeader(Member leader) {
-        this.leader = leader;
+        for (GroupMember gm : this.groupMemberList) {
+            gm.setLeader(gm.getMember().equals(leader));
+        }
     }
 
-    public void addMember(Member member) {
-        this.members.add(member);
-    }
-
-    public void kickMember(Member member) {
-        this.members.remove(member);
+    public void kickMember(GroupMember groupMember) {
+        this.groupMemberList.remove(groupMember);
     }
 
     public void validateGroupName(String newName) {
@@ -68,14 +67,9 @@ public class Group extends AuditingTimeEntity {
     }
 
     public void checkLeaderAuthorization(Member member) {
-        if (!this.leader.equals(member)) {
+        Member leader = this.getLeader();
+        if (!leader.equals(member)) {
             throw new CustomException(ErrorStatus.GROUP_UNAUTHORIZED_EXCEPTION, ErrorStatus.GROUP_UNAUTHORIZED_EXCEPTION.getMessage());
-        }
-    }
-
-    public void checkGroupMember(Member member) {
-        if (!this.members.contains(member)) {
-            throw new NotFoundException(ErrorStatus.GROUP_MEMBER_NOT_FOUND_EXCEPTION, ErrorStatus.GROUP_MEMBER_NOT_FOUND_EXCEPTION.getMessage());
         }
     }
 }
