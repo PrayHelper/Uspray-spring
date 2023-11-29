@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
   Optional<Member> findByUserId(String userId);
+  Optional<Member> findBySocialId(String socialId);
 
   boolean existsByUserId(String userId);
 
