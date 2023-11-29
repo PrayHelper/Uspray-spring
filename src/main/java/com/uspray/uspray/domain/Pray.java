@@ -76,6 +76,7 @@ public class Pray extends AuditingTimeEntity {
         this.isShared = (originPrayId != null);
         this.category = category;
         this.prayType = prayType;
+        this.lastPrayedAt = LocalDate.now().minusDays(7);
     }
 
     public void update(PrayUpdateRequestDto prayUpdateRequestDto,

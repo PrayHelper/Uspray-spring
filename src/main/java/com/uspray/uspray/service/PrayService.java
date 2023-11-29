@@ -63,10 +63,7 @@ public class PrayService {
     public List<PrayListResponseDto> todayPray(Long prayId, String username) {
         Pray pray = prayRepository.getPrayByIdAndMemberId(prayId, username);
         LocalDate today = LocalDate.now();
-        if (isAlreadyPrayedToday(pray, today)) {
-            handleAlreadyPrayedToday(pray);
-        }
-        handleNotPrayedToday(pray);
+        handlePrayedToday(pray, today);
         return getPrayList(username, PrayType.PERSONAL.stringValue());
     }
 
@@ -83,22 +80,15 @@ public class PrayService {
         notificationLogRepository.save(notificationLog);
     }
 
-    private boolean isAlreadyPrayedToday(Pray pray, LocalDate today) {
-        return pray.getLastPrayedAt() != null && pray.getLastPrayedAt().equals(today);
-    }
-
-    private void handleAlreadyPrayedToday(Pray pray) {
-        throw new NotFoundException(ErrorStatus.ALREADY_PRAYED_TODAY,
-            ErrorStatus.ALREADY_PRAYED_TODAY.getMessage());
-    }
-
-    private void handleNotPrayedToday(Pray pray) {
+    private void handlePrayedToday(Pray pray, LocalDate today) {
+        if (pray.getLastPrayedAt().equals(today)) {
+            throw new NotFoundException(ErrorStatus.ALREADY_PRAYED_TODAY,
+                ErrorStatus.ALREADY_PRAYED_TODAY.getMessage());
+        }
         pray.countUp();
 
         if (pray.getPrayType() == PrayType.SHARED) {
             Pray originPray = prayRepository.getPrayById(pray.getOriginPrayId());
-            System.out.println(originPray.getMember().getName());
-            System.out.println(pray.getMember().getName());
             sendNotificationAndSaveLog(pray, originPray.getMember().getUserId());
         }
     }

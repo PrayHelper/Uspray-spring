@@ -1,7 +1,6 @@
 package com.uspray.uspray.domain;
 
 import com.uspray.uspray.common.domain.AuditingTimeEntity;
-import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import lombok.Builder;
@@ -18,7 +17,6 @@ public class NotificationLog extends AuditingTimeEntity {
     @EmbeddedId
     private NotificationLogId id;
 
-    @Column
     private String title;
 
     @Builder
