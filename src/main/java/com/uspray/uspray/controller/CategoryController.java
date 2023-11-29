@@ -40,7 +40,7 @@ public class CategoryController {
         responseCode = "200",
         description = "카테고리 조회",
         content = @Content(schema = @Schema(implementation = CategoryResponseDto.class)))
-    @PostMapping("/{categoryId}")
+    @GetMapping("/{categoryId}")
     public ApiResponseDto<CategoryResponseDto> getCategory(
         @Parameter(hidden = true) @AuthenticationPrincipal User user,
         @Parameter(description = "카테고리 ID", required = true) @PathVariable("categoryId") Long categoryId
