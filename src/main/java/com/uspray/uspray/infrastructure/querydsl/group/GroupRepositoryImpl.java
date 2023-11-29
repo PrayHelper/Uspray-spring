@@ -5,14 +5,15 @@ import static com.uspray.uspray.domain.QMember.member;
 import static com.uspray.uspray.domain.QGroupPray.groupPray;
 import static com.uspray.uspray.domain.QGroupMember.groupMember;
 
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.uspray.uspray.DTO.auth.response.MemberResponseDto;
 import com.uspray.uspray.DTO.auth.response.QMemberResponseDto;
 import com.uspray.uspray.DTO.group.response.GroupResponseDto;
 import com.uspray.uspray.DTO.group.response.QGroupResponseDto;
-import com.uspray.uspray.domain.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -23,7 +24,7 @@ public class GroupRepositoryImpl implements GroupRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<GroupResponseDto> findGroupListByMember(Member target) {
+    public List<GroupResponseDto> findGroupListByMemberId(String userId) {
         return queryFactory
             .select(new QGroupResponseDto(
                 group.id,
@@ -36,13 +37,22 @@ public class GroupRepositoryImpl implements GroupRepositoryCustom {
             .from(group)
             .join(group.groupMemberList, groupMember)
             .leftJoin(group.groupPrayList, groupPray)
-            .where(groupMember.member.eq(target))
+            .where(groupMember.member.userId.eq(userId))
             .groupBy(group.id)
             .fetch();
     }
 
     @Override
     public List<MemberResponseDto> findGroupMembersByGroupAndNameLike(Long groupId, String name) {
+
+        BooleanBuilder builder = new BooleanBuilder();
+
+        builder.and(groupMember.group.id.eq(groupId));
+
+        if (StringUtils.hasText(name)) {
+            builder.and(member.name.likeIgnoreCase("%" + name + "%"));
+        }
+
         return queryFactory
             .select(new QMemberResponseDto(
                 member.userId,
@@ -51,22 +61,8 @@ public class GroupRepositoryImpl implements GroupRepositoryCustom {
             ))
             .from(member)
             .join(member.groupMemberList, groupMember)
-            .where(groupMember.group.id.eq(groupId)
-                .and(member.name.likeIgnoreCase("%" + name + "%")))
+            .where(builder)
             .fetch();
     }
 
-    @Override
-    public List<MemberResponseDto> findGroupMembers(Long groupId) {
-        return queryFactory
-            .select(new QMemberResponseDto(
-                member.userId,
-                member.name,
-                member.phone
-            ))
-            .from(member)
-            .join(member.groupMemberList, groupMember)
-            .where(groupMember.group.id.eq(groupId))
-            .fetch();
-    }
 }
