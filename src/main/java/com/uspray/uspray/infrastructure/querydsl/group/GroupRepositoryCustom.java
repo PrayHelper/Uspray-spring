@@ -10,9 +10,8 @@ import java.util.List;
 
 public interface GroupRepositoryCustom {
 
-    List<GroupResponseDto> findGroupListByMember(Member member);
+    List<GroupResponseDto> findGroupListByMemberId(String userId);
 
     List<MemberResponseDto> findGroupMembersByGroupAndNameLike(Long groupId, String name);
 
-    List<MemberResponseDto> findGroupMembers(Long groupId);
 }
