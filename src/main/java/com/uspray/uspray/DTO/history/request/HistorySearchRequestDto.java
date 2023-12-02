@@ -13,22 +13,22 @@ import lombok.NoArgsConstructor;
 public class HistorySearchRequestDto {
 
     @Schema(description = "검색 키워드", example = "기도")
-    String keyword;
+    private String keyword;
     @NotNull
     @Schema(description = "검색 시작 날짜", example = "2023-01-01")
-    LocalDate startDate;
+    private LocalDate startDate;
     @NotNull
     @Schema(description = "검색 종료 날짜", example = "2024-01-01")
-    LocalDate endDate;
+    private LocalDate endDate;
     @NotNull
     @Schema(description = "페이지", example = "0")
-    Integer page;
+    private Integer page;
     @NotNull
     @Schema(description = "페이지 크기", example = "10")
-    Integer size;
+    private Integer size;
     @Schema(description = "내가 쓴 기도제목만 검색", example = "true")
-    Boolean isPersonal;
+    private Boolean isPersonal;
     @Schema(description = "공유받은 기도제목만 검색", example = "true")
-    Boolean isShared;
+    private Boolean isShared;
 
 }
