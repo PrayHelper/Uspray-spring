@@ -39,6 +39,7 @@ public enum SuccessStatus {
     CHANGE_GROUP_LEADER_SUCCESS(HttpStatus.OK, "모임 리더 위임에 성공했습니다."),
     KICK_GROUP_MEMBER_SUCCESS(HttpStatus.OK, "모임 멤버 내보내기에 성공했습니다."),
     ADD_GROUP_MEMBER_SUCCESS(HttpStatus.OK, "모임 멤버 추가하기에 성공했습니다."),
+    GET_MEMBER_LIST_SUCCESS(HttpStatus.OK, "모임 멤버 조회에 성공했습니다."),
     CANCEL_PRAY_SUCCESS(HttpStatus.OK, "기도제목 취소에 성공했습니다."),
     TEST_SUCCESS(HttpStatus.OK, "Test :: OK"),
 

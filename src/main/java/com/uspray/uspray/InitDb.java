@@ -2,11 +2,8 @@ package com.uspray.uspray;
 
 import com.uspray.uspray.Enums.Authority;
 import com.uspray.uspray.Enums.PrayType;
-import com.uspray.uspray.domain.Category;
-import com.uspray.uspray.domain.Group;
-import com.uspray.uspray.domain.History;
-import com.uspray.uspray.domain.Member;
-import com.uspray.uspray.domain.Pray;
+import com.uspray.uspray.domain.*;
+
 import java.time.LocalDate;
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
@@ -72,13 +69,17 @@ public class InitDb {
           
 
             Group group = Group.builder()
-                .leader(member)
                 .name("테스트 모임")
+                .leader(member)
                 .build();
-            group.addMember(member);
-            member.joinGroup(group);
             em.persist(group);
 
+            GroupMember groupMember = GroupMember.builder()
+                .group(group)
+                .member(member)
+                .build();
+            em.persist(groupMember);
+          
             Category category = Category.builder()
                 .name("기타 카테고리")
                 .color("#FFFFFF")
@@ -154,6 +155,7 @@ public class InitDb {
                 .pray(pray)
                 .build();
             em.persist(history);
+          
         }
 
     }
