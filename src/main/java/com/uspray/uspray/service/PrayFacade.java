@@ -56,8 +56,16 @@ public class PrayFacade {
         // 이 기도 제목을 공유한 적 없거나, 공유 받은 사람이 없으면 전부 수정 가능
         // 이 기도 제목을 공유한 적 있고, 누구라도 공유 받은 사람이 있으면 기도제목 내용 수정 불가능
         Pray sharedPray = prayRepository.getPrayByOriginPrayId(prayId);
+        if (prayUpdateRequestDto.getCategoryId() != null) {
+            Category category = categoryRepository.getCategoryByIdAndMember(
+                prayUpdateRequestDto.getCategoryId(),
+                pray.getMember());
+            pray.update(prayUpdateRequestDto,
+                sharedPray != null || pray.getPrayType() == PrayType.SHARED, category);
+        }
+
         pray.update(prayUpdateRequestDto,
-            sharedPray != null || pray.getPrayType() == PrayType.SHARED);
+            sharedPray != null || pray.getPrayType() == PrayType.SHARED, null);
 
         return PrayResponseDto.of(pray);
     }

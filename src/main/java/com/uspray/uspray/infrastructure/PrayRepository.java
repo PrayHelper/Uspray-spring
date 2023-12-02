@@ -32,4 +32,12 @@ public interface PrayRepository extends JpaRepository<Pray, Long>, PrayRepositor
     List<Pray> findAllByDeadlineBefore(LocalDate date);
 
     Pray getPrayByOriginPrayId(Long prayId);
+
+    default void cancelPray(Pray pray) {
+        if (pray.getDeleted()) {
+            throw new NotFoundException(ErrorStatus.ALREADY_CANCEL_EXCEPTION,
+                ErrorStatus.ALREADY_CANCEL_EXCEPTION.getMessage());
+        }
+        pray.deleteLastPrayedAt();
+    }
 }
