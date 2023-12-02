@@ -1,6 +1,7 @@
 package com.uspray.uspray.controller;
 
 import com.uspray.uspray.DTO.ApiResponseDto;
+import com.uspray.uspray.DTO.history.request.HistorySearchRequestDto;
 import com.uspray.uspray.DTO.history.response.HistoryDetailResponseDto;
 import com.uspray.uspray.DTO.history.response.HistoryListResponseDto;
 import com.uspray.uspray.DTO.pray.request.PrayRequestDto;
@@ -10,10 +11,8 @@ import com.uspray.uspray.service.PrayFacade;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.time.LocalDate;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -47,19 +46,13 @@ public class HistoryController {
     // 이름, 내용, 카테고리에 해당되는 키워드 전부를 찾아서 검색
     // 내가 쓴 기도제목, 공유받은 기도제목 체크박스 (최소 한 개 이상 선택)
     // 날짜까지 (옵션)
-    @GetMapping("/search")
+    @PostMapping("/search")
     public ApiResponseDto<HistoryListResponseDto> searchHistoryList(
         @Parameter(hidden = true) @AuthenticationPrincipal User user,
-        @RequestParam(required = false) String keyword,
-        @RequestParam Boolean isPersonal,
-        @RequestParam Boolean isShared,
-        @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
-        @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
-        @RequestParam(value = "page", defaultValue = "0") int page,
-        @RequestParam(value = "size", defaultValue = "10") int size) {
+        @RequestBody @Valid HistorySearchRequestDto historySearchRequestDto
+    ) {
         return ApiResponseDto.success(SuccessStatus.GET_HISTORY_LIST_SUCCESS,
-            historyService.searchHistoryList(user.getUsername(), keyword, isPersonal, isShared,
-                startDate, endDate, page, size));
+            historyService.searchHistoryList(user.getUsername(), historySearchRequestDto));
     }
 
     @GetMapping("/detail/{historyId}")

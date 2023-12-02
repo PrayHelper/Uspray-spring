@@ -128,7 +128,7 @@ public class PrayController {
     @Operation(summary = "기도 완료하기")
     @ApiResponse(
         responseCode = "200",
-        description = "기도 완료하기",
+        description = "기도제목 완료하기",
         content = @Content(schema = @Schema(implementation = PrayResponseDto.class)))
     @PutMapping("/{prayId}/complete")
     public ApiResponseDto<List<PrayListResponseDto>> completePray(
@@ -138,5 +138,19 @@ public class PrayController {
         prayFacadeService.createHistory(user.getUsername(), prayId);
         return ApiResponseDto.success(SuccessStatus.GET_PRAY_LIST_SUCCESS,
             prayService.completePray(prayId, user.getUsername()));
+    }
+
+    @Operation(summary = "기도제목 취소하기")
+    @ApiResponse(
+        responseCode = "200",
+        description = "오늘 기도 취소하기",
+        content = @Content(schema = @Schema(implementation = PrayResponseDto.class)))
+    @PutMapping("/{prayId}/cancel")
+    public ApiResponseDto<List<PrayListResponseDto>> cancelPray(
+        @Parameter(description = "기도제목 ID", required = true) @PathVariable("prayId") Long prayId,
+        @Parameter(hidden = true) @AuthenticationPrincipal User user
+    ) {
+        return ApiResponseDto.success(SuccessStatus.CANCEL_PRAY_SUCCESS,
+            prayService.cancelPray(prayId, user.getUsername()));
     }
 }

@@ -12,5 +12,5 @@ import javax.validation.constraints.NotNull;
 public class GroupMemberRequestDto {
 
     @NotNull
-    private String username;
+    private Long memberId;
 }

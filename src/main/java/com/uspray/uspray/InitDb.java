@@ -2,11 +2,8 @@ package com.uspray.uspray;
 
 import com.uspray.uspray.Enums.Authority;
 import com.uspray.uspray.Enums.PrayType;
-import com.uspray.uspray.domain.Category;
-import com.uspray.uspray.domain.Group;
-import com.uspray.uspray.domain.History;
-import com.uspray.uspray.domain.Member;
-import com.uspray.uspray.domain.Pray;
+import com.uspray.uspray.domain.*;
+
 import java.time.LocalDate;
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
@@ -47,6 +44,18 @@ public class InitDb {
                 .build();
             em.persist(member);
 
+            Member member2 = Member.builder()
+                .userId("test2")
+                .password(passwordEncoder.encode("test2"))
+                .name("홍길동")
+                .phone("01012345670")
+                .birth("2002-02-24")
+                .gender("male")
+                .authority(Authority.ROLE_USER)
+                .build();
+            em.persist(member2);
+          
+          
             Member member_mook = Member.builder()
                 .userId("wjdanr0869")
                 .password(passwordEncoder.encode("wjdanr0869"))
@@ -57,15 +66,20 @@ public class InitDb {
                 .authority(Authority.ROLE_USER)
                 .build();
             em.persist(member_mook);
+          
 
             Group group = Group.builder()
-                .leader(member)
                 .name("테스트 모임")
+                .leader(member)
                 .build();
-            group.addMember(member);
-            member.joinGroup(group);
             em.persist(group);
 
+            GroupMember groupMember = GroupMember.builder()
+                .group(group)
+                .member(member)
+                .build();
+            em.persist(groupMember);
+          
             Category category = Category.builder()
                 .name("기타 카테고리")
                 .color("#FFFFFF")
@@ -82,6 +96,14 @@ public class InitDb {
                 .build();
             em.persist(category1);
 
+            Category category2 = Category.builder()
+                .name("친구")
+                .color("#408CFF")
+                .member(member2)
+                .order(2048)
+                .build();
+            em.persist(category2);
+
             Pray pray = Pray.builder()
                 .content("테스트 기도")
                 .deadline(LocalDate.parse("2025-01-01"))
@@ -91,21 +113,32 @@ public class InitDb {
                 .build();
             em.persist(pray);
 
+            Pray pray_1 = Pray.builder()
+                .content("공유 테스트 기도")
+                .deadline(LocalDate.parse("2025-01-01"))
+                .member(member2)
+                .category(category)
+                .prayType(PrayType.PERSONAL)
+                .build();
+            em.persist(pray_1);
+
             Pray pray1 = Pray.builder()
                 .content("기도합니다")
                 .deadline(LocalDate.parse("2025-02-24"))
                 .member(member)
                 .category(category)
                 .prayType(PrayType.SHARED)
+                .originPrayId(pray_1.getId())
                 .build();
             em.persist(pray1);
 
             Pray pray2 = Pray.builder()
                 .content("기도할게요")
                 .deadline(LocalDate.parse("2024-02-24"))
-                .member(member)
-                .category(category1)
+                .member(member2)
+                .category(category2)
                 .prayType(PrayType.SHARED)
+                .originPrayId(pray.getId())
                 .build();
             em.persist(pray2);
 
@@ -122,6 +155,7 @@ public class InitDb {
                 .pray(pray)
                 .build();
             em.persist(history);
+          
         }
 
     }

@@ -38,6 +38,7 @@ public class Pray extends AuditingTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "pray_id")
     private Long id;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
@@ -75,22 +76,27 @@ public class Pray extends AuditingTimeEntity {
         this.isShared = (originPrayId != null);
         this.category = category;
         this.prayType = prayType;
+        this.lastPrayedAt = LocalDate.now().minusDays(7);
     }
 
     public void update(PrayUpdateRequestDto prayUpdateRequestDto,
-        boolean isShared) {
-        if (isShared && prayUpdateRequestDto.getContent() != null) {
-            throw new NotFoundException(ErrorStatus.ALREADY_SHARED_EXCEPTION,
-                ErrorStatus.ALREADY_SHARED_EXCEPTION.getMessage());
-        }
+        boolean isShared, Category category) {
+        handleUpdateContentSharedPray(isShared, prayUpdateRequestDto.getContent());
         if (prayUpdateRequestDto.getContent() != null) {
             this.content = new String(
                 Base64.getEncoder().encode(prayUpdateRequestDto.getContent().getBytes()));
         }
         this.deadline = prayUpdateRequestDto.getDeadline();
-        this.category = Category.builder()
-            .id(prayUpdateRequestDto.getCategoryId())
-            .build();
+        if (category != null) {
+            this.category = category;
+        }
+    }
+
+    private void handleUpdateContentSharedPray(boolean isShared, String content) {
+        if (isShared && content != null) {
+            throw new NotFoundException(ErrorStatus.ALREADY_SHARED_EXCEPTION,
+                ErrorStatus.ALREADY_SHARED_EXCEPTION.getMessage());
+        }
     }
 
     public String getContent() {
@@ -104,5 +110,10 @@ public class Pray extends AuditingTimeEntity {
 
     public void complete() {
         this.deadline = LocalDate.now();
+    }
+
+    public void deleteLastPrayedAt() {
+        this.lastPrayedAt = null;
+        this.count--;
     }
 }
