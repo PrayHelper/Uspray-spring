@@ -1,6 +1,9 @@
 package com.uspray.uspray.domain;
 
 import com.uspray.uspray.common.domain.AuditingTimeEntity;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -9,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -33,6 +37,9 @@ public class GroupPray extends AuditingTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member author;
+
+    @OneToMany(mappedBy = "groupPray", cascade = CascadeType.ALL)
+    private final List<ScrapAndHeart> scrapAndHeart = new ArrayList<>();
 
     @Builder
     public GroupPray(String content, Group group, Member author) {
