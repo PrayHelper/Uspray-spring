@@ -1,7 +1,6 @@
 package com.uspray.uspray.DTO.group.response;
 
 import com.querydsl.core.annotations.QueryProjection;
-import com.uspray.uspray.Enums.MaskingType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
