@@ -25,14 +25,10 @@ public class GroupMember {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @Setter
-    private boolean isLeader = false;
-
     @Builder
-    public GroupMember(Group group, Member member, Boolean isLeader) {
+    public GroupMember(Group group, Member member) {
         setGroup(group);
         setMember(member);
-        this.isLeader = isLeader;
     }
 
     private void setMember(Member member) {

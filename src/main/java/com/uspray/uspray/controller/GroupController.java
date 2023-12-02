@@ -1,10 +1,10 @@
 package com.uspray.uspray.controller;
 
 import com.uspray.uspray.DTO.ApiResponseDto;
-import com.uspray.uspray.DTO.auth.response.MemberResponseDto;
 import com.uspray.uspray.DTO.group.request.GroupMemberRequestDto;
 import com.uspray.uspray.DTO.group.request.GroupRequestDto;
 import com.uspray.uspray.DTO.group.response.GroupListResponseDto;
+import com.uspray.uspray.DTO.group.response.GroupMemberResponseDto;
 import com.uspray.uspray.exception.SuccessStatus;
 import com.uspray.uspray.service.GroupFacade;
 import com.uspray.uspray.service.GroupService;
@@ -60,7 +60,7 @@ public class GroupController {
         @Parameter(hidden = true) @AuthenticationPrincipal User user,
         @PathVariable Long groupId,
         @Valid @RequestBody GroupMemberRequestDto groupLeaderRequestDto) {
-        groupFacade.changeGroupLeader(user.getUsername(), groupId, groupLeaderRequestDto);
+        groupFacade.changeGroupLeader(user.getUsername(), groupId, groupLeaderRequestDto.getMemberId());
         return ApiResponseDto.success(SuccessStatus.CHANGE_GROUP_LEADER_SUCCESS,
             SuccessStatus.CHANGE_GROUP_LEADER_SUCCESS.getMessage());
     }
@@ -70,7 +70,7 @@ public class GroupController {
         @Parameter(hidden = true) @AuthenticationPrincipal User user,
         @PathVariable Long groupId,
         @Valid @RequestBody GroupMemberRequestDto groupMemberRequestDto) {
-        groupFacade.kickGroupMember(user.getUsername(), groupId, groupMemberRequestDto);
+        groupFacade.kickGroupMember(user.getUsername(), groupId, groupMemberRequestDto.getMemberId());
         return ApiResponseDto.success(SuccessStatus.KICK_GROUP_MEMBER_SUCCESS,
             SuccessStatus.KICK_GROUP_MEMBER_SUCCESS.getMessage());
     }
@@ -79,7 +79,7 @@ public class GroupController {
     public ApiResponseDto<?> addGroupMember(
         @Parameter(hidden = true) @AuthenticationPrincipal User user,
         @PathVariable Long groupId) {
-        groupFacade.addGroupMember(user.getUsername(), groupId, false);
+        groupFacade.addGroupMember(user.getUsername(), groupId);
         return ApiResponseDto.success(SuccessStatus.ADD_GROUP_MEMBER_SUCCESS,
             SuccessStatus.ADD_GROUP_MEMBER_SUCCESS.getMessage());
     }
@@ -103,7 +103,7 @@ public class GroupController {
     }
 
     @GetMapping("/{groupId}/member/search")
-    public ApiResponseDto<List<MemberResponseDto>> searchGroupMembers(
+    public ApiResponseDto<List<GroupMemberResponseDto>> searchGroupMembers(
         @PathVariable Long groupId,
         @RequestParam(required = false) String name) {
         return ApiResponseDto.success(SuccessStatus.GET_MEMBER_LIST_SUCCESS,

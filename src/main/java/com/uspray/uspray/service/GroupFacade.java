@@ -27,10 +27,11 @@ public class GroupFacade {
     public void createGroup(String username, GroupRequestDto groupRequestDto) {
         Group group = Group.builder()
             .name(groupRequestDto.getName())
+            .leader(memberRepository.getMemberByUserId(username))
             .build();
         groupRepository.save(group);
 
-        addGroupMember(username, group.getId(), true);
+        addGroupMember(username, group.getId());
     }
 
     @Transactional
@@ -44,9 +45,9 @@ public class GroupFacade {
     }
 
     @Transactional
-    public void changeGroupLeader(String username, Long groupId, GroupMemberRequestDto groupLeaderRequestDto) {
+    public void changeGroupLeader(String username, Long groupId, Long newLeaderId) {
         Member member = memberRepository.getMemberByUserId(username);
-        Member newLeader = memberRepository.getMemberByUserId(groupLeaderRequestDto.getUsername());
+        Member newLeader = memberRepository.getMemberById(newLeaderId);
         Group group = groupRepository.getGroupById(groupId);
 
         group.checkLeaderAuthorization(member);
@@ -54,21 +55,20 @@ public class GroupFacade {
     }
 
     @Transactional
-    public void kickGroupMember(String username, Long groupId, GroupMemberRequestDto groupKickRequestDto) {
+    public void kickGroupMember(String username, Long groupId, Long kickedMemberId) {
         Member leader = memberRepository.getMemberByUserId(username);
         Group group = groupRepository.getGroupById(groupId);
-        Member kickedMember = memberRepository.getMemberByUserId(groupKickRequestDto.getUsername());
-        GroupMember kickedgroupMember = groupMemberRepository.getGroupMemberByGroupAndMember(group, kickedMember);
+        GroupMember kickedgroupMember = groupMemberRepository.getGroupMemberByGroupIdAndMemberId(groupId, kickedMemberId);
 
         group.checkLeaderAuthorization(leader);
-        if (group.getLeader().equals(kickedMember)) {
+        if (group.getLeader().getId().equals(kickedMemberId)) {
             throw new CustomException(ErrorStatus.LEADER_CANNOT_LEAVE_GROUP_EXCEPTION, ErrorStatus.LEADER_CANNOT_LEAVE_GROUP_EXCEPTION.getMessage());
         }
         group.kickMember(kickedgroupMember);
     }
 
     @Transactional
-    public void addGroupMember(String username, Long groupId, Boolean isLeader) {
+    public void addGroupMember(String username, Long groupId) {
         Member member = memberRepository.getMemberByUserId(username);
         Group group = groupRepository.getGroupById(groupId);
 
@@ -78,7 +78,6 @@ public class GroupFacade {
         GroupMember groupMember = GroupMember.builder()
             .group(group)
             .member(member)
-            .isLeader(isLeader)
             .build();
         groupMemberRepository.save(groupMember);
     }

@@ -1,5 +1,6 @@
 package com.uspray.uspray;
 
+import com.uspray.uspray.DTO.group.response.GroupMemberResponseDto;
 import com.uspray.uspray.Enums.Authority;
 import com.uspray.uspray.Enums.PrayType;
 import com.uspray.uspray.domain.*;
@@ -8,10 +9,12 @@ import java.time.LocalDate;
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class InitDb {
@@ -46,13 +49,13 @@ public class InitDb {
           
             Group group = Group.builder()
                 .name("테스트 모임")
+                .leader(member)
                 .build();
             em.persist(group);
 
             GroupMember groupMember = GroupMember.builder()
                 .group(group)
                 .member(member)
-                .isLeader(true)
                 .build();
             em.persist(groupMember);
           
@@ -112,6 +115,9 @@ public class InitDb {
                 .pray(pray)
                 .build();
             em.persist(history);
+
+            GroupMemberResponseDto groupMemberResponseDto = new GroupMemberResponseDto(member.getId(), member.getUserId(), member.getName());
+            log.info(groupMemberResponseDto.toString());
         }
 
     }

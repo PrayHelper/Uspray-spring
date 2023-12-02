@@ -9,13 +9,16 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.uspray.uspray.DTO.auth.response.MemberResponseDto;
 import com.uspray.uspray.DTO.auth.response.QMemberResponseDto;
+import com.uspray.uspray.DTO.group.response.GroupMemberResponseDto;
 import com.uspray.uspray.DTO.group.response.GroupResponseDto;
+import com.uspray.uspray.DTO.group.response.QGroupMemberResponseDto;
 import com.uspray.uspray.DTO.group.response.QGroupResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
@@ -43,7 +46,7 @@ public class GroupRepositoryImpl implements GroupRepositoryCustom {
     }
 
     @Override
-    public List<MemberResponseDto> findGroupMembersByGroupAndNameLike(Long groupId, String name) {
+    public List<GroupMemberResponseDto> findGroupMembersByGroupAndNameLike(Long groupId, String name) {
 
         BooleanBuilder builder = new BooleanBuilder();
 
@@ -54,10 +57,10 @@ public class GroupRepositoryImpl implements GroupRepositoryCustom {
         }
 
         return queryFactory
-            .select(new QMemberResponseDto(
+            .select(new QGroupMemberResponseDto(
+                member.id,
                 member.userId,
-                member.name,
-                member.phone
+                member.name
             ))
             .from(member)
             .join(member.groupMemberList, groupMember)
