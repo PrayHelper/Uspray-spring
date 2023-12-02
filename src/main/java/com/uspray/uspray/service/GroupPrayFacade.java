@@ -83,7 +83,7 @@ public class GroupPrayFacade {
             .deadline(scrapRequestDto.getDeadline())
             .member(member)
             .category(category)
-            .prayType(PrayType.PERSONAL)
+            .prayType(PrayType.SHARED)
             .build();
     }
 }
