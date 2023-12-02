@@ -1,5 +1,6 @@
 package com.uspray.uspray.service;
 
+import com.uspray.uspray.DTO.history.request.HistorySearchRequestDto;
 import com.uspray.uspray.DTO.history.response.HistoryDetailResponseDto;
 import com.uspray.uspray.DTO.history.response.HistoryListResponseDto;
 import com.uspray.uspray.DTO.history.response.HistoryResponseDto;
@@ -10,7 +11,6 @@ import com.uspray.uspray.exception.ErrorStatus;
 import com.uspray.uspray.exception.model.NotFoundException;
 import com.uspray.uspray.infrastructure.HistoryRepository;
 import com.uspray.uspray.infrastructure.MemberRepository;
-import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -47,18 +47,16 @@ public class HistoryService {
     }
 
     @Transactional(readOnly = true)
-    public HistoryListResponseDto searchHistoryList(String username, String keyword,
-        Boolean isPersonal, Boolean isShared, LocalDate startDate, LocalDate endDate, int page,
-        int size) {
+    public HistoryListResponseDto searchHistoryList(String username,
+        HistorySearchRequestDto historySearchRequestDto) {
 
-        // 전체 파라미터가 null 인 경우 예외처리
-        if (keyword == null && isPersonal == null && isShared == null && startDate == null
-            && endDate == null) {
-            throw new IllegalArgumentException("검색 조건이 없습니다.");
-        }
-        Pageable pageable = PageRequest.of(page, size, Sort.by("deadline").descending());
+        Pageable pageable = PageRequest.of(historySearchRequestDto.getPage(),
+            historySearchRequestDto.getSize(), Sort.by("deadline").descending());
         Page<HistoryResponseDto> historyList = historyRepository.findBySearchOption(username,
-                keyword, isPersonal, isShared, startDate, endDate, pageable)
+                historySearchRequestDto.getKeyword(), historySearchRequestDto.getIsPersonal(),
+                historySearchRequestDto.getIsShared(),
+                historySearchRequestDto.getStartDate(), historySearchRequestDto.getEndDate(),
+                pageable)
             .map(HistoryResponseDto::of);
         return new HistoryListResponseDto(historyList.getContent(), historyList.getTotalPages());
     }
