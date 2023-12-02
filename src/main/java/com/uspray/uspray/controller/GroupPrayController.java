@@ -15,7 +15,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
@@ -42,7 +44,7 @@ public class GroupPrayController {
     @PostMapping
     public ApiResponseDto<?> createGroupPray(@RequestBody GroupPrayRequestDto groupPrayRequestDto,
         @Parameter(hidden = true) @AuthenticationPrincipal User user) {
-        groupPrayService.createGroupPray(groupPrayRequestDto, user.getUsername());
+        groupPrayFacade.createGroupPray(groupPrayRequestDto, user.getUsername());
         return ApiResponseDto.success(SuccessStatus.CREATE_GROUP_PRAY_SUCCESS,
             SuccessStatus.CREATE_GROUP_PRAY_SUCCESS.getMessage());
     }
@@ -61,11 +63,11 @@ public class GroupPrayController {
         responseCode = "200",
         description = "모임 기도제목 목록 반환",
         content = @Content(schema = @Schema(implementation = GroupPrayResponseDto.class)))
-    public ApiResponseDto<List<GroupPrayResponseDto>> getGroupPray(
+    public ApiResponseDto<Map<LocalDate, List<GroupPrayResponseDto>>> getGroupPray(
         @PathVariable(name = "groupId") Long groupId,
         @Parameter(hidden = true) @AuthenticationPrincipal User user) {
         return ApiResponseDto.success(SuccessStatus.GET_GROUP_PRAY_LIST_SUCCESS,
-            groupPrayService.getGroupPray(groupId, user.getUsername()));
+            groupPrayFacade.getGroupPray(groupId, user.getUsername()));
     }
 
     @Operation(summary = "모임 기도제목 삭제")
