@@ -78,6 +78,9 @@ public class GroupPrayController {
 
     @Operation(summary = "모임 기도제목 삭제")
     @DeleteMapping("/{groupPrayId}")
+    @ApiResponse(
+        responseCode = "204",
+        description = "모임 기도제목 삭제")
     public ApiResponseDto<?> deleteGroupPray(@PathVariable(name = "groupPrayId") Long id) {
         groupPrayService.deleteGroupPray(id);
         return ApiResponseDto.success(SuccessStatus.DELETE_GROUP_PRAY_SUCCESS,
