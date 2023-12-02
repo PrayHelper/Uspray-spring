@@ -1,18 +1,13 @@
 package com.uspray.uspray;
 
-import com.uspray.uspray.DTO.group.response.GroupMemberResponseDto;
 import com.uspray.uspray.Enums.Authority;
 import com.uspray.uspray.Enums.PrayType;
-import com.uspray.uspray.domain.Category;
-import com.uspray.uspray.domain.Group;
-import com.uspray.uspray.domain.History;
-import com.uspray.uspray.domain.Member;
-import com.uspray.uspray.domain.Pray;
+import com.uspray.uspray.domain.*;
+
 import java.time.LocalDate;
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;

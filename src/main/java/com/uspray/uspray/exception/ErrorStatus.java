@@ -48,8 +48,7 @@ public enum ErrorStatus {
     HISTORY_NOT_FOUND_EXCEPTION(HttpStatus.NOT_FOUND, "해당 히스토리를 찾을 수 없습니다."),
     CATEGORY_NOT_FOUND_EXCEPTION(HttpStatus.NOT_FOUND, "해당 카테고리를 찾을 수 없습니다."),
     GROUP_MEMBER_NOT_FOUND_EXCEPTION(HttpStatus.NOT_FOUND, "해당 멤버를 모임에서 찾을 수 없습니다."),
-    NOT_FOUND_GROUP_MEMBER_EXCEPTION(HttpStatus.NOT_FOUND, "존재하지 않는 모임 회원입니다."),
-    GROUP_MEMBER_NOT_FOUND_EXCEPTION(HttpStatus.NOT_FOUND, "해당 멤버를 모임에서 찾을 수 없습니다.");
+    NOT_FOUND_GROUP_MEMBER_EXCEPTION(HttpStatus.NOT_FOUND, "존재하지 않는 모임 회원입니다.");
 
     private final HttpStatus httpStatus;
     private final String message;
