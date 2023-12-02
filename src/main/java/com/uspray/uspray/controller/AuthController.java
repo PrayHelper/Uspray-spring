@@ -35,7 +35,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @Tag(name = "Auth", description = "Auth 관련 API")
 public class AuthController {
-  private final AuthService authService;
+
+    private final AuthService authService;
 
     @PostMapping("/signup")
     @ApiResponse(
@@ -69,10 +70,9 @@ public class AuthController {
         @SecurityRequirement(name = "Refresh")
     })
     public ApiResponseDto<TokenDto> reissue(@Parameter(hidden = true) HttpServletRequest request) {
-        String accessToken = request.getHeader("Authorization").substring(7);
         String refreshToken = request.getHeader("Refresh");
         return ApiResponseDto.success(SuccessStatus.REISSUE_SUCCESS,
-            authService.reissue(accessToken, refreshToken));
+            authService.reissue(refreshToken));
     }
 
 
