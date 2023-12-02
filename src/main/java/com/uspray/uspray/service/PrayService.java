@@ -4,7 +4,6 @@ import com.uspray.uspray.DTO.pray.PrayListResponseDto;
 import com.uspray.uspray.DTO.pray.response.PrayResponseDto;
 import com.uspray.uspray.Enums.PrayType;
 import com.uspray.uspray.domain.NotificationLog;
-import com.uspray.uspray.domain.NotificationLogId;
 import com.uspray.uspray.domain.Pray;
 import com.uspray.uspray.exception.ErrorStatus;
 import com.uspray.uspray.exception.model.NotFoundException;
@@ -70,12 +69,10 @@ public class PrayService {
     private void sendNotificationAndSaveLog(Pray pray, String username) {
         // TODO: notification 보내는 로직 추가
         System.out.println("send notification to " + memberRepository.getMemberByUserId(username));
-        NotificationLogId notificationLogId = NotificationLogId.builder()
+        NotificationLog notificationLog = NotificationLog.builder()
             .pray(pray)
             .member(memberRepository.getMemberByUserId(username))
-            .build();
-        NotificationLog notificationLog = NotificationLog.builder()
-            .id(notificationLogId)
+            .title("누군가가 당신이 공유한 기도제목을 기도했어요.")
             .build();
         notificationLogRepository.save(notificationLog);
     }
