@@ -1,5 +1,6 @@
 package com.uspray.uspray.service;
 
+import com.uspray.uspray.DTO.pray.PrayListResponseDto;
 import com.uspray.uspray.DTO.pray.request.PrayRequestDto;
 import com.uspray.uspray.DTO.pray.request.PrayUpdateRequestDto;
 import com.uspray.uspray.DTO.pray.response.PrayResponseDto;
@@ -7,15 +8,20 @@ import com.uspray.uspray.Enums.PrayType;
 import com.uspray.uspray.domain.Category;
 import com.uspray.uspray.domain.History;
 import com.uspray.uspray.domain.Member;
+import com.uspray.uspray.domain.NotificationLog;
 import com.uspray.uspray.domain.Pray;
 import com.uspray.uspray.exception.ErrorStatus;
 import com.uspray.uspray.exception.model.CustomException;
+import com.uspray.uspray.exception.model.NotFoundException;
 import com.uspray.uspray.infrastructure.CategoryRepository;
 import com.uspray.uspray.infrastructure.HistoryRepository;
 import com.uspray.uspray.infrastructure.MemberRepository;
+import com.uspray.uspray.infrastructure.NotificationLogRepository;
 import com.uspray.uspray.infrastructure.PrayRepository;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,6 +34,7 @@ public class PrayFacade {
     private final PrayRepository prayRepository;
     private final CategoryRepository categoryRepository;
     private final HistoryRepository historyRepository;
+    private final NotificationLogRepository notificationLogRepository;
 
     @Transactional
     public PrayResponseDto createPray(PrayRequestDto prayRequestDto, String username) {
@@ -90,5 +97,57 @@ public class PrayFacade {
             .pray(pray)
             .build();
         historyRepository.save(history);
+    }
+
+    @Transactional
+    public List<PrayListResponseDto> getPrayList(String username, String prayType) {
+
+        List<Pray> prays = prayRepository.findAllWithOrderAndType(username, prayType);
+
+        // Pray 엔티티를 categoryId를 기준으로 그룹화한 맵 생성
+        Map<Long, List<Pray>> prayMap = prays.stream()
+            .collect(Collectors.groupingBy(pray -> pray.getCategory().getId()));
+
+        // 그룹화된 맵을 PrayListResponseDto 변환하여 반환
+        return prayMap.entrySet().stream()
+            .map(entry -> new PrayListResponseDto(entry.getKey(),
+                entry.getValue().get(0).getCategory().getName(),
+                entry.getValue().stream()
+                    .map(PrayResponseDto::of)
+                    .collect(Collectors.toList())))
+            .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public List<PrayListResponseDto> todayPray(Long prayId, String username) {
+        Pray pray = prayRepository.getPrayByIdAndMemberId(prayId, username);
+        LocalDate today = LocalDate.now();
+        handlePrayedToday(pray, today);
+        return getPrayList(username, PrayType.PERSONAL.stringValue());
+    }
+
+    private void sendNotificationAndSaveLog(Pray pray, String username) {
+        // TODO: notification 보내는 로직 추가
+
+        System.out.println("send notification to " + memberRepository.getMemberByUserId(username));
+        NotificationLog notificationLog = NotificationLog.builder()
+            .pray(pray)
+            .member(memberRepository.getMemberByUserId(username))
+            .title("누군가가 당신이 공유한 기도제목을 기도했어요.")
+            .build();
+        notificationLogRepository.save(notificationLog);
+    }
+
+    private void handlePrayedToday(Pray pray, LocalDate today) {
+        if (pray.getLastPrayedAt().equals(today)) {
+            throw new NotFoundException(ErrorStatus.ALREADY_PRAYED_TODAY,
+                ErrorStatus.ALREADY_PRAYED_TODAY.getMessage());
+        }
+        pray.countUp();
+
+        if (pray.getPrayType() == PrayType.SHARED) {
+            Pray originPray = prayRepository.getPrayById(pray.getOriginPrayId());
+            sendNotificationAndSaveLog(pray, originPray.getMember().getUserId());
+        }
     }
 }
