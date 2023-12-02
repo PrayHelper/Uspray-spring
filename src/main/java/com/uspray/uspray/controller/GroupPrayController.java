@@ -42,6 +42,9 @@ public class GroupPrayController {
 
     @Operation(summary = "모임 기도제목 생성")
     @PostMapping
+    @ApiResponse(
+        responseCode = "201",
+        description = "모임 기도제목 생성")
     public ApiResponseDto<?> createGroupPray(@RequestBody GroupPrayRequestDto groupPrayRequestDto,
         @Parameter(hidden = true) @AuthenticationPrincipal User user) {
         groupPrayFacade.createGroupPray(groupPrayRequestDto, user.getUsername());
@@ -51,6 +54,9 @@ public class GroupPrayController {
 
     @Operation(summary = "모임 기도제목 수정")
     @PutMapping
+    @ApiResponse(
+        responseCode = "200",
+        description = "모임 기도제목 수정")
     public ApiResponseDto<?> updateGroupPray(@RequestBody GroupPrayUpdateDto groupPrayUpdateDto) {
         groupPrayService.updateGroupPray(groupPrayUpdateDto);
         return ApiResponseDto.success(SuccessStatus.UPDATE_GROUP_PRAY_SUCCESS,
@@ -80,6 +86,9 @@ public class GroupPrayController {
 
     @Operation(summary = "모임 기도제목 좋아요")
     @PostMapping("/{groupPrayId}/like")
+    @ApiResponse(
+        responseCode = "200",
+        description = "모임 기도제목 좋아요")
     public ApiResponseDto<?> likeGroupPray(@PathVariable(name = "groupPrayId") Long id,
         @Parameter(hidden = true) @AuthenticationPrincipal User user) {
         groupPrayFacade.heartGroupPray(id, user.getUsername());
@@ -89,6 +98,9 @@ public class GroupPrayController {
 
     @Operation(summary = "모임 기도제목 스크랩")
     @PostMapping("/scrap")
+    @ApiResponse(
+        responseCode = "200",
+        description = "모임 기도제목 스크랩")
     public ApiResponseDto<?> scarpGroupPray(@RequestBody ScrapRequestDto scrapRequestDto,
         @Parameter(hidden = true) @AuthenticationPrincipal User user) {
         groupPrayFacade.scrapGroupPray(scrapRequestDto, user.getUsername());

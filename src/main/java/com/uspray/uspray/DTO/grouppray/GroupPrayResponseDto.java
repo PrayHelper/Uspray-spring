@@ -1,6 +1,7 @@
 package com.uspray.uspray.DTO.grouppray;
 
 import com.querydsl.core.annotations.QueryProjection;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -9,12 +10,19 @@ import lombok.Data;
 @Data
 public class GroupPrayResponseDto {
 
+    @Schema(example = "1")
     private Long groupPrayId;
+    @Schema(example = "테스트이기도 아니기도")
     private String content;
+    @Schema(example = "오리너구리")
     private String authorName;
-    private Boolean isOwner;
+    @Schema(example = "true")
+    private boolean isOwner;
+    @Schema(example = "true")
     private boolean heart;
+    @Schema(example = "false")
     private boolean scrap;
+    @Schema(example = "1592-07-17")
     private LocalDate createdAt;
 
     @QueryProjection
