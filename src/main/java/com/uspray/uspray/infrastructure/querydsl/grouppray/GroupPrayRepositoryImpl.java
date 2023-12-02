@@ -29,10 +29,10 @@ public class GroupPrayRepositoryImpl implements GroupPrayRepositoryCustom {
                 groupPray.content,
                 groupPray.author.id,
                 pray.count))
-            .from(pray)
-            .rightJoin(pray.groupPray, groupPray)
+            .from(groupPray, pray)
+            .leftJoin(groupPray, pray.groupPray) // 좋아요 및 스크랩 확인 기능
             .where(pray.member.eq(member),
-                pray.prayType.eq(PrayType.SHARED),
+                pray.prayType.eq(PrayType.GROUP),
                 groupPray.group.eq(group))
             .fetch();
     }

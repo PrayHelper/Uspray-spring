@@ -4,7 +4,9 @@ import com.uspray.uspray.DTO.ApiResponseDto;
 import com.uspray.uspray.DTO.grouppray.GroupPrayRequestDto;
 import com.uspray.uspray.DTO.grouppray.GroupPrayResponseDto;
 import com.uspray.uspray.DTO.grouppray.GroupPrayUpdateDto;
+import com.uspray.uspray.DTO.grouppray.ScrapRequestDto;
 import com.uspray.uspray.exception.SuccessStatus;
+import com.uspray.uspray.service.GroupPrayFacade;
 import com.uspray.uspray.service.GroupPrayService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -34,6 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class GroupPrayController {
 
     private final GroupPrayService groupPrayService;
+    private final GroupPrayFacade groupPrayFacade;
 
     @Operation(summary = "모임 기도제목 생성")
     @PostMapping
@@ -71,5 +74,23 @@ public class GroupPrayController {
         groupPrayService.deleteGroupPray(id);
         return ApiResponseDto.success(SuccessStatus.DELETE_GROUP_PRAY_SUCCESS,
             SuccessStatus.DELETE_GROUP_PRAY_SUCCESS.getMessage());
+    }
+
+    @Operation(summary = "모임 기도제목 좋아요")
+    @PostMapping("/{groupPrayId}/like")
+    public ApiResponseDto<?> likeGroupPray(@PathVariable(name = "groupPrayId") Long id,
+        @Parameter(hidden = true) @AuthenticationPrincipal User user) {
+        groupPrayFacade.heartGroupPray(id, user.getUsername());
+        return ApiResponseDto.success(SuccessStatus.LIKE_GROUP_PRAY_SUCCESS,
+            SuccessStatus.LIKE_GROUP_PRAY_SUCCESS.getMessage());
+    }
+
+    @Operation(summary = "모임 기도제목 스크랩")
+    @PostMapping("/scrap")
+    public ApiResponseDto<?> scarpGroupPray(@RequestBody ScrapRequestDto scrapRequestDto,
+        @Parameter(hidden = true) @AuthenticationPrincipal User user) {
+        groupPrayFacade.scrapGroupPray(scrapRequestDto, user.getUsername());
+        return ApiResponseDto.success(SuccessStatus.SCARP_GROUP_PRAY_SUCCESS,
+            SuccessStatus.SCARP_GROUP_PRAY_SUCCESS.getMessage());
     }
 }
