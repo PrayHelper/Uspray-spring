@@ -9,7 +9,6 @@ import com.uspray.uspray.DTO.auth.request.MemberLoginRequestDto;
 import com.uspray.uspray.DTO.auth.request.MemberRequestDto;
 import com.uspray.uspray.DTO.auth.response.MemberResponseDto;
 import com.uspray.uspray.exception.SuccessStatus;
-import com.uspray.uspray.jwt.TokenProvider;
 import com.uspray.uspray.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -37,7 +36,6 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Auth", description = "Auth 관련 API")
 public class AuthController {
 
-    private final TokenProvider tokenProvider;
     private final AuthService authService;
 
     @PostMapping("/signup")
@@ -68,14 +66,12 @@ public class AuthController {
         description = "토큰 재발급 성공",
         content = @Content(schema = @Schema(implementation = TokenDto.class)))
     @SecurityRequirements({
-        @SecurityRequirement(name = "JWT Auth"),
         @SecurityRequirement(name = "Refresh")
     })
     public ApiResponseDto<TokenDto> reissue(@Parameter(hidden = true) HttpServletRequest request) {
-        String accessToken = request.getHeader("Authorization").substring(7);
         String refreshToken = request.getHeader("Refresh");
         return ApiResponseDto.success(SuccessStatus.REISSUE_SUCCESS,
-            authService.reissue(accessToken, refreshToken));
+            authService.reissue(refreshToken));
     }
 
 

@@ -22,26 +22,22 @@ import org.hibernate.annotations.Where;
 @Where(clause = "deleted=false")
 public class Member extends AuditingTimeEntity {
 
+    private final Boolean deleted = false;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
     private Long id;
-
     private String userId;
     private String password;
-
     private String name;
     private String phone;
     private String birth;
     private String gender;
     private String firebaseToken;
-
     private Boolean firstNotiAgree = true;
     private Boolean secondNotiAgree = true;
     private Boolean thirdNotiAgree = true;
-
-    private final Boolean deleted = false;
-
+    private String socialId;
     @Enumerated(EnumType.STRING)
     private Authority authority;
 
@@ -50,6 +46,23 @@ public class Member extends AuditingTimeEntity {
 
     @OneToMany(mappedBy = "author")
     private List<GroupPray> groupPrayList;
+
+    @Builder
+    public Member(String userId, String password, String name, String phone, String birth,
+        String gender, Authority authority, String socialId) {
+        this.userId = userId;
+        this.password = password;
+        this.name = name;
+        this.phone = phone;
+        this.birth = birth;
+        this.gender = gender;
+        this.socialId = socialId;
+        this.authority = authority;
+    }
+  
+    public void changeSocialId(String socialId) {
+        this.socialId = socialId;
+    }
 
     public void changeFirebaseToken(String firebaseToken) {
         this.firebaseToken = firebaseToken;
@@ -61,18 +74,6 @@ public class Member extends AuditingTimeEntity {
 
     public void changePw(String pw) {
         this.password = pw;
-    }
-
-    @Builder
-    public Member(String userId, String password, String name, String phone, String birth,
-                  String gender, Authority authority) {
-        this.userId = userId;
-        this.password = password;
-        this.name = name;
-        this.phone = phone;
-        this.birth = birth;
-        this.gender = gender;
-        this.authority = authority;
     }
 
     public void changeNotificationSetting(NotificationAgreeDto notificationAgreeDto) {

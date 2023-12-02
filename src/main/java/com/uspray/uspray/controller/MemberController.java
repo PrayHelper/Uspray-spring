@@ -37,7 +37,7 @@ public class MemberController {
     }
 
     @Operation(summary = "알림 On/Off")
-    @PostMapping("/nodification-setting")
+    @PostMapping("/notification-setting")
     public ApiResponseDto<?> setNotificationAgree(
         @Parameter(hidden = true) @AuthenticationPrincipal User user,
         @RequestBody NotificationAgreeDto notificationAgreeDto) {
