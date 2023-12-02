@@ -66,7 +66,6 @@ public class AuthController {
         description = "토큰 재발급 성공",
         content = @Content(schema = @Schema(implementation = TokenDto.class)))
     @SecurityRequirements({
-        @SecurityRequirement(name = "JWT Auth"),
         @SecurityRequirement(name = "Refresh")
     })
     public ApiResponseDto<TokenDto> reissue(@Parameter(hidden = true) HttpServletRequest request) {
