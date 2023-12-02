@@ -35,6 +35,7 @@ public class PrayFacade {
     private final CategoryRepository categoryRepository;
     private final HistoryRepository historyRepository;
     private final NotificationLogRepository notificationLogRepository;
+    private final FCMNotificationService fcmNotificationService;
 
     @Transactional
     public PrayResponseDto createPray(PrayRequestDto prayRequestDto, String username) {
@@ -126,13 +127,20 @@ public class PrayFacade {
         return getPrayList(username, PrayType.PERSONAL.stringValue());
     }
 
-    private void sendNotificationAndSaveLog(Pray pray, String username) {
-        // TODO: notification 보내는 로직 추가
-
-        System.out.println("send notification to " + memberRepository.getMemberByUserId(username));
+    private void sendNotificationAndSaveLog(Pray pray, Member member) {
+        try {
+            fcmNotificationService.sendMessageTo(
+                member.getFirebaseToken(),
+                "누군가가 당신이 공유한 기도제목을 기도했어요.",
+                "💘");
+        } catch (Exception e) {
+            System.out.println("send notification error");
+        }
+        System.out.println(
+            "send notification to " + memberRepository.getMemberByUserId(member.getUserId()));
         NotificationLog notificationLog = NotificationLog.builder()
             .pray(pray)
-            .member(memberRepository.getMemberByUserId(username))
+            .member(memberRepository.getMemberByUserId(member.getUserId()))
             .title("누군가가 당신이 공유한 기도제목을 기도했어요.")
             .build();
         notificationLogRepository.save(notificationLog);
@@ -147,7 +155,7 @@ public class PrayFacade {
 
         if (pray.getPrayType() == PrayType.SHARED) {
             Pray originPray = prayRepository.getPrayById(pray.getOriginPrayId());
-            sendNotificationAndSaveLog(pray, originPray.getMember().getUserId());
+            sendNotificationAndSaveLog(pray, originPray.getMember());
         }
     }
 }
