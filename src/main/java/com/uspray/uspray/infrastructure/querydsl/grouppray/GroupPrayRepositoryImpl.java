@@ -7,6 +7,7 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.uspray.uspray.DTO.grouppray.GroupPrayResponseDto;
 import com.uspray.uspray.DTO.grouppray.QGroupPrayResponseDto;
+import java.time.LocalDate;
 import java.util.List;
 import javax.persistence.EntityManager;
 
@@ -34,6 +35,7 @@ public class GroupPrayRepositoryImpl implements GroupPrayRepositoryCustom {
             .from(groupPray)
             .leftJoin(groupPray.scrapAndHeart, scrapAndHeart)
             .where(groupPray.group.id.eq(groupId),
+                groupPray.deadline.gt(LocalDate.now()),
                 scarpAndHeartEq(userId))
             .orderBy()
             .fetch();
