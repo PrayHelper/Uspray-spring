@@ -6,7 +6,6 @@ import com.uspray.uspray.DTO.pray.response.PrayResponseDto;
 import com.uspray.uspray.DTO.sharedpray.request.SharedPrayDeleteRequestDto;
 import com.uspray.uspray.DTO.sharedpray.request.SharedPrayRequestDto;
 import com.uspray.uspray.DTO.sharedpray.request.SharedPraySaveRequestDto;
-import com.uspray.uspray.DTO.sharedpray.response.SharedPrayListResponseDto;
 import com.uspray.uspray.DTO.sharedpray.response.SharedPrayResponseDto;
 import com.uspray.uspray.exception.SuccessStatus;
 import com.uspray.uspray.service.ShareFacade;
@@ -36,14 +35,13 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Shared pray", description = "기도제목 공유 관련 API")
 public class ShareController {
 
-    private final ShareService shareService;
     private final ShareFacade shareFacade;
 
     @GetMapping
     @ApiResponse(
         responseCode = "200",
         description = "공유받은 기도제목 조회 (보관함 조회)",
-        content = @Content(schema = @Schema(implementation = SharedPrayListResponseDto.class))
+        content = @Content(schema = @Schema(implementation = SharedPrayRequestDto.class))
     )
     @Operation(summary = "공유받은 기도제목 조회 (보관함 조회)")
     public ApiResponseDto<List<SharedPrayResponseDto>> getSharedPrayList(
