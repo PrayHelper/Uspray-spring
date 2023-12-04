@@ -40,10 +40,14 @@ public class GroupPrayFacade {
     public void createGroupPray(GroupPrayRequestDto groupPrayRequestDto, String userId) {
         Member author = memberRepository.getMemberByUserId(userId);
         Group group = groupRepository.getGroupById(groupPrayRequestDto.getGroupId());
+        Category category = categoryRepository.getCategoryByIdAndMember(
+            groupPrayRequestDto.getCategoryId(),
+            author);
 
         GroupPray groupPray = GroupPray.builder()
             .group(group)
             .author(author)
+            .deadline(groupPrayRequestDto.getDeadline())
             .content(groupPrayRequestDto.getContent())
             .build();
         groupPrayRepository.save(groupPray);
@@ -53,6 +57,16 @@ public class GroupPrayFacade {
             .member(author)
             .build();
         scrapAndHeartRepository.save(scrapAndHeart);
+
+        Pray pray = Pray.builder()
+            .content(groupPrayRequestDto.getContent())
+            .deadline(groupPrayRequestDto.getDeadline())
+            .member(author)
+            .category(category)
+            .prayType(PrayType.PERSONAL)
+            .build();
+        pray.setIsShared();
+        prayRepository.save(pray);
     }
 
     //groupId와 자신의 Id를 이용해 group pray들 반환 + 작성자인지 and 좋아요를 눌렀는지 확인 가능

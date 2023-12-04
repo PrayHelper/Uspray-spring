@@ -116,4 +116,7 @@ public class Pray extends AuditingTimeEntity {
         this.lastPrayedAt = null;
         this.count--;
     }
+    public void setIsShared() {
+        this.isShared = true;
+    }
 }
