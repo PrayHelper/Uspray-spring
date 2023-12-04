@@ -14,6 +14,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,5 +44,14 @@ public class MemberController {
         @RequestBody NotificationAgreeDto notificationAgreeDto) {
         memberService.changeNotificationAgree(user.getUsername(), notificationAgreeDto);
         return ApiResponseDto.success(SuccessStatus.CHANGE_PUSH_AGREE_SUCCESS);
+    }
+
+    @PutMapping("/oauth/{name}")
+    @Operation(summary = "소셜 로그인 회원가입 이름 설정")
+    public ApiResponseDto<?> setOAuthName(
+        @Parameter(hidden = true) @AuthenticationPrincipal User user,
+        @PathVariable("name") String name) {
+        memberService.changeName(user.getUsername(), name);
+        return ApiResponseDto.success(SuccessStatus.CHANGE_NAME_SUCCESS);
     }
 }
