@@ -1,6 +1,7 @@
 package com.uspray.uspray.domain;
 
 import com.uspray.uspray.common.domain.AuditingTimeEntity;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -30,6 +31,8 @@ public class GroupPray extends AuditingTimeEntity {
 
     private String content;
 
+    private LocalDate deadline;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_id")
     private Group group;
@@ -42,10 +45,11 @@ public class GroupPray extends AuditingTimeEntity {
     private final List<ScrapAndHeart> scrapAndHeart = new ArrayList<>();
 
     @Builder
-    public GroupPray(String content, Group group, Member author) {
+    public GroupPray(String content, Group group, Member author, LocalDate deadline) {
         this.content = content;
         setGroup(group);
         setAuthor(author);
+        this.deadline = deadline;
     }
 
     private void setGroup(Group group) {
