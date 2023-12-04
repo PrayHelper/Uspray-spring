@@ -3,6 +3,7 @@ package com.uspray.uspray.external.client.oauth2;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.uspray.uspray.DTO.ApiResponseDto;
 import com.uspray.uspray.DTO.auth.TokenDto;
+import com.uspray.uspray.Enums.Authority;
 import com.uspray.uspray.exception.SuccessStatus;
 import com.uspray.uspray.jwt.TokenProvider;
 import java.io.IOException;
@@ -31,6 +32,16 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
     @Transactional
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
         Authentication authentication) throws IOException, ServletException {
+
+        CustomOAuth2User customOAuth2User = (CustomOAuth2User) authentication.getPrincipal();
+
+        // User의 Role이 GUEST일 경우 처음 요청한 회원이므로 회원가입 페이지로 리다이렉트
+        if(customOAuth2User.getAuthority() == Authority.ROLE_GUEST) {
+            String accessToken = tokenProvider.generateTokenDto(authentication).getAccessToken();
+            response.addHeader("Authorization", "Bearer " + accessToken);
+            response.sendRedirect("/name-form"); // 프론트의 회원가입 추가 정보 입력 폼으로 리다이렉트 (추가 컨트롤러를 만들고 거기서 post 해야지 User로 바뀜)
+            return;
+        }
 
         TokenDto tokenDto = tokenProvider.generateTokenDto(authentication);
         redisTemplate.opsForValue().set("RT:" + authentication.getName(),
