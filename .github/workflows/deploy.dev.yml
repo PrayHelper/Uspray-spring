@@ -62,16 +62,3 @@ jobs:
       run: |
         docker build -t ${{ env.IMAGE_NAME }} .
         docker push ${{ env.IMAGE_NAME }}
-
-    - name: Pull docker image to server
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ env.HOST }}
-        username: ${{ env.USERNAME }}
-        key: ${{ env.KEY }}
-        port: ${{ env.PORT }}
-        script: |
-          docker stop uspray-server
-          docker rm uspray-server
-          docker rmi ${{ env.IMAGE_NAME }}: latest
-          docker-compose up -d
