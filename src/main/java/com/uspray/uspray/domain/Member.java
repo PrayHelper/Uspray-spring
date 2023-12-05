@@ -71,6 +71,13 @@ public class Member extends AuditingTimeEntity {
     public void changePhone(String phone) {
         this.phone = phone;
     }
+    public void changeName(String name) {
+        this.name = name;
+    }
+
+    public void changeAuthority(Authority authority) {
+        this.authority = authority;
+    }
 
     public void changePw(String pw) {
         this.password = pw;
