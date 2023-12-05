@@ -39,7 +39,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         if(customOAuth2User.getAuthority() == Authority.ROLE_GUEST) {
             String accessToken = tokenProvider.generateTokenDto(authentication).getAccessToken();
             response.addHeader("Authorization", "Bearer " + accessToken);
-            response.sendRedirect("/name-form"); // 프론트의 회원가입 추가 정보 입력 폼으로 리다이렉트 (추가 컨트롤러를 만들고 거기서 post 해야지 User로 바뀜)
+            response.sendRedirect("/socialLoginNameInput"); // 프론트의 회원가입 추가 정보 입력 폼으로 리다이렉트 (추가 컨트롤러를 만들고 거기서 post 해야지 User로 바뀜)
             return;
         }
 
