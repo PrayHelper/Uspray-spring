@@ -74,16 +74,13 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
      * 처음 가입하는 회원이라면 Member 테이블을 생성합니다. (소셜 회원가입)
      **/
     private Member saveMember(OAuthAttributes attributes, String userId) {
-        //기존 유저와 아이디가 같으면 같은 유저임
-        // update는 기존 유저의 소셜 ID 컬럼에 값을 추가하는 것 정도만 있으면 될듯
         Member member = memberRepository.getMemberByUserId(userId);
         member.changeSocialId(attributes.getOAuth2UserInfo().getId());
         return memberRepository.save(member);
     }
 
+    //처음 가입
     private Member saveMember(OAuthAttributes attributes) {
-        //기존 유저와 아이디가 같으면 같은 유저임
-        // update는 기존 유저의 소셜 ID 컬럼에 값을 추가하는 것 정도만 있으면 될듯
         Member member = attributes.toEntity(attributes.getOAuth2UserInfo(), generateRandomId());
         return memberRepository.save(member);
     }
