@@ -15,7 +15,7 @@ permissions:
 env:
   HOST:     ${{ secrets.HOST }}
   USERNAME: ${{ secrets.USERNAME }}
-  KEY:      ${{ secrets.KEY }}
+  KEY:      ${{ secrets.SSH_KEY }}
   PORT:     ${{ secrets.PORT }}
   INSTANCE_PATH: ./backend-dev
   IMAGE_NAME: shinsion/uspray-server
