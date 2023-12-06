@@ -71,6 +71,7 @@ jobs:
         key: ${{ env.KEY }}
         port: ${{ env.PORT }}
         script: |
+          cd spring-dev
           docker stop prayhelper-spring-dev
           docker rm prayhelper-spring-dev
           docker rmi ${{ env.IMAGE_NAME }}:latest
