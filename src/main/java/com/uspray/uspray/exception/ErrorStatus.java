@@ -30,13 +30,17 @@ public enum ErrorStatus {
     /*
      * 401 UNAUTHORIZED
      */
-    PRAY_UNAUTHORIZED_EXCEPTION(HttpStatus.UNAUTHORIZED, "해당 기도제목에 대한 권한이 없습니다."),
     TOKEN_NOT_VALID_EXCEPTION(HttpStatus.UNAUTHORIZED, "유효하지 않는 토큰입니다."),
+    REFRESH_TOKEN_NOT_VALID_EXCEPTION(HttpStatus.UNAUTHORIZED, "유효하지 않는 리프레시 토큰입니다."),
+
+    /**
+     * 403 FORBIDDEN
+     */
+    PRAY_UNAUTHORIZED_EXCEPTION(HttpStatus.FORBIDDEN, "해당 기도제목에 대한 권한이 없습니다."),
     SHARE_NOT_AUTHORIZED_EXCEPTION(HttpStatus.UNAUTHORIZED, "기도제목을 공유할 권한이 없습니다."),
     DELETE_NOT_AUTHORIZED_EXCEPTION(HttpStatus.UNAUTHORIZED, "기도제목을 삭제할 권한이 없습니다."),
     CATEGORY_UNAUTHORIZED_EXCEPTION(HttpStatus.UNAUTHORIZED, "해당 카테고리에 대한 권한이 없습니다."),
     GROUP_UNAUTHORIZED_EXCEPTION(HttpStatus.UNAUTHORIZED, "해당 모임에 대한 권한이 없습니다."),
-    REFRESH_TOKEN_NOT_VALID_EXCEPTION(HttpStatus.UNAUTHORIZED, "유효하지 않는 리프레시 토큰입니다."),
 
     /**
      * 404 NOT FOUND
