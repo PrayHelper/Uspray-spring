@@ -31,10 +31,10 @@ public class Group extends AuditingTimeEntity {
     private Member leader;
 
     @OneToMany(mappedBy = "group", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<GroupMember> groupMemberList = new ArrayList<>();
+    private final List<GroupMember> groupMemberList = new ArrayList<>();
 
     @OneToMany(mappedBy = "group", orphanRemoval = true)
-    private List<GroupPray> groupPrayList;
+    private final List<GroupPray> groupPrayList = new ArrayList<>();
 
     @Builder
     public Group(String name, Member leader) {
