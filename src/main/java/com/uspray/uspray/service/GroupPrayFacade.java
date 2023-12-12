@@ -58,6 +58,7 @@ public class GroupPrayFacade {
             .build();
         scrapAndHeartRepository.save(scrapAndHeart);
 
+        //TODO 원본 기도를 지우면 그룹 기도도 같이 지워지게 연관 설정
         Pray pray = Pray.builder()
             .content(groupPrayRequestDto.getContent())
             .deadline(groupPrayRequestDto.getDeadline())
