@@ -35,7 +35,8 @@ public class GroupRepositoryImpl implements GroupRepositoryCustom {
                 groupPray.content.max(),
                 group.groupMemberList.size(),
                 group.groupPrayList.size(),
-                groupPray.createdAt.max()
+                groupPray.createdAt.max(),
+                group.leader.userId.eq(userId)
             ))
             .from(group)
             .join(group.groupMemberList, groupMember)
