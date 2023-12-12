@@ -28,7 +28,6 @@ public class GroupService {
         List<GroupMemberResponseDto> groupMemberResponseDtoList = groupRepository.findGroupMembersByGroupAndNameLike(groupId, name);
         for (GroupMemberResponseDto dto: groupMemberResponseDtoList) {
             dto.setUserId(MaskingUtil.maskUserId(dto.getUserId()));
-            dto.setName(MaskingUtil.maskName(dto.getName()));
         }
         return groupMemberResponseDtoList;
     }
