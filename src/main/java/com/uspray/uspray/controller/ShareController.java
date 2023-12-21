@@ -3,11 +3,12 @@ package com.uspray.uspray.controller;
 
 import com.uspray.uspray.DTO.ApiResponseDto;
 import com.uspray.uspray.DTO.pray.response.PrayResponseDto;
+import com.uspray.uspray.DTO.sharedpray.request.SharedPrayDeleteRequestDto;
 import com.uspray.uspray.DTO.sharedpray.request.SharedPrayRequestDto;
-import com.uspray.uspray.DTO.sharedpray.response.SharedPrayListResponseDto;
+import com.uspray.uspray.DTO.sharedpray.request.SharedPraySaveRequestDto;
 import com.uspray.uspray.DTO.sharedpray.response.SharedPrayResponseDto;
 import com.uspray.uspray.exception.SuccessStatus;
-import com.uspray.uspray.service.ShareService;
+import com.uspray.uspray.service.ShareFacade;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -24,7 +25,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -34,33 +34,33 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Shared pray", description = "기도제목 공유 관련 API")
 public class ShareController {
 
-    private final ShareService shareService;
+    private final ShareFacade shareFacade;
 
-    @GetMapping()
+    @GetMapping
     @ApiResponse(
         responseCode = "200",
         description = "공유받은 기도제목 조회 (보관함 조회)",
-        content = @Content(schema = @Schema(implementation = SharedPrayListResponseDto.class))
+        content = @Content(schema = @Schema(implementation = SharedPrayRequestDto.class))
     )
     @Operation(summary = "공유받은 기도제목 조회 (보관함 조회)")
     public ApiResponseDto<List<SharedPrayResponseDto>> getSharedPrayList(
         @Parameter(hidden = true) @AuthenticationPrincipal User user) {
         return ApiResponseDto.success(SuccessStatus.GET_PRAY_LIST_SUCCESS,
-            shareService.getSharedPrayList(user.getUsername()));
+            shareFacade.getSharedPrayList(user.getUsername()));
     }
 
-    @PostMapping()
+    @PostMapping("/receive")
     @ApiResponse(
         responseCode = "201",
-        description = "기도제목 공유",
-        content = @Content(schema = @Schema(implementation = PrayResponseDto.class))
+        description = "공유받은 기도제목을 보관함에 넣습니다",
+        content = @Content(schema = @Schema(implementation = SharedPrayRequestDto.class))
     )
-    @Operation(summary = "기도제목 공유")
-    public ApiResponseDto<?> sharePray(
+    @Operation(summary = "기도제목 공유받기")
+    public ApiResponseDto<?> receiveSharedPray(
         @Parameter(hidden = true) @AuthenticationPrincipal User user,
         @RequestBody SharedPrayRequestDto sharedPrayRequestDto) {
-        shareService.sharePray(user.getUsername(), sharedPrayRequestDto);
-        return ApiResponseDto.success(SuccessStatus.SHARE_PRAY_SUCCESS);
+        shareFacade.receivedSharedPray(user.getUsername(), sharedPrayRequestDto);
+        return ApiResponseDto.success(SuccessStatus.SHARE_PRAY_SUCCESS, SuccessStatus.SHARE_PRAY_SUCCESS.getMessage());
     }
 
     @DeleteMapping()
@@ -72,22 +72,22 @@ public class ShareController {
     @Operation(summary = "공유받은 기도제목 삭제")
     public ApiResponseDto<?> deletePray(
         @Parameter(hidden = true) @AuthenticationPrincipal User user,
-        @RequestParam Long sharedPrayId) {
-        shareService.deleteSharedPray(user.getUsername(), sharedPrayId);
-        return ApiResponseDto.success(SuccessStatus.DELETE_PRAY_SUCCESS);
+        @RequestBody SharedPrayDeleteRequestDto sharedPrayDeleteRequestDto) {
+        shareFacade.deleteSharedPray(user.getUsername(), sharedPrayDeleteRequestDto);
+        return ApiResponseDto.success(SuccessStatus.DELETE_PRAY_SUCCESS, SuccessStatus.DELETE_PRAY_SUCCESS.getMessage());
     }
 
     @PostMapping("/save")
     @ApiResponse(
         responseCode = "201",
-        description = "공유받은 기도제목 저장",
+        description = "보관함에 있는 공유받은 기도제목을 개인 기도제목으로 저장합니다",
         content = @Content(schema = @Schema(implementation = PrayResponseDto.class))
     )
     @Operation(summary = "공유받은 기도제목 저장")
     public ApiResponseDto<?> savePray(
         @Parameter(hidden = true) @AuthenticationPrincipal User user,
-        @RequestParam Long sharedPrayId) {
-        shareService.saveSharedPray(user.getUsername(), sharedPrayId);
-        return ApiResponseDto.success(SuccessStatus.SHARE_PRAY_AGREE_SUCCESS);
+        @RequestBody SharedPraySaveRequestDto sharedPraySaveRequestDto) {
+        shareFacade.saveSharedPray(user.getUsername(), sharedPraySaveRequestDto);
+        return ApiResponseDto.success(SuccessStatus.SHARE_PRAY_AGREE_SUCCESS, SuccessStatus.SHARE_PRAY_AGREE_SUCCESS.getMessage());
     }
 }
