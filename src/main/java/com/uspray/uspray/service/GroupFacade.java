@@ -66,6 +66,7 @@ public class GroupFacade {
                 ErrorStatus.LEADER_CANNOT_LEAVE_GROUP_EXCEPTION.getMessage());
         }
         group.kickMember(kickedgroupMember);
+        groupMemberRepository.delete(kickedgroupMember);
     }
 
     @Transactional
