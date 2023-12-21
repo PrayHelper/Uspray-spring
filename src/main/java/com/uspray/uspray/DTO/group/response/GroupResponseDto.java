@@ -2,11 +2,10 @@ package com.uspray.uspray.DTO.group.response;
 
 import com.querydsl.core.annotations.QueryProjection;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
@@ -20,16 +19,17 @@ public class GroupResponseDto {
 
     private String lastPrayContent;
 
-    private Integer memberCount;
+    private Long memberCount;
 
-    private Integer prayCount;
+    private Long prayCount;
 
     private LocalDateTime updatedAt;
 
     private boolean isLeader;
 
     @QueryProjection
-    public GroupResponseDto(Long id, String name, String lastPrayContent, Integer memberCount, Integer prayCount, LocalDateTime updatedAt, boolean isLeader) {
+    public GroupResponseDto(Long id, String name, String lastPrayContent, Long memberCount,
+        Long prayCount, LocalDateTime updatedAt, boolean isLeader) {
         this.id = id;
         this.name = name;
         this.lastPrayContent = lastPrayContent;

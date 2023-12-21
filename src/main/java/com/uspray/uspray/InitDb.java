@@ -60,8 +60,7 @@ public class InitDb {
                 .authority(Authority.ROLE_USER)
                 .build();
             em.persist(member2);
-          
-          
+
             Member member_mook = Member.builder()
                 .userId("wjdanr0869")
                 .password(passwordEncoder.encode("wjdanr0869"))
@@ -72,7 +71,6 @@ public class InitDb {
                 .authority(Authority.ROLE_USER)
                 .build();
             em.persist(member_mook);
-          
 
             Group group = Group.builder()
                 .name("테스트 모임")
@@ -85,7 +83,7 @@ public class InitDb {
                 .member(member)
                 .build();
             em.persist(groupMember);
-          
+
             Category category = Category.builder()
                 .name("기타 카테고리")
                 .color("#FFFFFF")
@@ -166,6 +164,7 @@ public class InitDb {
                 .group(group)
                 .author(member)
                 .content("테스트기도하고 아니기도하고")
+                .deadline(LocalDate.parse("2025-01-01"))
                 .build();
             em.persist(groupPray);
 
