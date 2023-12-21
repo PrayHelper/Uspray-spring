@@ -8,6 +8,8 @@ import com.uspray.uspray.DTO.sms.CertificationDto;
 import com.uspray.uspray.DTO.sms.MessageDto;
 import com.uspray.uspray.DTO.sms.SmsRequestDto;
 import com.uspray.uspray.DTO.sms.SmsResponseDto;
+import com.uspray.uspray.exception.ErrorStatus;
+import com.uspray.uspray.exception.model.CustomException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -15,6 +17,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import javax.crypto.Mac;
@@ -140,8 +143,10 @@ public class SmsService {
     public Boolean getCertification(CertificationDto certificationDto) {
         String verificationCode = (String) redisTemplate.opsForValue()
             .get(certificationDto.getRequestId());
-//        exception 정의한 pr 머지된 후 에러처리
-//        if(Objects.equals(verificationCode, certDto.getSmsConfirmNum())) throw new MissMatchCertificationCodeException();
+
+        if (!Objects.equals(verificationCode, certificationDto.getSmsConfirmNum())) {
+            throw new CustomException(ErrorStatus.MISS_MATCH_SMS_CODE, ErrorStatus.MISS_MATCH_SMS_CODE.getMessage());
+        }
         return true;
     }
 }
