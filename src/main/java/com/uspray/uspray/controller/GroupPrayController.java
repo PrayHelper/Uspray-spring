@@ -1,6 +1,7 @@
 package com.uspray.uspray.controller;
 
 import com.uspray.uspray.DTO.ApiResponseDto;
+import com.uspray.uspray.DTO.grouppray.GroupPrayRappingDto;
 import com.uspray.uspray.DTO.grouppray.GroupPrayRequestDto;
 import com.uspray.uspray.DTO.grouppray.GroupPrayResponseDto;
 import com.uspray.uspray.DTO.grouppray.ScrapRequestDto;
@@ -14,9 +15,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
@@ -56,7 +54,7 @@ public class GroupPrayController {
         responseCode = "200",
         description = "모임 기도제목 목록 반환",
         content = @Content(schema = @Schema(implementation = GroupPrayResponseDto.class)))
-    public ApiResponseDto<Map<LocalDate, List<GroupPrayResponseDto>>> getGroupPray(
+    public ApiResponseDto<GroupPrayRappingDto> getGroupPray(
         @PathVariable(name = "groupId") Long groupId,
         @Parameter(hidden = true) @AuthenticationPrincipal User user) {
         return ApiResponseDto.success(SuccessStatus.GET_GROUP_PRAY_LIST_SUCCESS,
