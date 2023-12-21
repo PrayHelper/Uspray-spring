@@ -30,6 +30,10 @@ public class Group extends AuditingTimeEntity {
     @JoinColumn(name = "leader_id", referencedColumnName = "member_id")
     private Member leader;
 
+    @OneToOne
+    @JoinColumn(name = "last_pray_id", referencedColumnName = "grouppray_id")
+    private GroupPray lastPray;
+
     @OneToMany(mappedBy = "group", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private final List<GroupMember> groupMemberList = new ArrayList<>();
 
@@ -40,6 +44,7 @@ public class Group extends AuditingTimeEntity {
     public Group(String name, Member leader) {
         this.name = name;
         this.leader = leader;
+        this.lastPray = null;
     }
 
     public void changeName(String name) {
@@ -52,6 +57,10 @@ public class Group extends AuditingTimeEntity {
 
     public void kickMember(GroupMember groupMember) {
         this.groupMemberList.remove(groupMember);
+    }
+
+    public void updateLastPray(GroupPray groupPray) {
+        this.lastPray = groupPray;
     }
 
     public void validateGroupName(String newName) {

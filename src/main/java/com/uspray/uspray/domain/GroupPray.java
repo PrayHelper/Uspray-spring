@@ -55,6 +55,7 @@ public class GroupPray extends AuditingTimeEntity {
     private void setGroup(Group group) {
         this.group = group;
         group.getGroupPrayList().add(this);
+        group.updateLastPray(this);
     }
 
     private void setAuthor(Member author) {

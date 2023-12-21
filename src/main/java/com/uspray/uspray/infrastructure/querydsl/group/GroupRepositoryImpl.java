@@ -29,15 +29,15 @@ public class GroupRepositoryImpl implements GroupRepositoryCustom {
             .select(new QGroupResponseDto(
                 group.id,
                 group.name,
-                groupPray.content.min(),        // 최근 기도 내용
-                groupMember.count(),      // 그룹 멤버 수 (집계 함수 사용)
-                groupPray.count(),        // 그룹 기도 수 (집계 함수 사용)
-                groupPray.createdAt.max(),// 기도 생성 날짜의 최대값
-                group.leader.userId.eq(userId)  // 리더 ID가 사용자 ID와 일치하는지
+                group.lastPray.content,
+                group.groupMemberList.size(),
+                group.groupPrayList.size(),
+                group.lastPray.createdAt,
+                group.leader.userId.eq(userId)
             ))
             .from(group)
+            .leftJoin(group.lastPray)
             .join(group.groupMemberList, groupMember)
-            .leftJoin(group.groupPrayList, groupPray)
             .where(groupMember.member.userId.eq(userId))
             .groupBy(group.id, group.name, group.leader.userId)
             .fetch();
