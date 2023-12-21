@@ -36,7 +36,9 @@ public class SharedPrayResponseDto {
     private LocalDateTime createdAt;
 
     public static SharedPrayResponseDto of(SharedPray sharedPray) {
-        return new SharedPrayResponseDto(sharedPray.getId(), sharedPray.getPray().getId(), sharedPray.getMember().getUserId(),
-            sharedPray.getPray().getContent(), sharedPray.getPray().getDeadline(), sharedPray.getPray().getCreatedAt());
+        return new SharedPrayResponseDto(sharedPray.getId(), sharedPray.getPray().getId(),
+            sharedPray.getMember().getUserId(),
+            sharedPray.getPray().getContent(), sharedPray.getPray().getDeadline(),
+            sharedPray.getCreatedAt());
     }
 }
