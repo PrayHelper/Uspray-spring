@@ -53,7 +53,7 @@ public class InitDb {
             Member member2 = Member.builder()
                 .userId("test2")
                 .password(passwordEncoder.encode("test2"))
-                .name("홍길동")
+                .name("김길동")
                 .phone("01012345670")
                 .birth("2002-02-24")
                 .gender("male")

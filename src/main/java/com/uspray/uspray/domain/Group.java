@@ -26,18 +26,22 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Group extends AuditingTimeEntity {
 
-    @OneToMany(mappedBy = "group", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private final List<GroupMember> groupMemberList = new ArrayList<>();
-    @OneToMany(mappedBy = "group", orphanRemoval = true)
-    private final List<GroupPray> groupPrayList = new ArrayList<>();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "group_id")
     private Long id;
+
     private String name;
+
     @OneToOne
     @JoinColumn(name = "leader_id", referencedColumnName = "member_id")
     private Member leader;
+
+    @OneToMany(mappedBy = "group", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private final List<GroupMember> groupMemberList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "group", orphanRemoval = true)
+    private final List<GroupPray> groupPrayList = new ArrayList<>();
 
     @Builder
     public Group(String name, Member leader) {

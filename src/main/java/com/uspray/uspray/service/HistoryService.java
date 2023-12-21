@@ -7,10 +7,13 @@ import com.uspray.uspray.DTO.history.response.HistoryResponseDto;
 import com.uspray.uspray.Enums.PrayType;
 import com.uspray.uspray.domain.History;
 import com.uspray.uspray.domain.Member;
+import com.uspray.uspray.domain.Pray;
 import com.uspray.uspray.exception.ErrorStatus;
+import com.uspray.uspray.exception.model.CustomException;
 import com.uspray.uspray.exception.model.NotFoundException;
 import com.uspray.uspray.infrastructure.HistoryRepository;
 import com.uspray.uspray.infrastructure.MemberRepository;
+import com.uspray.uspray.infrastructure.PrayRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,6 +28,7 @@ public class HistoryService {
 
     private final HistoryRepository historyRepository;
     private final MemberRepository memberRepository;
+    private final PrayRepository prayRepository;
 
     @Transactional(readOnly = true)
     public HistoryListResponseDto getHistoryList(String username, String type, int page, int size) {
@@ -33,17 +37,24 @@ public class HistoryService {
         Pageable pageable = PageRequest.of(page, size, Sort.by("deadline").descending());
         Member member = memberRepository.getMemberByUserId(username);
         Page<HistoryResponseDto> historyList;
+
         if (PrayType.PERSONAL.name().equalsIgnoreCase(type)) {
             historyList = historyRepository.findByMemberAndOriginPrayIdIsNull(member, pageable)
                 .map(HistoryResponseDto::of);
-        } else if (PrayType.SHARED.name().equalsIgnoreCase(type)) {
-            historyList = historyRepository.findByMemberAndOriginPrayIdIsNotNull(
-                member, pageable).map(HistoryResponseDto::of);
-        } else {
-            throw new IllegalArgumentException("잘못된 타입입니다.");
+            return new HistoryListResponseDto(historyList.getContent(),
+                historyList.getTotalPages());
         }
-        return new HistoryListResponseDto(historyList.getContent(),
-            historyList.getTotalPages());
+        if (PrayType.SHARED.name().equalsIgnoreCase(type)) {
+            historyList = historyRepository.findByMemberAndOriginPrayIdIsNotNull(
+                member, pageable).map(history -> {
+                Pray originPray = prayRepository.getPrayById(history.getOriginPrayId());
+                return HistoryResponseDto.shared(history, originPray);
+            });
+            return new HistoryListResponseDto(historyList.getContent(),
+                historyList.getTotalPages());
+        }
+        throw new CustomException(ErrorStatus.INVALID_TYPE_EXCEPTION,
+            ErrorStatus.INVALID_TYPE_EXCEPTION.getMessage());
     }
 
     @Transactional(readOnly = true)
@@ -67,7 +78,8 @@ public class HistoryService {
         History history = historyRepository.findById(historyId)
             .orElseThrow(() -> new IllegalArgumentException("해당 히스토리가 없습니다. id=" + historyId));
         if (!history.getMember().equals(member)) {
-            throw new IllegalArgumentException("해당 히스토리에 대한 권한이 없습니다.");
+            throw new NotFoundException(ErrorStatus.HISTORY_NOT_FOUND_EXCEPTION,
+                ErrorStatus.HISTORY_NOT_FOUND_EXCEPTION.getMessage());
         }
         return HistoryDetailResponseDto.of(history);
     }

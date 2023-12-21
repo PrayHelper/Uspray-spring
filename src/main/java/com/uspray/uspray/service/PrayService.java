@@ -40,12 +40,24 @@ public class PrayService {
         Map<Long, List<Pray>> prayMap = prays.stream()
             .collect(Collectors.groupingBy(pray -> pray.getCategory().getId()));
 
-        // 그룹화된 맵을 PrayListResponseDto 변환하여 반환
+        if (prayType.equalsIgnoreCase(PrayType.PERSONAL.stringValue())) {
+            // Pray 엔티티를 categoryId를 기준으로 그룹화한 맵을 PrayListResponseDto 변환하여 반환
+            return prayMap.entrySet().stream()
+                .map(entry -> new PrayListResponseDto(entry.getKey(),
+                    entry.getValue().get(0).getCategory().getName(),
+                    entry.getValue().stream()
+                        .map(PrayResponseDto::of)
+                        .collect(Collectors.toList())))
+                .collect(Collectors.toList());
+        }
         return prayMap.entrySet().stream()
             .map(entry -> new PrayListResponseDto(entry.getKey(),
                 entry.getValue().get(0).getCategory().getName(),
                 entry.getValue().stream()
-                    .map(PrayResponseDto::of)
+                    .map(Pray -> {
+                        Pray originPray = prayRepository.getPrayById(Pray.getOriginPrayId());
+                        return PrayResponseDto.shared(Pray, originPray);
+                    })
                     .collect(Collectors.toList())))
             .collect(Collectors.toList());
     }
