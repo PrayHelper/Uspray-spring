@@ -88,7 +88,7 @@ public class SmsService {
             .contentType("COMM")
             .countryCode("82")
             .from(phone)
-            .content("[uspray] 인증번호 [" + smsConfirmNum + "]를 입력해주세요")
+            .content("[유스프레이] 인증번호 [" + smsConfirmNum + "]를 입력해주세요")
             .messages(messages)
             .build();
 
