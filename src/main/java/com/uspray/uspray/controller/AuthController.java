@@ -55,7 +55,7 @@ public class AuthController {
         description = "로그인 성공",
         content = @Content(schema = @Schema(implementation = MemberResponseDto.class)))
     public ApiResponseDto<TokenDto> login(
-        @RequestBody MemberLoginRequestDto memberLoginRequestDto) {
+        @RequestBody @Valid MemberLoginRequestDto memberLoginRequestDto) {
         return ApiResponseDto.success(SuccessStatus.LOGIN_SUCCESS,
             authService.login(memberLoginRequestDto));
     }
