@@ -40,7 +40,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class PrayController {
 
     private final PrayService prayService;
-    private final PrayFacade prayFacadeService;
+    private final PrayFacade prayFacade;
 
     @Operation(summary = "기도제목 목록 조회")
     @ApiResponse(
@@ -82,7 +82,7 @@ public class PrayController {
         @Parameter(hidden = true) @AuthenticationPrincipal User user
     ) {
         return ApiResponseDto.success(SuccessStatus.CREATE_PRAY_SUCCESS,
-            prayFacadeService.createPray(prayRequestDto, user.getUsername()));
+            prayFacade.createPray(prayRequestDto, user.getUsername()));
     }
 
     @DeleteMapping("/{prayId}")
@@ -108,7 +108,7 @@ public class PrayController {
         @Parameter(hidden = true) @AuthenticationPrincipal User user
     ) {
         return ApiResponseDto.success(SuccessStatus.UPDATE_PRAY_SUCCESS,
-            prayFacadeService.updatePray(prayId, user.getUsername(), prayUpdateRequestDto));
+            prayFacade.updatePray(prayId, user.getUsername(), prayUpdateRequestDto));
     }
 
     @Operation(summary = "오늘 기도하기")
@@ -122,7 +122,7 @@ public class PrayController {
         @Parameter(hidden = true) @AuthenticationPrincipal User user
     ) {
         return ApiResponseDto.success(SuccessStatus.INCREASE_PRAY_COUNT_SUCCESS,
-            prayService.todayPray(prayId, user.getUsername()));
+            prayFacade.todayPray(prayId, user.getUsername()));
     }
 
     @Operation(summary = "기도 완료하기")
@@ -135,7 +135,7 @@ public class PrayController {
         @Parameter(description = "기도제목 ID", required = true) @PathVariable("prayId") Long prayId,
         @Parameter(hidden = true) @AuthenticationPrincipal User user
     ) {
-        prayFacadeService.createHistory(user.getUsername(), prayId);
+        prayFacade.createHistory(user.getUsername(), prayId);
         return ApiResponseDto.success(SuccessStatus.GET_PRAY_LIST_SUCCESS,
             prayService.completePray(prayId, user.getUsername()));
     }

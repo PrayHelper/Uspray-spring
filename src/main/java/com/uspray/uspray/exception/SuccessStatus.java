@@ -26,6 +26,7 @@ public enum SuccessStatus {
     REISSUE_SUCCESS(HttpStatus.OK, "토큰 재발급에 성공했습니다."),
     PUSH_SUCCESS(HttpStatus.OK, "푸쉬 알림을 성공적으로 전송했습니다."),
     CHANGE_PUSH_AGREE_SUCCESS(HttpStatus.OK, "푸쉬 알림 설정을 성공적으로 변경했습니다."),
+    CHANGE_NAME_SUCCESS(HttpStatus.OK, "이름을 성공적으로 변경했습니다."),
     UPDATE_CATEGORY_SUCCESS(HttpStatus.OK, "카테고리 수정에 성공했습니다."),
     GET_CATEGORY_SUCCESS(HttpStatus.OK, "카테고리 조회에 성공했습니다."),
     GET_HISTORY_LIST_SUCCESS(HttpStatus.OK, "히스토리 목록 조회에 성공했습니다."),
@@ -41,7 +42,8 @@ public enum SuccessStatus {
     ADD_GROUP_MEMBER_SUCCESS(HttpStatus.OK, "모임 멤버 추가하기에 성공했습니다."),
     GET_MEMBER_LIST_SUCCESS(HttpStatus.OK, "모임 멤버 조회에 성공했습니다."),
     CANCEL_PRAY_SUCCESS(HttpStatus.OK, "기도제목 취소에 성공했습니다."),
-    PRAY_LIST_SHARABLE(HttpStatus.OK, "해당 기도제목은 공유 가능합니다."),
+    LIKE_GROUP_PRAY_SUCCESS(HttpStatus.OK, "모임 기도제목 좋아요를 성공했습니다."),
+    SCARP_GROUP_PRAY_SUCCESS(HttpStatus.OK, "모임 기도제목 스크랩을 성공했습니다."),
     TEST_SUCCESS(HttpStatus.OK, "Test :: OK"),
 
     /*

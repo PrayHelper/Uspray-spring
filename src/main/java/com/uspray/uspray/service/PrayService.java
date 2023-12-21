@@ -3,14 +3,8 @@ package com.uspray.uspray.service;
 import com.uspray.uspray.DTO.pray.PrayListResponseDto;
 import com.uspray.uspray.DTO.pray.response.PrayResponseDto;
 import com.uspray.uspray.Enums.PrayType;
-import com.uspray.uspray.domain.NotificationLog;
 import com.uspray.uspray.domain.Pray;
-import com.uspray.uspray.exception.ErrorStatus;
-import com.uspray.uspray.exception.model.NotFoundException;
-import com.uspray.uspray.infrastructure.MemberRepository;
-import com.uspray.uspray.infrastructure.NotificationLogRepository;
 import com.uspray.uspray.infrastructure.PrayRepository;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -23,8 +17,6 @@ import org.springframework.stereotype.Service;
 public class PrayService {
 
     private final PrayRepository prayRepository;
-    private final NotificationLogRepository notificationLogRepository;
-    private final MemberRepository memberRepository;
 
     @Transactional
     public PrayResponseDto getPrayDetail(Long prayId, String username) {
@@ -58,37 +50,6 @@ public class PrayService {
             .collect(Collectors.toList());
     }
 
-    @Transactional
-    public List<PrayListResponseDto> todayPray(Long prayId, String username) {
-        Pray pray = prayRepository.getPrayByIdAndMemberId(prayId, username);
-        LocalDate today = LocalDate.now();
-        handlePrayedToday(pray, today);
-        return getPrayList(username, PrayType.PERSONAL.stringValue());
-    }
-
-    private void sendNotificationAndSaveLog(Pray pray, String username) {
-        // TODO: notification 보내는 로직 추가
-        System.out.println("send notification to " + memberRepository.getMemberByUserId(username));
-        NotificationLog notificationLog = NotificationLog.builder()
-            .pray(pray)
-            .member(memberRepository.getMemberByUserId(username))
-            .title("누군가가 당신이 공유한 기도제목을 기도했어요.")
-            .build();
-        notificationLogRepository.save(notificationLog);
-    }
-
-    private void handlePrayedToday(Pray pray, LocalDate today) {
-        if (pray.getLastPrayedAt().equals(today)) {
-            throw new NotFoundException(ErrorStatus.ALREADY_PRAYED_TODAY,
-                ErrorStatus.ALREADY_PRAYED_TODAY.getMessage());
-        }
-        pray.countUp();
-
-        if (pray.getPrayType() == PrayType.SHARED) {
-            Pray originPray = prayRepository.getPrayById(pray.getOriginPrayId());
-            sendNotificationAndSaveLog(pray, originPray.getMember().getUserId());
-        }
-    }
 
     @Transactional
     public List<PrayListResponseDto> completePray(Long prayId, String username) {

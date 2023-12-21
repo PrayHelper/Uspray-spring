@@ -49,7 +49,7 @@ public class OAuthAttributes {
             .name("Uspray")
             .userId(randomId)
             .socialId(oAuth2UserInfo.getId())
-            .authority(Authority.ROLE_USER)
+            .authority(Authority.ROLE_GUEST)
             .build();
     }
 

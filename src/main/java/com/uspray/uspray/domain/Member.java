@@ -42,10 +42,10 @@ public class Member extends AuditingTimeEntity {
     private Authority authority;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<GroupMember> groupMemberList = new ArrayList<>();
+    private final List<GroupMember> groupMemberList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "author")
-    private List<GroupPray> groupPrayList;
+    @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE)
+    private final List<GroupPray> groupPrayList = new ArrayList<>();
 
     @Builder
     public Member(String userId, String password, String name, String phone, String birth,
@@ -70,6 +70,13 @@ public class Member extends AuditingTimeEntity {
 
     public void changePhone(String phone) {
         this.phone = phone;
+    }
+    public void changeName(String name) {
+        this.name = name;
+    }
+
+    public void changeAuthority(Authority authority) {
+        this.authority = authority;
     }
 
     public void changePw(String pw) {

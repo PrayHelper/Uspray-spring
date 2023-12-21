@@ -2,8 +2,14 @@ package com.uspray.uspray;
 
 import com.uspray.uspray.Enums.Authority;
 import com.uspray.uspray.Enums.PrayType;
-import com.uspray.uspray.domain.*;
-
+import com.uspray.uspray.domain.Category;
+import com.uspray.uspray.domain.Group;
+import com.uspray.uspray.domain.GroupMember;
+import com.uspray.uspray.domain.GroupPray;
+import com.uspray.uspray.domain.History;
+import com.uspray.uspray.domain.Member;
+import com.uspray.uspray.domain.Pray;
+import com.uspray.uspray.domain.ScrapAndHeart;
 import java.time.LocalDate;
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
@@ -155,7 +161,19 @@ public class InitDb {
                 .pray(pray)
                 .build();
             em.persist(history);
-          
+
+            GroupPray groupPray = GroupPray.builder()
+                .group(group)
+                .author(member)
+                .content("테스트기도하고 아니기도하고")
+                .build();
+            em.persist(groupPray);
+
+            ScrapAndHeart scrapAndHeart = ScrapAndHeart.builder()
+                .groupPray(groupPray)
+                .member(member)
+                .build();
+            em.persist(scrapAndHeart);
         }
 
     }
