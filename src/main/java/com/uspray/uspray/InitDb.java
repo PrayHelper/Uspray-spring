@@ -72,6 +72,39 @@ public class InitDb {
                 .build();
             em.persist(member_mook);
 
+            Member member3 = Member.builder()
+                .userId("member3")
+                .password(passwordEncoder.encode("member3"))
+                .name("이수빈")
+                .phone("01022223333")
+                .birth("2001-11-07")
+                .gender("female")
+                .authority(Authority.ROLE_USER)
+                .build();
+            em.persist(member3);
+
+            Member member4 = Member.builder()
+                .userId("member4")
+                .password(passwordEncoder.encode("member4"))
+                .name("권은혜")
+                .phone("01022223331")
+                .birth("2001-11-07")
+                .gender("female")
+                .authority(Authority.ROLE_USER)
+                .build();
+            em.persist(member4);
+
+            Member member5 = Member.builder()
+                .userId("member5")
+                .password(passwordEncoder.encode("member5"))
+                .name("배서현")
+                .phone("01022223931")
+                .birth("2001-11-07")
+                .gender("female")
+                .authority(Authority.ROLE_USER)
+                .build();
+            em.persist(member5);
+
             Group group = Group.builder()
                 .name("테스트 모임")
                 .leader(member)
