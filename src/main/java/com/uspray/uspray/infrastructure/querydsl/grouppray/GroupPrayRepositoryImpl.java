@@ -34,9 +34,9 @@ public class GroupPrayRepositoryImpl implements GroupPrayRepositoryCustom {
                 groupPray.createdAt))
             .from(groupPray)
             .leftJoin(groupPray.scrapAndHeart, scrapAndHeart)
+            .on(scarpAndHeartEq(userId))
             .where(groupPray.group.id.eq(groupId),
-                groupPray.deadline.gt(LocalDate.now()),
-                scarpAndHeartEq(userId))
+                groupPray.deadline.gt(LocalDate.now()))
             .orderBy()
             .fetch();
     }
