@@ -4,14 +4,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 @Data
-public class FindPwDto {
+public class CheckPwDto {
     @Schema(example = "test")
     String userId;
-    @Schema(example = "이름")
-    String name;
-    @Schema(example = "01064519986")
+    @Schema(example = "01012345678")
     String phone;
-    @Schema(example = "password")
-    String password;
 
 }

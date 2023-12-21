@@ -3,10 +3,7 @@ package com.uspray.uspray.infrastructure;
 import com.uspray.uspray.domain.Member;
 import com.uspray.uspray.exception.ErrorStatus;
 import com.uspray.uspray.exception.model.NotFoundException;
-
-import java.util.List;
 import java.util.Optional;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -15,19 +12,13 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Optional<Member> findByUserId(String userId);
 
-    Optional<Member> findById(Long id);
-
     boolean existsByUserId(String userId);
 
     Optional<Member> findBySocialId(String socialId);
 
     Member findByNameAndPhone(String name, String phone);
 
-    Member findByNameAndPhoneAndUserId(String name, String phone, String userId);
-
-    Member getMemberByName(String name);
-
-    List<Member> findAllByUserIdIn(List<String> userIds);
+    Member findByUserIdAndPhone(String userId, String phone);
 
     default Member getMemberByUserId(String userId) {
         return this.findByUserId(userId).orElseThrow(

@@ -2,8 +2,9 @@ package com.uspray.uspray.controller;
 
 import com.uspray.uspray.DTO.ApiResponseDto;
 import com.uspray.uspray.DTO.auth.TokenDto;
+import com.uspray.uspray.DTO.auth.request.ChangePwDto;
 import com.uspray.uspray.DTO.auth.request.FindIdDto;
-import com.uspray.uspray.DTO.auth.request.FindPwDto;
+import com.uspray.uspray.DTO.auth.request.CheckPwDto;
 import com.uspray.uspray.DTO.auth.request.MemberDeleteDto;
 import com.uspray.uspray.DTO.auth.request.MemberLoginRequestDto;
 import com.uspray.uspray.DTO.auth.request.MemberRequestDto;
@@ -82,10 +83,17 @@ public class AuthController {
             authService.findId(findIdDto));
     }
 
-    @PostMapping("/find-pw")
-    @Operation(summary = "비밀번호 찾기")
-    public ApiResponseDto<?> findId(@RequestBody FindPwDto findPwDto) {
-        authService.findPw(findPwDto);
+    @PostMapping("/check-pw")
+    @Operation(summary = "비밀번호 확인")
+    public ApiResponseDto<?> checkPw(@RequestBody CheckPwDto checkPwDto) {
+        return ApiResponseDto.success(SuccessStatus.CHECK_USER_PW_SUCCESS, authService.checkPw(
+            checkPwDto));
+    }
+
+    @PostMapping("/change-pw")
+    @Operation(summary = "비밀번호 변경")
+    public ApiResponseDto<?> findId(@RequestBody ChangePwDto changePwDto) {
+        authService.changePw(changePwDto);
         return ApiResponseDto.success(SuccessStatus.CHANGE_USER_PW_SUCCESS);
     }
 
@@ -104,6 +112,5 @@ public class AuthController {
     public ApiResponseDto<?> dupCheck(@PathVariable("userId") String userId) {
         authService.dupCheck(userId);
         return ApiResponseDto.success(SuccessStatus.CHECK_USER_ID_SUCCESS);
-
     }
 }

@@ -1,8 +1,9 @@
 package com.uspray.uspray.service;
 
 import com.uspray.uspray.DTO.auth.TokenDto;
+import com.uspray.uspray.DTO.auth.request.ChangePwDto;
 import com.uspray.uspray.DTO.auth.request.FindIdDto;
-import com.uspray.uspray.DTO.auth.request.FindPwDto;
+import com.uspray.uspray.DTO.auth.request.CheckPwDto;
 import com.uspray.uspray.DTO.auth.request.MemberDeleteDto;
 import com.uspray.uspray.DTO.auth.request.MemberLoginRequestDto;
 import com.uspray.uspray.DTO.auth.request.MemberRequestDto;
@@ -124,11 +125,15 @@ public class AuthService {
             .getUserId();
     }
 
+
+    public Long checkPw(CheckPwDto checkPwDto) {
+        return memberRepository.findByUserIdAndPhone(
+            checkPwDto.getUserId(), checkPwDto.getPhone()).getId();
+    }
+
     @Transactional
-    public void findPw(FindPwDto findPwDto) {
-        memberRepository.findByNameAndPhoneAndUserId(
-            findPwDto.getName(), findPwDto.getPhone(),
-            findPwDto.getUserId()).changePw(passwordEncoder.encode(findPwDto.getPassword()));
+    public void changePw(ChangePwDto changePwDto) {
+        memberRepository.getMemberById(changePwDto.getId()).changePw(passwordEncoder.encode(changePwDto.getPassword()));
     }
 
     @Transactional
