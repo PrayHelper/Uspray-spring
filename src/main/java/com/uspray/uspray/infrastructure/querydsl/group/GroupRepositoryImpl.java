@@ -11,7 +11,6 @@ import com.uspray.uspray.DTO.group.response.GroupMemberResponseDto;
 import com.uspray.uspray.DTO.group.response.GroupResponseDto;
 import com.uspray.uspray.DTO.group.response.QGroupMemberResponseDto;
 import com.uspray.uspray.DTO.group.response.QGroupResponseDto;
-import com.uspray.uspray.domain.QGroupPray;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -26,7 +25,6 @@ public class GroupRepositoryImpl implements GroupRepositoryCustom {
 
     @Override
     public List<GroupResponseDto> findGroupListByMemberId(String userId) {
-        QGroupPray latestGroupPray = new QGroupPray("latestGroupPray");
         return queryFactory
             .select(new QGroupResponseDto(
                 group.id,
@@ -38,9 +36,8 @@ public class GroupRepositoryImpl implements GroupRepositoryCustom {
                 group.leader.userId.eq(userId)  // 리더 ID가 사용자 ID와 일치하는지
             ))
             .from(group)
-            .join(group.groupMemberList, groupMember)
+            .leftJoin(group.groupMemberList, groupMember)
             .leftJoin(group.groupPrayList, groupPray)
-            .where(groupMember.member.userId.eq(userId))
             .groupBy(group.id, group.name, group.leader.userId, groupPray.content)
             .orderBy(groupPray.createdAt.max().desc())
             .fetch();
