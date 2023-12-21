@@ -30,13 +30,14 @@ public class GroupRepositoryImpl implements GroupRepositoryCustom {
                 group.id,
                 group.name,
                 groupPray.content,        // 최근 기도 내용
-                groupMember.count(),      // 그룹 멤버 수 (집계 함수 사용)
-                groupPray.count(),        // 그룹 기도 수 (집계 함수 사용)
+                group.groupMemberList.size(),      // 그룹 멤버 수 (집계 함수 사용)
+                group.groupPrayList.size(),        // 그룹 기도 수 (집계 함수 사용)
                 groupPray.createdAt.max(),// 기도 생성 날짜의 최대값
                 group.leader.userId.eq(userId)  // 리더 ID가 사용자 ID와 일치하는지
             ))
             .from(group)
             .leftJoin(group.groupMemberList, groupMember)
+            .where(groupMember.member.userId.eq(userId))
             .leftJoin(group.groupPrayList, groupPray)
             .groupBy(group.id, group.name, group.leader.userId, groupPray.content)
             .orderBy(groupPray.createdAt.max().desc())
