@@ -11,10 +11,12 @@ import com.uspray.uspray.DTO.group.response.GroupMemberResponseDto;
 import com.uspray.uspray.DTO.group.response.GroupResponseDto;
 import com.uspray.uspray.DTO.group.response.QGroupMemberResponseDto;
 import com.uspray.uspray.DTO.group.response.QGroupResponseDto;
+import com.uspray.uspray.domain.QGroupPray;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
+
 
 @Repository
 @RequiredArgsConstructor
@@ -24,12 +26,12 @@ public class GroupRepositoryImpl implements GroupRepositoryCustom {
 
     @Override
     public List<GroupResponseDto> findGroupListByMemberId(String userId) {
-
+        QGroupPray latestGroupPray = new QGroupPray("latestGroupPray");
         return queryFactory
             .select(new QGroupResponseDto(
                 group.id,
                 group.name,
-                groupPray.content.min(),        // 최근 기도 내용
+                groupPray.content,        // 최근 기도 내용
                 groupMember.count(),      // 그룹 멤버 수 (집계 함수 사용)
                 groupPray.count(),        // 그룹 기도 수 (집계 함수 사용)
                 groupPray.createdAt.max(),// 기도 생성 날짜의 최대값
@@ -37,9 +39,10 @@ public class GroupRepositoryImpl implements GroupRepositoryCustom {
             ))
             .from(group)
             .join(group.groupMemberList, groupMember)
-            .leftJoin(group.groupPrayList, groupPray)
+            .join(group.groupPrayList, groupPray)
             .where(groupMember.member.userId.eq(userId))
-            .groupBy(group.id, group.name, group.leader.userId)
+            .groupBy(group.id, group.name, group.leader.userId, groupPray.content)
+            .orderBy(groupPray.createdAt.max().desc())
             .fetch();
     }
 
