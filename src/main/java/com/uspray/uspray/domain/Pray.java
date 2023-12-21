@@ -7,7 +7,6 @@ import com.uspray.uspray.exception.ErrorStatus;
 import com.uspray.uspray.exception.model.NotFoundException;
 import java.time.LocalDate;
 import java.util.Base64;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -18,6 +17,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -54,7 +54,7 @@ public class Pray extends AuditingTimeEntity {
     @Enumerated(EnumType.STRING)
     private PrayType prayType;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_pray_id")
     private GroupPray groupPray;
 
@@ -67,7 +67,7 @@ public class Pray extends AuditingTimeEntity {
 
     @Builder
     public Pray(Member member, String content, LocalDate deadline, Long originPrayId,
-        Category category, PrayType prayType) {
+        Category category, PrayType prayType, GroupPray groupPray) {
         this.member = member;
         this.content = new String(Base64.getEncoder().encode(content.getBytes()));
         this.count = 0;
@@ -76,6 +76,7 @@ public class Pray extends AuditingTimeEntity {
         this.isShared = (originPrayId != null);
         this.category = category;
         this.prayType = prayType;
+        this.groupPray = groupPray;
         this.lastPrayedAt = LocalDate.of(2002, 2, 24);
     }
 

@@ -25,13 +25,6 @@ public class PrayService {
     }
 
     @Transactional
-    public PrayResponseDto deletePray(Long prayId, String username) {
-        Pray pray = prayRepository.getPrayByIdAndMemberId(prayId, username);
-        prayRepository.delete(pray);
-        return PrayResponseDto.of(pray);
-    }
-
-    @Transactional
     public List<PrayListResponseDto> getPrayList(String username, String prayType) {
 
         List<Pray> prays = prayRepository.findAllWithOrderAndType(username, prayType);

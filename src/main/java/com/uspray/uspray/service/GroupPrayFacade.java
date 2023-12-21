@@ -68,6 +68,7 @@ public class GroupPrayFacade {
             .member(author)
             .category(category)
             .prayType(PrayType.PERSONAL)
+            .groupPray(groupPray)
             .build();
         pray.setIsShared();
         prayRepository.save(pray);

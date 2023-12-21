@@ -41,7 +41,7 @@ public class GroupPray extends AuditingTimeEntity {
     @JoinColumn(name = "member_id")
     private Member author;
 
-    @OneToMany(mappedBy = "groupPray", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "groupPray", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private final List<ScrapAndHeart> scrapAndHeart = new ArrayList<>();
 
     @Builder

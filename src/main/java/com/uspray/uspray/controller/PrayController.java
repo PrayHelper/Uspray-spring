@@ -93,7 +93,7 @@ public class PrayController {
         @Parameter(hidden = true) @AuthenticationPrincipal User user
     ) {
         return ApiResponseDto.success(SuccessStatus.DELETE_PRAY_SUCCESS,
-            prayService.deletePray(prayId, user.getUsername()));
+            prayFacade.deletePray(prayId, user.getUsername()));
     }
 
     @PutMapping("/{prayId}")

@@ -14,6 +14,7 @@ import com.uspray.uspray.exception.ErrorStatus;
 import com.uspray.uspray.exception.model.CustomException;
 import com.uspray.uspray.exception.model.NotFoundException;
 import com.uspray.uspray.infrastructure.CategoryRepository;
+import com.uspray.uspray.infrastructure.GroupPrayRepository;
 import com.uspray.uspray.infrastructure.HistoryRepository;
 import com.uspray.uspray.infrastructure.MemberRepository;
 import com.uspray.uspray.infrastructure.NotificationLogRepository;
@@ -34,6 +35,7 @@ public class PrayFacade {
 
     private final MemberRepository memberRepository;
     private final PrayRepository prayRepository;
+    private final GroupPrayRepository groupPrayRepository;
     private final CategoryRepository categoryRepository;
     private final HistoryRepository historyRepository;
     private final NotificationLogRepository notificationLogRepository;
@@ -161,5 +163,13 @@ public class PrayFacade {
             Pray originPray = prayRepository.getPrayById(pray.getOriginPrayId());
             sendNotificationAndSaveLog(pray, originPray.getMember());
         }
+    }
+
+    @Transactional
+    public PrayResponseDto deletePray(Long prayId, String username) {
+        Pray pray = prayRepository.getPrayByIdAndMemberId(prayId, username);
+        groupPrayRepository.delete(pray.getGroupPray());
+        prayRepository.delete(pray);
+        return PrayResponseDto.of(pray);
     }
 }
