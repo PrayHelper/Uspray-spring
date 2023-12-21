@@ -43,17 +43,6 @@ public class ShareFacade {
             .collect(Collectors.toList());
     }
 
-    public void checkSharable(String username, SharedPrayRequestDto sharedPrayRequestDto) {
-
-        List<Pray> prayList = prayRepository.findAllByIdIn(sharedPrayRequestDto.getPrayIds());
-
-        for (Pray pray : prayList) {
-            if (!pray.getMember().getUserId().equals(username)) {
-                throw new CustomException(ErrorStatus.SHARE_NOT_AUTHORIZED_EXCEPTION, ErrorStatus.SHARE_NOT_AUTHORIZED_EXCEPTION.getMessage());
-            }
-        }
-    }
-
     @Transactional
     public void receivedSharedPray(String username, SharedPrayRequestDto sharedPrayRequestDto) {
 
@@ -84,8 +73,7 @@ public class ShareFacade {
         }
     }
 
-    @Transactional
-    public void save(Member member, Long sharedPrayId, Category category) {
+    private void save(Member member, Long sharedPrayId, Category category) {
 
         SharedPray sharedPray = sharedPrayRepository.getSharedPrayById(sharedPrayId);
 
@@ -116,8 +104,7 @@ public class ShareFacade {
         }
     }
 
-    @Transactional
-    public void delete(Member member, Long sharedPrayId) {
+    private void delete(Member member, Long sharedPrayId) {
 
         SharedPray sharedPray = sharedPrayRepository.getSharedPrayById(sharedPrayId);
 

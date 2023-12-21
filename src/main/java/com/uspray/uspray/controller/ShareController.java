@@ -9,7 +9,6 @@ import com.uspray.uspray.DTO.sharedpray.request.SharedPraySaveRequestDto;
 import com.uspray.uspray.DTO.sharedpray.response.SharedPrayResponseDto;
 import com.uspray.uspray.exception.SuccessStatus;
 import com.uspray.uspray.service.ShareFacade;
-import com.uspray.uspray.service.ShareService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -48,20 +47,6 @@ public class ShareController {
         @Parameter(hidden = true) @AuthenticationPrincipal User user) {
         return ApiResponseDto.success(SuccessStatus.GET_PRAY_LIST_SUCCESS,
             shareFacade.getSharedPrayList(user.getUsername()));
-    }
-
-    @PostMapping
-    @ApiResponse(
-        responseCode = "200",
-        description = "해당 기도제목 리스트가 공유 가능한지 여부를 알려줍니다",
-        content = @Content(schema = @Schema(implementation = PrayResponseDto.class))
-    )
-    @Operation(summary = "기도제목 공유가능 여부")
-    public ApiResponseDto<?> sharePray(
-        @Parameter(hidden = true) @AuthenticationPrincipal User user,
-        @RequestBody SharedPrayRequestDto sharedPrayRequestDto) {
-        shareFacade.checkSharable(user.getUsername(), sharedPrayRequestDto);
-        return ApiResponseDto.success(SuccessStatus.PRAY_LIST_SHARABLE, SuccessStatus.PRAY_LIST_SHARABLE.getMessage());
     }
 
     @PostMapping("/receive")
