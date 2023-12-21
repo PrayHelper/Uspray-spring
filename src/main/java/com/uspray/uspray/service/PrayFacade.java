@@ -24,10 +24,12 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PrayFacade {
 
     private final MemberRepository memberRepository;
@@ -134,10 +136,12 @@ public class PrayFacade {
                 "누군가가 당신이 공유한 기도제목을 기도했어요.",
                 "💘");
         } catch (Exception e) {
-            System.out.println("send notification error");
+            log.error(e.getMessage());
+
         }
-        System.out.println(
-            "send notification to " + memberRepository.getMemberByUserId(member.getUserId()));
+        log.error(
+            "send notification to " + memberRepository.getMemberByUserId(member.getUserId())
+        );
         NotificationLog notificationLog = NotificationLog.builder()
             .pray(pray)
             .member(memberRepository.getMemberByUserId(member.getUserId()))
