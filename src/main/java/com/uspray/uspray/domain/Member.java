@@ -3,11 +3,17 @@ package com.uspray.uspray.domain;
 import com.uspray.uspray.DTO.notification.NotificationAgreeDto;
 import com.uspray.uspray.Enums.Authority;
 import com.uspray.uspray.common.domain.AuditingTimeEntity;
-
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.*;
-
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,6 +29,10 @@ import org.hibernate.annotations.Where;
 public class Member extends AuditingTimeEntity {
 
     private final Boolean deleted = false;
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private final List<GroupMember> groupMemberList = new ArrayList<>();
+    @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE)
+    private final List<GroupPray> groupPrayList = new ArrayList<>();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
@@ -41,12 +51,6 @@ public class Member extends AuditingTimeEntity {
     @Enumerated(EnumType.STRING)
     private Authority authority;
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private final List<GroupMember> groupMemberList = new ArrayList<>();
-
-    @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE)
-    private final List<GroupPray> groupPrayList = new ArrayList<>();
-
     @Builder
     public Member(String userId, String password, String name, String phone, String birth,
         String gender, Authority authority, String socialId) {
@@ -59,7 +63,7 @@ public class Member extends AuditingTimeEntity {
         this.socialId = socialId;
         this.authority = authority;
     }
-  
+
     public void changeSocialId(String socialId) {
         this.socialId = socialId;
     }
@@ -71,6 +75,7 @@ public class Member extends AuditingTimeEntity {
     public void changePhone(String phone) {
         this.phone = phone;
     }
+
     public void changeName(String name) {
         this.name = name;
     }
