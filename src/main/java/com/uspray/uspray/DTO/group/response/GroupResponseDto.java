@@ -26,13 +26,16 @@ public class GroupResponseDto {
 
     private LocalDateTime updatedAt;
 
+    private boolean isLeader;
+
     @QueryProjection
-    public GroupResponseDto(Long id, String name, String lastPrayContent, Integer memberCount, Integer prayCount, LocalDateTime updatedAt) {
+    public GroupResponseDto(Long id, String name, String lastPrayContent, Integer memberCount, Integer prayCount, LocalDateTime updatedAt, boolean isLeader) {
         this.id = id;
         this.name = name;
         this.lastPrayContent = lastPrayContent;
         this.memberCount = memberCount;
         this.prayCount = prayCount;
         this.updatedAt = updatedAt;
+        this.isLeader = isLeader;
     }
 }
