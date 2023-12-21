@@ -37,7 +37,7 @@ public class SharedPrayResponseDto {
 
     public static SharedPrayResponseDto of(SharedPray sharedPray) {
         return new SharedPrayResponseDto(sharedPray.getId(), sharedPray.getPray().getId(),
-            sharedPray.getMember().getUserId(),
+            sharedPray.getPray().getMember().getUserId(),
             sharedPray.getPray().getContent(), sharedPray.getPray().getDeadline(),
             sharedPray.getCreatedAt());
     }
