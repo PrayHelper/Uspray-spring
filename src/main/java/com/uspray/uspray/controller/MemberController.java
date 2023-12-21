@@ -46,6 +46,7 @@ public class MemberController {
         return ApiResponseDto.success(SuccessStatus.CHANGE_PUSH_AGREE_SUCCESS);
     }
 
+    //TODO user.getUsername()이 안되는 것 같다. 확인해보자!
     @PutMapping("/oauth/{name}")
     @Operation(summary = "소셜 로그인 회원가입 이름 설정")
     public ApiResponseDto<?> setOAuthName(

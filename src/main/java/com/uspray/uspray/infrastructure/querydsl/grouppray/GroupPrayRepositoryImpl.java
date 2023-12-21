@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import java.util.List;
 import javax.persistence.EntityManager;
 
+//TODO 리팩터링하거나 지우거나
 public class GroupPrayRepositoryImpl implements GroupPrayRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
