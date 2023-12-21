@@ -37,7 +37,6 @@ import org.springframework.web.client.RestTemplate;
 @RequiredArgsConstructor
 public class SmsService {
 
-    private final String smsConfirmNum = createSmsKey();
     private final RedisTemplate redisTemplate;
 
     @Value("${naver-cloud-sms.accessKey}")
@@ -77,6 +76,8 @@ public class SmsService {
 
         List<MessageDto> messages = new ArrayList<>();
         messages.add(messageDto);
+
+        String smsConfirmNum = createSmsKey();
 
         // api 요청 양식에 맞춰 세팅
         SmsRequestDto request = SmsRequestDto.builder()
