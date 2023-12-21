@@ -39,7 +39,7 @@ public class GroupRepositoryImpl implements GroupRepositoryCustom {
             ))
             .from(group)
             .join(group.groupMemberList, groupMember)
-            .join(group.groupPrayList, groupPray)
+            .leftJoin(group.groupPrayList, groupPray)
             .where(groupMember.member.userId.eq(userId))
             .groupBy(group.id, group.name, group.leader.userId, groupPray.content)
             .orderBy(groupPray.createdAt.max().desc())
