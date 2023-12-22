@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -41,6 +42,10 @@ public class GroupPray extends AuditingTimeEntity {
     @JoinColumn(name = "member_id")
     private Member author;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "pray_id")
+    private Pray originPray;
+
     @OneToMany(mappedBy = "groupPray", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private final List<ScrapAndHeart> scrapAndHeart = new ArrayList<>();
 
@@ -50,6 +55,10 @@ public class GroupPray extends AuditingTimeEntity {
         setGroup(group);
         setAuthor(author);
         this.deadline = deadline;
+    }
+
+    public void setOriginPray(Pray pray) {
+        this.originPray = pray;
     }
 
     private void setGroup(Group group) {
