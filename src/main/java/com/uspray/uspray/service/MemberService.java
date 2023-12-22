@@ -1,8 +1,11 @@
 package com.uspray.uspray.service;
 
+import com.uspray.uspray.DTO.auth.request.OauthNameDto;
 import com.uspray.uspray.DTO.notification.NotificationAgreeDto;
 import com.uspray.uspray.Enums.Authority;
 import com.uspray.uspray.domain.Member;
+import com.uspray.uspray.exception.ErrorStatus;
+import com.uspray.uspray.exception.model.NotFoundException;
 import com.uspray.uspray.infrastructure.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,9 +28,12 @@ public class MemberService {
     }
 
     @Transactional
-    public void changeName(String userId, String name) {
-        Member member = memberRepository.getMemberByUserId(userId);
-        member.changeName(name);
+    public void changeName(OauthNameDto oauthNameDto) {
+        Member member = memberRepository.findBySocialId(oauthNameDto.getId())
+            .orElseThrow(() -> new NotFoundException(
+                ErrorStatus.NOT_FOUND_USER_EXCEPTION,
+                ErrorStatus.NOT_FOUND_USER_EXCEPTION.getMessage()));
+        member.changeName(oauthNameDto.getName());
         member.changeAuthority(Authority.ROLE_USER);
     }
 }
