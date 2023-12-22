@@ -1,8 +1,10 @@
 package com.uspray.uspray.DTO.grouppray;
 
+import com.uspray.uspray.domain.GroupPray;
+import com.uspray.uspray.domain.Member;
+import com.uspray.uspray.domain.ScrapAndHeart;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Objects;
 import lombok.Builder;
 import lombok.Data;
@@ -19,22 +21,38 @@ public class GroupPrayResponseDto {
     @Schema(example = "true")
     private boolean isOwner;
     @Schema(example = "true")
-    private boolean heart;
+    private boolean heart = false;
     @Schema(example = "false")
-    private boolean scrap;
+    private boolean scrap = false;
     @Schema(example = "1592-07-17")
     private LocalDate createdAt;
 
+//    @Builder
+//    public GroupPrayResponseDto(Long groupPrayId, String content, String authorName, Long authorId,
+//        Long memberId, boolean heart, boolean scrap, LocalDateTime createdAt) {
+//        this.groupPrayId = groupPrayId;
+//        this.content = content;
+//        this.authorName = authorName;
+//        setIsOwner(authorId, memberId);
+//        this.heart = heart;
+//        this.scrap = scrap;
+//        this.createdAt = LocalDate.from(createdAt);
+//    }
+
     @Builder
-    public GroupPrayResponseDto(Long groupPrayId, String content, String authorName, Long authorId,
-        Long memberId, boolean heart, boolean scrap, LocalDateTime createdAt) {
-        this.groupPrayId = groupPrayId;
-        this.content = content;
-        this.authorName = authorName;
-        setIsOwner(authorId, memberId);
-        this.heart = heart;
-        this.scrap = scrap;
-        this.createdAt = LocalDate.from(createdAt);
+    public GroupPrayResponseDto(GroupPray groupPray, Member member, ScrapAndHeart scrapAndHeart) {
+        this.groupPrayId = groupPray.getId();
+        this.content = groupPray.getContent();
+        this.authorName = member.getName();
+        setIsOwner(groupPray.getAuthor().getId(), member.getId());
+        setSC(scrapAndHeart);
+        this.createdAt = LocalDate.from(groupPray.getCreatedAt());
+    }
+    private void setSC(ScrapAndHeart scrapAndHeart) {
+        if (scrapAndHeart != null) {
+            this.heart = scrapAndHeart.isHeart();
+            this.scrap = scrapAndHeart.isScrap();
+        }
     }
 
 //    @QueryProjection
