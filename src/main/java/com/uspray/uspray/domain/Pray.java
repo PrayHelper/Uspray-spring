@@ -80,9 +80,11 @@ public class Pray extends AuditingTimeEntity {
         this.lastPrayedAt = LocalDate.of(2002, 2, 24);
     }
 
-    private void setGroupPray(GroupPray groupPray) {
-        this.groupPray = groupPray;
-        groupPray.setOriginPray(this);
+    public void setGroupPray(GroupPray groupPray) {
+        if (groupPray != null) {
+            this.groupPray = groupPray;
+            groupPray.setOriginPray(this);
+        }
     }
 
     public void update(PrayUpdateRequestDto prayUpdateRequestDto,

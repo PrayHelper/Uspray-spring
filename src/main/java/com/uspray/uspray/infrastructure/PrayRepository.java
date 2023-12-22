@@ -29,6 +29,9 @@ public interface PrayRepository extends JpaRepository<Pray, Long>, PrayRepositor
             ));
     }
 
+    @EntityGraph(attributePaths = {"member"})
+    List<Pray> findAllByOriginPrayIdIn(List<Long> prayIds);
+
     List<Pray> findAllByIdIn(List<Long> prayIds);
 
     List<Pray> findAllByDeadlineBefore(LocalDate date);

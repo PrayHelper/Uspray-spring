@@ -147,7 +147,7 @@ public class GroupPrayFacade {
             ScrapAndHeart scrapAndHeart = ScrapAndHeart.builder()
                 .groupPray(groupPray)
                 .member(member)
-                .pray(pray)
+                .sharedPray(pray)
                 .build();
             prayRepository.save(pray);
             scrapAndHeart.scrapPray(pray);

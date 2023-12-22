@@ -3,6 +3,7 @@ package com.uspray.uspray.controller;
 
 import com.uspray.uspray.DTO.ApiResponseDto;
 import com.uspray.uspray.DTO.pray.PrayListResponseDto;
+import com.uspray.uspray.DTO.pray.request.BringInGroupPrayDto;
 import com.uspray.uspray.DTO.pray.request.PrayRequestDto;
 import com.uspray.uspray.DTO.pray.request.PrayUpdateRequestDto;
 import com.uspray.uspray.DTO.pray.response.PrayResponseDto;
@@ -152,5 +153,19 @@ public class PrayController {
     ) {
         return ApiResponseDto.success(SuccessStatus.CANCEL_PRAY_SUCCESS,
             prayService.cancelPray(prayId, user.getUsername()));
+    }
+
+    @Operation(summary = "모임 기도제목으로 불러오기")
+    @ApiResponse(
+        responseCode = "200",
+        description = "모임 기도제목으로 불러오기",
+        content = @Content(schema = @Schema(implementation = PrayResponseDto.class)))
+    @PostMapping("/bring-in-grouppray")
+    public ApiResponseDto<?> bringInGroupPray(
+        @RequestBody BringInGroupPrayDto bringInGroupPrayDto,
+        @Parameter(hidden = true) @AuthenticationPrincipal User user
+    ) {
+        prayFacade.bringInGroupPray(bringInGroupPrayDto, user.getUsername());
+        return ApiResponseDto.success(SuccessStatus.BRING_IN_GROUP_PRAY_SUCCESS);
     }
 }
