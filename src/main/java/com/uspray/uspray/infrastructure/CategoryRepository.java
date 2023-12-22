@@ -31,6 +31,9 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
             throw new NotFoundException(ErrorStatus.CATEGORY_DUPLICATE_EXCEPTION,
                 ErrorStatus.CATEGORY_DUPLICATE_EXCEPTION.getMessage());
         }
+        if (getCategoriesByMemberOrderByOrder(member).isEmpty()) {
+            return 0;
+        }
         return getMaxCategoryOrder(member);
     }
 

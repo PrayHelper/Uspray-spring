@@ -1,6 +1,5 @@
 package com.uspray.uspray.service;
 
-import com.uspray.uspray.DTO.group.request.GroupMemberRequestDto;
 import com.uspray.uspray.DTO.group.request.GroupRequestDto;
 import com.uspray.uspray.domain.Group;
 import com.uspray.uspray.domain.GroupMember;
@@ -58,13 +57,16 @@ public class GroupFacade {
     public void kickGroupMember(String username, Long groupId, Long kickedMemberId) {
         Member leader = memberRepository.getMemberByUserId(username);
         Group group = groupRepository.getGroupById(groupId);
-        GroupMember kickedgroupMember = groupMemberRepository.getGroupMemberByGroupIdAndMemberId(groupId, kickedMemberId);
+        GroupMember kickedgroupMember = groupMemberRepository.getGroupMemberByGroupIdAndMemberId(
+            groupId, kickedMemberId);
 
         group.checkLeaderAuthorization(leader);
         if (group.getLeader().getId().equals(kickedMemberId)) {
-            throw new CustomException(ErrorStatus.LEADER_CANNOT_LEAVE_GROUP_EXCEPTION, ErrorStatus.LEADER_CANNOT_LEAVE_GROUP_EXCEPTION.getMessage());
+            throw new CustomException(ErrorStatus.LEADER_CANNOT_LEAVE_GROUP_EXCEPTION,
+                ErrorStatus.LEADER_CANNOT_LEAVE_GROUP_EXCEPTION.getMessage());
         }
         group.kickMember(kickedgroupMember);
+        groupMemberRepository.delete(kickedgroupMember);
     }
 
     @Transactional
@@ -73,7 +75,8 @@ public class GroupFacade {
         Group group = groupRepository.getGroupById(groupId);
 
         if (groupMemberRepository.existsByGroupAndMember(group, member)) {
-            throw new CustomException(ErrorStatus.ALREADY_EXIST_GROUP_MEMBER_EXCEPTION, ErrorStatus.ALREADY_EXIST_GROUP_MEMBER_EXCEPTION.getMessage());
+            throw new CustomException(ErrorStatus.ALREADY_EXIST_GROUP_MEMBER_EXCEPTION,
+                ErrorStatus.ALREADY_EXIST_GROUP_MEMBER_EXCEPTION.getMessage());
         }
         GroupMember groupMember = GroupMember.builder()
             .group(group)
@@ -86,12 +89,15 @@ public class GroupFacade {
     public void leaveGroup(String username, Long groupId) {
         Member member = memberRepository.getMemberByUserId(username);
         Group group = groupRepository.getGroupById(groupId);
-        GroupMember groupMember = groupMemberRepository.getGroupMemberByGroupAndMember(group, member);
+        GroupMember groupMember = groupMemberRepository.getGroupMemberByGroupAndMember(group,
+            member);
 
         if (group.getLeader().equals(member)) {
-            throw new CustomException(ErrorStatus.LEADER_CANNOT_LEAVE_GROUP_EXCEPTION, ErrorStatus.LEADER_CANNOT_LEAVE_GROUP_EXCEPTION.getMessage());
+            throw new CustomException(ErrorStatus.LEADER_CANNOT_LEAVE_GROUP_EXCEPTION,
+                ErrorStatus.LEADER_CANNOT_LEAVE_GROUP_EXCEPTION.getMessage());
         }
         group.kickMember(groupMember);
+        groupMemberRepository.delete(groupMember);
     }
 
     @Transactional

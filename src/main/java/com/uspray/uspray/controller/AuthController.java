@@ -3,11 +3,12 @@ package com.uspray.uspray.controller;
 import com.uspray.uspray.DTO.ApiResponseDto;
 import com.uspray.uspray.DTO.auth.TokenDto;
 import com.uspray.uspray.DTO.auth.request.ChangePwDto;
-import com.uspray.uspray.DTO.auth.request.FindIdDto;
 import com.uspray.uspray.DTO.auth.request.CheckPwDto;
+import com.uspray.uspray.DTO.auth.request.FindIdDto;
 import com.uspray.uspray.DTO.auth.request.MemberDeleteDto;
 import com.uspray.uspray.DTO.auth.request.MemberLoginRequestDto;
 import com.uspray.uspray.DTO.auth.request.MemberRequestDto;
+import com.uspray.uspray.DTO.auth.response.DupCheckResponseDto;
 import com.uspray.uspray.DTO.auth.response.MemberResponseDto;
 import com.uspray.uspray.exception.SuccessStatus;
 import com.uspray.uspray.service.AuthService;
@@ -109,8 +110,9 @@ public class AuthController {
 
     @GetMapping("/dup-check/{userId}")
     @Operation(summary = "아이디 중복 체크")
-    public ApiResponseDto<?> dupCheck(@PathVariable("userId") String userId) {
-        authService.dupCheck(userId);
-        return ApiResponseDto.success(SuccessStatus.CHECK_USER_ID_SUCCESS);
+    public ApiResponseDto<DupCheckResponseDto> dupCheck(@PathVariable("userId") String userId) {
+        return ApiResponseDto.success(SuccessStatus.CHECK_USER_ID_SUCCESS,
+            authService.dupCheck(userId));
+
     }
 }

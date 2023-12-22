@@ -2,18 +2,18 @@ package com.uspray.uspray.service;
 
 import com.uspray.uspray.DTO.auth.TokenDto;
 import com.uspray.uspray.DTO.auth.request.ChangePwDto;
-import com.uspray.uspray.DTO.auth.request.FindIdDto;
 import com.uspray.uspray.DTO.auth.request.CheckPwDto;
+import com.uspray.uspray.DTO.auth.request.FindIdDto;
 import com.uspray.uspray.DTO.auth.request.MemberDeleteDto;
 import com.uspray.uspray.DTO.auth.request.MemberLoginRequestDto;
 import com.uspray.uspray.DTO.auth.request.MemberRequestDto;
+import com.uspray.uspray.DTO.auth.response.DupCheckResponseDto;
 import com.uspray.uspray.DTO.auth.response.MemberResponseDto;
 import com.uspray.uspray.Enums.WithdrawReason;
 import com.uspray.uspray.domain.Member;
 import com.uspray.uspray.domain.Withdraw;
 import com.uspray.uspray.exception.ErrorStatus;
 import com.uspray.uspray.exception.model.CustomException;
-import com.uspray.uspray.exception.model.ExistIdException;
 import com.uspray.uspray.exception.model.NotFoundException;
 import com.uspray.uspray.infrastructure.MemberRepository;
 import com.uspray.uspray.infrastructure.WithdrawRepository;
@@ -133,7 +133,8 @@ public class AuthService {
 
     @Transactional
     public void changePw(ChangePwDto changePwDto) {
-        memberRepository.getMemberById(changePwDto.getId()).changePw(passwordEncoder.encode(changePwDto.getPassword()));
+        memberRepository.getMemberById(changePwDto.getId())
+            .changePw(passwordEncoder.encode(changePwDto.getPassword()));
     }
 
     @Transactional
@@ -155,13 +156,7 @@ public class AuthService {
         memberRepository.delete(member);
     }
 
-    public void dupCheck(String userId) {
-
-        if (memberRepository.existsByUserId(userId)) {
-            throw new ExistIdException(ErrorStatus.ALREADY_EXIST_ID_EXCEPTION,
-                ErrorStatus.ALREADY_EXIST_ID_EXCEPTION.getMessage());
-        }
+    public DupCheckResponseDto dupCheck(String userId) {
+        return new DupCheckResponseDto(memberRepository.existsByUserId(userId));
     }
-
-
 }

@@ -60,8 +60,7 @@ public class InitDb {
                 .authority(Authority.ROLE_USER)
                 .build();
             em.persist(member2);
-          
-          
+
             Member member_mook = Member.builder()
                 .userId("wjdanr0869")
                 .password(passwordEncoder.encode("wjdanr0869"))
@@ -72,7 +71,39 @@ public class InitDb {
                 .authority(Authority.ROLE_USER)
                 .build();
             em.persist(member_mook);
-          
+
+            Member member3 = Member.builder()
+                .userId("test3")
+                .password(passwordEncoder.encode("test3"))
+                .name("이수빈")
+                .phone("01022223333")
+                .birth("2001-11-07")
+                .gender("female")
+                .authority(Authority.ROLE_USER)
+                .build();
+            em.persist(member3);
+
+            Member member4 = Member.builder()
+                .userId("test4")
+                .password(passwordEncoder.encode("test4"))
+                .name("권은혜")
+                .phone("01022223331")
+                .birth("2001-11-07")
+                .gender("female")
+                .authority(Authority.ROLE_USER)
+                .build();
+            em.persist(member4);
+
+            Member member5 = Member.builder()
+                .userId("test5")
+                .password(passwordEncoder.encode("test5"))
+                .name("배서현")
+                .phone("01022223931")
+                .birth("2001-11-07")
+                .gender("female")
+                .authority(Authority.ROLE_USER)
+                .build();
+            em.persist(member5);
 
             Group group = Group.builder()
                 .name("테스트 모임")
@@ -85,7 +116,7 @@ public class InitDb {
                 .member(member)
                 .build();
             em.persist(groupMember);
-          
+
             Category category = Category.builder()
                 .name("기타 카테고리")
                 .color("#FFFFFF")
@@ -166,6 +197,7 @@ public class InitDb {
                 .group(group)
                 .author(member)
                 .content("테스트기도하고 아니기도하고")
+                .deadline(LocalDate.parse("2025-01-01"))
                 .build();
             em.persist(groupPray);
 
