@@ -1,5 +1,6 @@
 package com.uspray.uspray.service;
 
+import com.uspray.uspray.DTO.grouppray.GroupPrayRappingDto;
 import com.uspray.uspray.DTO.grouppray.GroupPrayRequestDto;
 import com.uspray.uspray.DTO.grouppray.GroupPrayResponseDto;
 import com.uspray.uspray.DTO.grouppray.ScrapRequestDto;
@@ -17,6 +18,8 @@ import com.uspray.uspray.infrastructure.MemberRepository;
 import com.uspray.uspray.infrastructure.PrayRepository;
 import com.uspray.uspray.infrastructure.ScrapAndHeartRepository;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -58,25 +61,56 @@ public class GroupPrayFacade {
             .build();
         scrapAndHeartRepository.save(scrapAndHeart);
 
-        //TODO 원본 기도를 지우면 그룹 기도도 같이 지워지게 연관 설정
         Pray pray = Pray.builder()
             .content(groupPrayRequestDto.getContent())
             .deadline(groupPrayRequestDto.getDeadline())
             .member(author)
             .category(category)
             .prayType(PrayType.PERSONAL)
+            .groupPray(groupPray)
             .build();
         pray.setIsShared();
         prayRepository.save(pray);
     }
 
-    //groupId와 자신의 Id를 이용해 group pray들 반환 + 작성자인지 and 좋아요를 눌렀는지 확인 가능
     @Transactional(readOnly = true)
-    public Map<LocalDate, List<GroupPrayResponseDto>> getGroupPray(Long groupId, String userId) {
+    public GroupPrayRappingDto getGroupPray(Long groupId, String userId) {
 
-        List<GroupPrayResponseDto> groupPrayList = groupPrayRepository.getGroupPrayList(groupId, userId);
+        Member member = memberRepository.getMemberByUserId(userId);
+        Group group = groupRepository.getGroupById(groupId);
+        List<GroupPray> groupPrays = groupPrayRepository.findGroupPraysByGroup(group);
 
-        return groupPrayList.stream().collect(Collectors.groupingBy(GroupPrayResponseDto::getCreatedAt));
+        Long count = scrapAndHeartRepository.countHeart(groupPrays, true);
+
+        List<GroupPrayResponseDto> groupPrayList = new ArrayList<>();
+
+        for (GroupPray groupPray : groupPrays) {
+            Optional<ScrapAndHeart> SH = scrapAndHeartRepository.findScrapAndHeartByGroupPrayAndMember(
+                groupPray, member);
+            if (SH.isPresent()){
+                ScrapAndHeart scrapAndHeart = SH.get();
+                groupPrayList.add(GroupPrayResponseDto.builder()
+                        .groupPray(groupPray)
+                        .member(member)
+                        .scrapAndHeart(scrapAndHeart)
+                        .build());
+                continue;
+            }
+            groupPrayList.add(GroupPrayResponseDto.builder()
+                .groupPray(groupPray)
+                .member(member)
+                .build());
+        }
+
+        Map<LocalDate, List<GroupPrayResponseDto>> map = groupPrayList.stream()
+            .collect(Collectors.groupingBy(GroupPrayResponseDto::getCreatedAt));
+
+        for (Map.Entry<LocalDate, List<GroupPrayResponseDto>> entry : map.entrySet()) {
+            List<GroupPrayResponseDto> value = entry.getValue();
+            value.sort(Comparator.comparing(GroupPrayResponseDto::getGroupPrayId).reversed());
+        }
+
+        return new GroupPrayRappingDto(count, map);
     }
 
     @Transactional
@@ -113,7 +147,7 @@ public class GroupPrayFacade {
             ScrapAndHeart scrapAndHeart = ScrapAndHeart.builder()
                 .groupPray(groupPray)
                 .member(member)
-                .pray(pray)
+                .sharedPray(pray)
                 .build();
             prayRepository.save(pray);
             scrapAndHeart.scrapPray(pray);

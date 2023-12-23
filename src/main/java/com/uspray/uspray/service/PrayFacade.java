@@ -1,23 +1,30 @@
 package com.uspray.uspray.service;
 
 import com.uspray.uspray.DTO.pray.PrayListResponseDto;
+import com.uspray.uspray.DTO.pray.request.PrayToGroupPrayDto;
 import com.uspray.uspray.DTO.pray.request.PrayRequestDto;
 import com.uspray.uspray.DTO.pray.request.PrayUpdateRequestDto;
 import com.uspray.uspray.DTO.pray.response.PrayResponseDto;
 import com.uspray.uspray.Enums.PrayType;
 import com.uspray.uspray.domain.Category;
+import com.uspray.uspray.domain.Group;
+import com.uspray.uspray.domain.GroupPray;
 import com.uspray.uspray.domain.History;
 import com.uspray.uspray.domain.Member;
 import com.uspray.uspray.domain.NotificationLog;
 import com.uspray.uspray.domain.Pray;
+import com.uspray.uspray.domain.ScrapAndHeart;
 import com.uspray.uspray.exception.ErrorStatus;
 import com.uspray.uspray.exception.model.CustomException;
 import com.uspray.uspray.exception.model.NotFoundException;
 import com.uspray.uspray.infrastructure.CategoryRepository;
+import com.uspray.uspray.infrastructure.GroupPrayRepository;
+import com.uspray.uspray.infrastructure.GroupRepository;
 import com.uspray.uspray.infrastructure.HistoryRepository;
 import com.uspray.uspray.infrastructure.MemberRepository;
 import com.uspray.uspray.infrastructure.NotificationLogRepository;
 import com.uspray.uspray.infrastructure.PrayRepository;
+import com.uspray.uspray.infrastructure.ScrapAndHeartRepository;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +41,9 @@ public class PrayFacade {
 
     private final MemberRepository memberRepository;
     private final PrayRepository prayRepository;
+    private final GroupPrayRepository groupPrayRepository;
+    private final GroupRepository groupRepository;
+    private final ScrapAndHeartRepository scrapAndHeartRepository;
     private final CategoryRepository categoryRepository;
     private final HistoryRepository historyRepository;
     private final NotificationLogRepository notificationLogRepository;
@@ -160,6 +170,50 @@ public class PrayFacade {
         if (pray.getPrayType() == PrayType.SHARED) {
             Pray originPray = prayRepository.getPrayById(pray.getOriginPrayId());
             sendNotificationAndSaveLog(pray, originPray.getMember());
+        }
+    }
+
+    @Transactional
+    public PrayResponseDto deletePray(Long prayId, String username) {
+        Pray pray = prayRepository.getPrayByIdAndMemberId(prayId, username);
+        groupPrayRepository.delete(pray.getGroupPray());
+        prayRepository.delete(pray);
+        return PrayResponseDto.of(pray);
+    }
+
+    @Transactional
+    public void prayToGroupPray(PrayToGroupPrayDto prayToGroupPrayDto, String userId) {
+        Member member = memberRepository.getMemberByUserId(userId);
+        Group group = groupRepository.getGroupById(prayToGroupPrayDto.getGroupId());
+
+        List<Pray> mainPray = prayRepository.findAllByIdIn(prayToGroupPrayDto.getPrayId());
+        List<Pray> targetPray = prayRepository.findAllByOriginPrayIdIn(
+            prayToGroupPrayDto.getPrayId());
+
+        for (Pray p : mainPray) {
+            GroupPray groupPray = GroupPray.builder()
+                .group(group)
+                .author(member)
+                .content(p.getContent())
+                .deadline(p.getDeadline())
+                .build();
+            p.setGroupPray(groupPray);
+            groupPrayRepository.save(groupPray);
+
+            ScrapAndHeart scrapAndHeart = ScrapAndHeart.builder()
+                .groupPray(groupPray)
+                .member(member)
+                .build();
+            scrapAndHeartRepository.save(scrapAndHeart);
+
+            for (Pray TP : targetPray) {
+                ScrapAndHeart targetScrapAndHeart = ScrapAndHeart.builder()
+                    .groupPray(groupPray)
+                    .member(TP.getMember())
+                    .build();
+                targetScrapAndHeart.scrapPray(TP);
+                scrapAndHeartRepository.save(targetScrapAndHeart);
+            }
         }
     }
 }

@@ -154,7 +154,7 @@ public class InitDb {
                 .content("공유 테스트 기도")
                 .deadline(LocalDate.parse("2025-01-01"))
                 .member(member2)
-                .category(category)
+                .category(category2)
                 .prayType(PrayType.PERSONAL)
                 .build();
             em.persist(pray_1);

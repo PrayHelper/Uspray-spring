@@ -38,13 +38,13 @@ public class ScrapAndHeart {
 
     @OneToOne(orphanRemoval = true)
     @JoinColumn(name = "pray_id")
-    private Pray pray;
+    private Pray sharedPray;
 
     @Builder
-    public ScrapAndHeart(GroupPray groupPray, Member member, Pray pray) {
+    public ScrapAndHeart(GroupPray groupPray, Member member, Pray sharedPray) {
         setGroupPray(groupPray);
         setMember(member);
-        setPray(pray);
+        setSharedPray(sharedPray);
     }
 
     private void setGroupPray(GroupPray groupPray) {
@@ -56,8 +56,8 @@ public class ScrapAndHeart {
         this.member = member;
     }
 
-    private void setPray(Pray pray) {
-        this.pray = pray;
+    private void setSharedPray(Pray pray) {
+        this.sharedPray = pray;
     }
 
     public void heartPray() {
@@ -66,6 +66,6 @@ public class ScrapAndHeart {
 
     public void scrapPray(Pray pray) {
         this.scrap = true;
-        this.pray = pray;
+        this.sharedPray = pray;
     }
 }
