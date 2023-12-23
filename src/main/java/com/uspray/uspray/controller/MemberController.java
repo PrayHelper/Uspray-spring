@@ -1,6 +1,7 @@
 package com.uspray.uspray.controller;
 
 import com.uspray.uspray.DTO.ApiResponseDto;
+import com.uspray.uspray.DTO.auth.request.OauthNameDto;
 import com.uspray.uspray.DTO.notification.NotificationAgreeDto;
 import com.uspray.uspray.exception.SuccessStatus;
 import com.uspray.uspray.service.MemberService;
@@ -46,13 +47,10 @@ public class MemberController {
         return ApiResponseDto.success(SuccessStatus.CHANGE_PUSH_AGREE_SUCCESS);
     }
 
-    //TODO user.getUsername()이 안되는 것 같다. 확인해보자!
-    @PutMapping("/oauth/{name}")
+    @PutMapping("/oauth")
     @Operation(summary = "소셜 로그인 회원가입 이름 설정")
-    public ApiResponseDto<?> setOAuthName(
-        @Parameter(hidden = true) @AuthenticationPrincipal User user,
-        @PathVariable("name") String name) {
-        memberService.changeName(user.getUsername(), name);
+    public ApiResponseDto<?> setOAuthName(@RequestBody OauthNameDto oauthNameDto) {
+        memberService.changeName(oauthNameDto);
         return ApiResponseDto.success(SuccessStatus.CHANGE_NAME_SUCCESS);
     }
 }
