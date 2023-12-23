@@ -1,6 +1,7 @@
 package com.uspray.uspray.DTO.history.response;
 
 import com.uspray.uspray.domain.History;
+import com.uspray.uspray.domain.Pray;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -18,6 +19,8 @@ public class HistoryResponseDto {
 
     private String userId;
 
+    private String name;
+
     private String content;
 
     private LocalDate deadline;
@@ -26,7 +29,12 @@ public class HistoryResponseDto {
 
     public static HistoryResponseDto of(History history) {
         return new HistoryResponseDto(history.getId(), history.getMember().getUserId(),
-            history.getContent(), history.getDeadline(), history.getCreatedAt());
+            history.getMember().getName(), history.getContent(), history.getDeadline(), history.getCreatedAt());
+    }
+
+    public static HistoryResponseDto shared(History history, Pray originPray) {
+        return new HistoryResponseDto(history.getId(), originPray.getMember().getUserId(),
+            originPray.getMember().getName(), history.getContent(), history.getDeadline(), history.getCreatedAt());
     }
 
 }

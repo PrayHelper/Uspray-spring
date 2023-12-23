@@ -23,18 +23,6 @@ public class HistoryRepositoryImpl implements HistoryRepositoryCustom {
         Boolean isShared, LocalDate startDate, LocalDate endDate, Pageable pageable) {
         QHistory history = QHistory.history;
 
-        long total = queryFactory
-            .selectFrom(history)
-            .where(
-                history.member.userId.eq(username),
-                keyword != null && !keyword.isEmpty() ? history.content.containsIgnoreCase(keyword) : null,
-                Boolean.TRUE.equals(isPersonal) && !Boolean.TRUE.equals(isShared) ? history.originPrayId.isNull() : null,
-                Boolean.TRUE.equals(isShared) && !Boolean.TRUE.equals(isPersonal) ? history.originPrayId.isNotNull() : null,
-                startDate != null ? history.createdAt.before(endDate.atStartOfDay()) : null,
-                endDate != null ? history.deadline.after(startDate) : null
-            )
-            .fetchCount();
-
         List<History> results = queryFactory
             .selectFrom(history)
             .where(
@@ -49,6 +37,6 @@ public class HistoryRepositoryImpl implements HistoryRepositoryCustom {
             .limit(pageable.getPageSize())
             .fetch();
 
-        return new PageImpl<>(results, pageable, total);
+        return new PageImpl<>(results, pageable, results.size());
     }
 }

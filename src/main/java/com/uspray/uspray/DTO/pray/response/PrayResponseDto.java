@@ -22,6 +22,10 @@ public class PrayResponseDto {
     private String content;
 
     @NotNull
+    @Schema(description = "기도제목 작성자 이름", example = "홍길동")
+    private String name;
+
+    @NotNull
     @Schema(description = "기도제목 마감일", example = "2025-01-01")
     private LocalDate deadline;
 
@@ -36,7 +40,22 @@ public class PrayResponseDto {
 
 
     public static PrayResponseDto of(Pray pray) {
-        return new PrayResponseDto(pray.getId(), pray.getContent(), pray.getDeadline(),
+        return new PrayResponseDto(
+            pray.getId(),
+            pray.getContent(),
+            pray.getMember().getName(),
+            pray.getDeadline(),
+            pray.getCategory().getId(),
+            pray.getCategory().getName(),
+            pray.getLastPrayedAt());
+    }
+
+    public static PrayResponseDto shared(Pray pray, Pray originPray) {
+        return new PrayResponseDto(
+            pray.getId(),
+            pray.getContent(),
+            originPray.getMember().getName(),
+            pray.getDeadline(),
             pray.getCategory().getId(),
             pray.getCategory().getName(),
             pray.getLastPrayedAt());

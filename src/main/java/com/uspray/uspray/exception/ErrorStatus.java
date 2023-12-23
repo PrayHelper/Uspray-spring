@@ -27,6 +27,7 @@ public enum ErrorStatus {
     ALREADY_CANCEL_EXCEPTION(HttpStatus.BAD_REQUEST, "이미 취소된 기도제목입니다."),
     WRONG_LOGIN_INFO_EXCEPTION(HttpStatus.BAD_REQUEST, "아이디 또는 비밀번호가 틀렸습니다."),
     MISS_MATCH_SMS_CODE(HttpStatus.BAD_REQUEST, "문자 인증 코드가 틀렸습니다."),
+    INVALID_TYPE_EXCEPTION(HttpStatus.BAD_REQUEST, "잘못된 타입입니다."),
 
     /*
      * 401 UNAUTHORIZED
