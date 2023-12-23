@@ -5,7 +5,7 @@ import java.util.List;
 import lombok.Data;
 
 @Data
-public class BringInGroupPrayDto {
+public class PrayToGroupPrayDto {
 
     @Schema(example = "1")
     private Long groupId;

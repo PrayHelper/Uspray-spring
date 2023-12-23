@@ -1,7 +1,7 @@
 package com.uspray.uspray.service;
 
 import com.uspray.uspray.DTO.pray.PrayListResponseDto;
-import com.uspray.uspray.DTO.pray.request.BringInGroupPrayDto;
+import com.uspray.uspray.DTO.pray.request.PrayToGroupPrayDto;
 import com.uspray.uspray.DTO.pray.request.PrayRequestDto;
 import com.uspray.uspray.DTO.pray.request.PrayUpdateRequestDto;
 import com.uspray.uspray.DTO.pray.response.PrayResponseDto;
@@ -182,13 +182,13 @@ public class PrayFacade {
     }
 
     @Transactional
-    public void bringInGroupPray(BringInGroupPrayDto bringInGroupPrayDto, String userId) {
+    public void prayToGroupPray(PrayToGroupPrayDto prayToGroupPrayDto, String userId) {
         Member member = memberRepository.getMemberByUserId(userId);
-        Group group = groupRepository.getGroupById(bringInGroupPrayDto.getGroupId());
+        Group group = groupRepository.getGroupById(prayToGroupPrayDto.getGroupId());
 
-        List<Pray> mainPray = prayRepository.findAllByIdIn(bringInGroupPrayDto.getPrayId());
+        List<Pray> mainPray = prayRepository.findAllByIdIn(prayToGroupPrayDto.getPrayId());
         List<Pray> targetPray = prayRepository.findAllByOriginPrayIdIn(
-            bringInGroupPrayDto.getPrayId());
+            prayToGroupPrayDto.getPrayId());
 
         for (Pray p : mainPray) {
             GroupPray groupPray = GroupPray.builder()

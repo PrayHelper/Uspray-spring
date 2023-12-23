@@ -27,18 +27,6 @@ public class GroupPrayResponseDto {
     @Schema(example = "1592-07-17")
     private LocalDate createdAt;
 
-//    @Builder
-//    public GroupPrayResponseDto(Long groupPrayId, String content, String authorName, Long authorId,
-//        Long memberId, boolean heart, boolean scrap, LocalDateTime createdAt) {
-//        this.groupPrayId = groupPrayId;
-//        this.content = content;
-//        this.authorName = authorName;
-//        setIsOwner(authorId, memberId);
-//        this.heart = heart;
-//        this.scrap = scrap;
-//        this.createdAt = LocalDate.from(createdAt);
-//    }
-
     @Builder
     public GroupPrayResponseDto(GroupPray groupPray, Member member, ScrapAndHeart scrapAndHeart) {
         this.groupPrayId = groupPray.getId();
@@ -54,18 +42,6 @@ public class GroupPrayResponseDto {
             this.scrap = scrapAndHeart.isScrap();
         }
     }
-
-//    @QueryProjection
-//    public GroupPrayResponseDto(Long groupPrayId, String content, String authorName, Long authorId,
-//        Long memberId, boolean heart, boolean scrap, LocalDateTime createdAt) {
-//        this.groupPrayId = groupPrayId;
-//        this.content = content;
-//        this.authorName = authorName;
-//        setIsOwner(authorId, memberId);
-//        this.heart = heart;
-//        this.scrap = scrap;
-//        this.createdAt = LocalDate.from(createdAt);
-//    }
 
     private void setIsOwner(Long authorId, Long memberId) {
         this.isOwner = Objects.equals(authorId, memberId);
