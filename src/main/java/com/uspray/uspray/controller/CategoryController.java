@@ -58,7 +58,7 @@ public class CategoryController {
     @GetMapping
     public ApiResponseDto<List<CategoryResponseDto>> getCategoryList(
         @Parameter(hidden = true) @AuthenticationPrincipal User user,
-        @Parameter(description = "카테고리 종류", required = true, example = "personal") CategoryType categoryType
+        @Parameter(description = "카테고리 종류", required = true, example = "PERSONAL") CategoryType categoryType
     ) {
         return ApiResponseDto.success(SuccessStatus.GET_CATEGORY_LIST_SUCCESS,
             categoryService.getCategoryList(user.getUsername(), categoryType));

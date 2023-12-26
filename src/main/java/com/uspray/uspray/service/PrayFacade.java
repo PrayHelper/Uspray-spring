@@ -1,8 +1,8 @@
 package com.uspray.uspray.service;
 
 import com.uspray.uspray.DTO.pray.PrayListResponseDto;
-import com.uspray.uspray.DTO.pray.request.PrayToGroupPrayDto;
 import com.uspray.uspray.DTO.pray.request.PrayRequestDto;
+import com.uspray.uspray.DTO.pray.request.PrayToGroupPrayDto;
 import com.uspray.uspray.DTO.pray.request.PrayUpdateRequestDto;
 import com.uspray.uspray.DTO.pray.response.PrayResponseDto;
 import com.uspray.uspray.Enums.PrayType;
@@ -69,10 +69,8 @@ public class PrayFacade {
             pray.getMember());
 
         // 그룹 기도 제목은 이 API로 수정 불가능
-        if (pray.getPrayType() == PrayType.GROUP) {
-            throw new CustomException(ErrorStatus.PRAY_UNAUTHORIZED_EXCEPTION,
-                ErrorStatus.PRAY_UNAUTHORIZED_EXCEPTION.getMessage());
-        }
+        checkGroupPray(pray);
+
         // 이 기도 제목을 공유한 적 없거나, 공유 받은 사람이 없으면 전부 수정 가능
         // 이 기도 제목을 공유한 적 있고, 누구라도 공유 받은 사람이 있으면 기도제목 내용 수정 불가능
         Pray sharedPray = prayRepository.getPrayByOriginPrayId(prayId);
@@ -80,14 +78,30 @@ public class PrayFacade {
             Category category = categoryRepository.getCategoryByIdAndMember(
                 prayUpdateRequestDto.getCategoryId(),
                 pray.getMember());
+            // 기도 제목 타입과 카테고리 타입 일치하는 지 확인
+            if (!pray.getPrayType().toString().equals(category.getCategoryType().toString())) {
+                throw new CustomException(ErrorStatus.PRAY_CATEGORY_TYPE_MISMATCH,
+                    ErrorStatus.PRAY_CATEGORY_TYPE_MISMATCH.getMessage());
+            }
             pray.update(prayUpdateRequestDto,
-                sharedPray != null || pray.getPrayType() == PrayType.SHARED, category);
+                checkIsShared(sharedPray, pray), category);
         }
 
         pray.update(prayUpdateRequestDto,
-            sharedPray != null || pray.getPrayType() == PrayType.SHARED, null);
+            checkIsShared(sharedPray, pray), null);
 
         return PrayResponseDto.of(pray);
+    }
+
+    public boolean checkIsShared(Pray sharedPray, Pray pray) {
+        return sharedPray != null || pray.getPrayType() == PrayType.SHARED;
+    }
+
+    public void checkGroupPray(Pray pray) {
+        if (pray.getPrayType() == PrayType.GROUP) {
+            throw new CustomException(ErrorStatus.PRAY_UNAUTHORIZED_EXCEPTION,
+                ErrorStatus.PRAY_UNAUTHORIZED_EXCEPTION.getMessage());
+        }
     }
 
     @Transactional
