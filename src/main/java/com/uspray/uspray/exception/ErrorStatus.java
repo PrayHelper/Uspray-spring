@@ -29,6 +29,7 @@ public enum ErrorStatus {
     MISS_MATCH_SMS_CODE(HttpStatus.BAD_REQUEST, "문자 인증 코드가 틀렸습니다."),
     INVALID_TYPE_EXCEPTION(HttpStatus.BAD_REQUEST, "잘못된 타입입니다."),
     PRAY_CATEGORY_TYPE_MISMATCH(HttpStatus.BAD_REQUEST, "기도제목 타입과 카테고리 타입이 일치하지 않습니다."),
+    INDEX_OUT_OF_BOUND_EXCEPTION(HttpStatus.BAD_REQUEST, "인덱스는 1부터 시작합니다."),
 
     /*
      * 401 UNAUTHORIZED

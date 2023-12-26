@@ -29,22 +29,22 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     }
 
 
-    default int checkDuplicateAndReturnMaxOrder(String name, Member member) {
-        boolean isDuplicate = existsByNameAndMember(name, member);
+    default int checkDuplicateAndReturnMaxOrder(String name, Member member, CategoryType type) {
+        boolean isDuplicate = existsByNameAndMemberAndCategoryType(name, member, type);
         if (isDuplicate) {
             throw new NotFoundException(ErrorStatus.CATEGORY_DUPLICATE_EXCEPTION,
                 ErrorStatus.CATEGORY_DUPLICATE_EXCEPTION.getMessage());
         }
-        if (getCategoriesByMemberOrderByOrder(member).isEmpty()) {
+        if (getCategoriesByMemberAndCategoryTypeOrderByOrder(member, type).isEmpty()) {
             return 0;
         }
-        return getMaxCategoryOrder(member);
+        return getMaxCategoryOrder(member, type);
     }
 
-    boolean existsByNameAndMember(String name, Member member);
+    boolean existsByNameAndMemberAndCategoryType(String name, Member member, CategoryType type);
 
-    default int getMaxCategoryOrder(Member member) {
-        Category category = getCategoriesByMemberOrderByOrder(member).stream()
+    default int getMaxCategoryOrder(Member member, CategoryType type) {
+        Category category = getCategoriesByMemberAndCategoryTypeOrderByOrder(member, type).stream()
             .reduce((first, second) -> second)
             .orElseThrow(() -> new NotFoundException(ErrorStatus.CATEGORY_NOT_FOUND_EXCEPTION,
                 ErrorStatus.CATEGORY_NOT_FOUND_EXCEPTION.getMessage()));

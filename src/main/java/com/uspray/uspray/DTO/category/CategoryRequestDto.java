@@ -22,7 +22,7 @@ public class CategoryRequestDto {
     private String name;
 
     @NotNull
-    @Schema(description = "카테고리 색상", example = "#FFFFFF")
+    @Schema(description = "카테고리 색상", example = "#75BD62")
     private String color;
 
     @NotNull
