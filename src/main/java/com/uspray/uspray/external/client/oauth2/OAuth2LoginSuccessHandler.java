@@ -34,11 +34,12 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         Authentication authentication) throws IOException, ServletException {
 
         CustomOAuth2User customOAuth2User = (CustomOAuth2User) authentication.getPrincipal();
+        String id = customOAuth2User.getName();
 
         // User의 Role이 GUEST일 경우 처음 요청한 회원이므로 회원가입 페이지로 리다이렉트
         if(customOAuth2User.getAuthority() == Authority.ROLE_GUEST) {
             String accessToken = tokenProvider.generateTokenDto(authentication).getAccessToken();
-            response.sendRedirect("http://localhost:3000/socialLoginNameInput"+"?token="+accessToken+"&id="+customOAuth2User.getName()); // 프론트의 회원가입 추가 정보 입력 폼으로 리다이렉트 (추가 컨트롤러를 만들고 거기서 post 해야지 User로 바뀜)
+            response.sendRedirect("http://localhost:3000/socialLoginNameInput"+"?token="+accessToken+"&id="+id.substring(1, id.length()-1)); // 프론트의 회원가입 추가 정보 입력 폼으로 리다이렉트 (추가 컨트롤러를 만들고 거기서 post 해야지 User로 바뀜)
             return;
         }
 
