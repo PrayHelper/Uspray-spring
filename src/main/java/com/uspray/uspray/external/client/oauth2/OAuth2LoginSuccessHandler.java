@@ -1,10 +1,8 @@
 package com.uspray.uspray.external.client.oauth2;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.uspray.uspray.DTO.ApiResponseDto;
 import com.uspray.uspray.DTO.auth.TokenDto;
 import com.uspray.uspray.Enums.Authority;
-import com.uspray.uspray.exception.SuccessStatus;
 import com.uspray.uspray.jwt.TokenProvider;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -48,12 +46,15 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
             tokenDto.getRefreshToken(),
             tokenProvider.getRefreshTokenExpireTime(),
             TimeUnit.MILLISECONDS);
-        response.setStatus(HttpServletResponse.SC_OK);
-        response.setContentType("application/json");
-        response.setCharacterEncoding("utf-8");
-        response.getWriter().write(mapper.writeValueAsString(
-            ApiResponseDto.success(SuccessStatus.LOGIN_SUCCESS, tokenDto)
-        ));
+
+        response.sendRedirect("http://localhost:3000/social-redirecting"+"?accessToken="+tokenDto.getAccessToken()+"&refreshToken="+tokenDto.getRefreshToken());
+
+//        response.setStatus(HttpServletResponse.SC_OK);
+//        response.setContentType("application/json");
+//        response.setCharacterEncoding("utf-8");
+//        response.getWriter().write(mapper.writeValueAsString(
+//            ApiResponseDto.success(SuccessStatus.LOGIN_SUCCESS, tokenDto)
+//        ));
         // 로그인에 성공한 경우 access, refresh 토큰 생성
     }
 }
