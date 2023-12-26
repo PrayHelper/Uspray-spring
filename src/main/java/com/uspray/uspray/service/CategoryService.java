@@ -2,6 +2,7 @@ package com.uspray.uspray.service;
 
 import com.uspray.uspray.DTO.category.CategoryRequestDto;
 import com.uspray.uspray.DTO.category.CategoryResponseDto;
+import com.uspray.uspray.Enums.CategoryType;
 import com.uspray.uspray.domain.Category;
 import com.uspray.uspray.domain.Member;
 import com.uspray.uspray.infrastructure.CategoryRepository;
@@ -71,9 +72,10 @@ public class CategoryService {
         return CategoryResponseDto.of(category);
     }
 
-    public List<CategoryResponseDto> getCategoryList(String username) {
+    public List<CategoryResponseDto> getCategoryList(String username, CategoryType categoryType) {
         Member member = memberRepository.getMemberByUserId(username);
-        List<Category> categories = categoryRepository.getCategoriesByMemberOrderByOrder(member);
+        List<Category> categories = categoryRepository.getCategoriesByMemberAndCategoryTypeOrderByOrder(
+            member, categoryType);
         return categories.stream()
             .map(CategoryResponseDto::of)
             .collect(Collectors.toList());

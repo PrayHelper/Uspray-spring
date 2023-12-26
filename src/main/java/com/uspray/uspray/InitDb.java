@@ -1,6 +1,7 @@
 package com.uspray.uspray;
 
 import com.uspray.uspray.Enums.Authority;
+import com.uspray.uspray.Enums.CategoryType;
 import com.uspray.uspray.Enums.PrayType;
 import com.uspray.uspray.domain.Category;
 import com.uspray.uspray.domain.Group;
@@ -122,6 +123,7 @@ public class InitDb {
                 .color("#FFFFFF")
                 .member(member)
                 .order(1024)
+                .categoryType(CategoryType.PERSONAL)
                 .build();
             em.persist(category);
 
@@ -130,6 +132,7 @@ public class InitDb {
                 .color("#408CFF")
                 .member(member)
                 .order(2048)
+                .categoryType(CategoryType.PERSONAL)
                 .build();
             em.persist(category1);
 
@@ -137,6 +140,7 @@ public class InitDb {
                 .name("친구")
                 .color("#408CFF")
                 .member(member2)
+                .categoryType(CategoryType.PERSONAL)
                 .order(2048)
                 .build();
             em.persist(category2);

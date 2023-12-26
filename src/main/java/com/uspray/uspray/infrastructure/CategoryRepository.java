@@ -1,5 +1,6 @@
 package com.uspray.uspray.infrastructure;
 
+import com.uspray.uspray.Enums.CategoryType;
 import com.uspray.uspray.domain.Category;
 import com.uspray.uspray.domain.Member;
 import com.uspray.uspray.exception.ErrorStatus;
@@ -14,6 +15,9 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     Category getCategoryById(Long categoryId);
 
     List<Category> getCategoriesByMemberOrderByOrder(Member member);
+
+    List<Category> getCategoriesByMemberAndCategoryTypeOrderByOrder(Member member,
+        CategoryType categoryType);
 
     default Category getCategoryByIdAndMember(Long categoryId, Member member) {
         return findById(categoryId)
