@@ -22,6 +22,9 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -76,11 +79,11 @@ public class ShareFacade {
         List<Long> sharedPrayIds = sharedPraySaveRequestDto.getSharedPrayIds();
 
         for (Long id : sharedPrayIds) {
-            save(member, id, category);
+            save(member, id, category, sharedPraySaveRequestDto.getDeadline());
         }
     }
 
-    private void save(Member member, Long sharedPrayId, Category category) {
+    private void save(Member member, Long sharedPrayId, Category category, LocalDate deadline) {
 
         SharedPray sharedPray = sharedPrayRepository.getSharedPrayById(sharedPrayId);
 
@@ -92,7 +95,7 @@ public class ShareFacade {
         Pray pray = Pray.builder()
             .member(member)
             .content(sharedPray.getPray().getContent())
-            .deadline(sharedPray.getPray().getDeadline())
+            .deadline(deadline)
             .originPrayId(sharedPray.getPray().getId())
             .category(category)
             .prayType(PrayType.SHARED)

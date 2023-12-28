@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 import java.util.List;
 
 @Getter
@@ -14,6 +15,9 @@ public class SharedPraySaveRequestDto {
 
     @NotNull
     private List<Long> sharedPrayIds;
+
+    @NotNull
+    private LocalDate deadline;
 
     @NotNull
     private Long categoryId;
