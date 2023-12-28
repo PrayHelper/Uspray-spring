@@ -2,8 +2,11 @@ package com.uspray.uspray.service;
 
 import com.uspray.uspray.DTO.category.CategoryRequestDto;
 import com.uspray.uspray.DTO.category.CategoryResponseDto;
+import com.uspray.uspray.Enums.CategoryType;
 import com.uspray.uspray.domain.Category;
 import com.uspray.uspray.domain.Member;
+import com.uspray.uspray.exception.ErrorStatus;
+import com.uspray.uspray.exception.model.NotFoundException;
 import com.uspray.uspray.infrastructure.CategoryRepository;
 import com.uspray.uspray.infrastructure.MemberRepository;
 import java.util.List;
@@ -18,12 +21,46 @@ public class CategoryService {
     private final MemberRepository memberRepository;
     private final CategoryRepository categoryRepository;
 
+    private static int getNewOrder(int index, List<Category> categories, Category category) {
+        validateIndex(index, categories.size());
+        Category prevCategory = categories.get(index - 1);
+        if (prevCategory.equals(category)) {
+            return prevCategory.getOrder();
+        }
+        if (index == 1) {
+            return getFirstPositionOrder(categories);
+        }
+        if (index == categories.size()) {
+            return getLastPositionOrder(prevCategory);
+        }
+        return getMiddlePositionOrder(prevCategory, categories.get(index));
+    }
+
+    private static void validateIndex(int index, int size) {
+        if (index < 1 || index > size) {
+            throw new NotFoundException(ErrorStatus.INDEX_OUT_OF_BOUND_EXCEPTION,
+                ErrorStatus.INDEX_OUT_OF_BOUND_EXCEPTION.getMessage());
+        }
+    }
+
+    private static int getFirstPositionOrder(List<Category> categories) {
+        return categories.get(0).getOrder() / 2;
+    }
+
+    private static int getLastPositionOrder(Category prevCategory) {
+        return prevCategory.getOrder() + 1024;
+    }
+
+    private static int getMiddlePositionOrder(Category prevCategory, Category nextCategory) {
+        return (prevCategory.getOrder() + nextCategory.getOrder()) / 2;
+    }
+
     public CategoryResponseDto createCategory(String username,
         CategoryRequestDto categoryRequestDto) {
         Member member = memberRepository.getMemberByUserId(username);
 
         int maxCategoryOrder = categoryRepository.checkDuplicateAndReturnMaxOrder(
-            categoryRequestDto.getName(), member);
+            categoryRequestDto.getName(), member, categoryRequestDto.getType());
         Category category = categoryRequestDto.toEntity(member, maxCategoryOrder + 1024);
         categoryRepository.save(category);
         return CategoryResponseDto.of(category);
@@ -53,16 +90,10 @@ public class CategoryService {
     public CategoryResponseDto updateCategoryOrder(String username, Long categoryId, int index) {
         Member member = memberRepository.getMemberByUserId(username);
         Category category = categoryRepository.getCategoryByIdAndMember(categoryId, member);
-        List<Category> categories = categoryRepository.getCategoriesByMemberOrderByOrder(member);
+        List<Category> categories = categoryRepository.getCategoriesByMemberAndCategoryTypeOrderByOrder(
+            member, category.getCategoryType());
 
-        Category nextCategory = categories.get(index);
-        Category prevCategory = (index > 0) ? categories.get(index - 1) : null;
-
-        int newOrder = (index == 0)
-            ? nextCategory.getOrder() / 2
-            : (index == categories.size() - 1)
-                ? prevCategory.getOrder() + 1024
-                : (prevCategory.getOrder() + nextCategory.getOrder()) / 2;
+        int newOrder = getNewOrder(index, categories, category);
 
         category.updateOrder(newOrder);
 
@@ -71,9 +102,10 @@ public class CategoryService {
         return CategoryResponseDto.of(category);
     }
 
-    public List<CategoryResponseDto> getCategoryList(String username) {
+    public List<CategoryResponseDto> getCategoryList(String username, CategoryType categoryType) {
         Member member = memberRepository.getMemberByUserId(username);
-        List<Category> categories = categoryRepository.getCategoriesByMemberOrderByOrder(member);
+        List<Category> categories = categoryRepository.getCategoriesByMemberAndCategoryTypeOrderByOrder(
+            member, categoryType);
         return categories.stream()
             .map(CategoryResponseDto::of)
             .collect(Collectors.toList());
