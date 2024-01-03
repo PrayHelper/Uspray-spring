@@ -20,6 +20,8 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Member findByUserIdAndPhone(String userId, String phone);
 
+    boolean existsByUserIdAndPassword(String userId, String password);
+
     default Member getMemberByUserId(String userId) {
         return this.findByUserId(userId).orElseThrow(
             () -> new NotFoundException(ErrorStatus.NOT_FOUND_USER_EXCEPTION,

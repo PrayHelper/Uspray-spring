@@ -91,13 +91,6 @@ public class AuthController {
             findPwDTO));
     }
 
-    @PostMapping("/check-pw")
-    @Operation(summary = "비밀번호 확인")
-    public ApiResponseDto<?> checkPw(@RequestBody FindPwDTO checkPwDto) {
-        return ApiResponseDto.success(SuccessStatus.CHECK_USER_PW_SUCCESS, authService.findPw(
-            checkPwDto));
-    }
-
     @PostMapping("/change-pw")
     @Operation(summary = "비밀번호 변경")
     public ApiResponseDto<?> findId(@RequestBody ChangePwDto changePwDto) {

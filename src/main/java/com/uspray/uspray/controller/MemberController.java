@@ -1,6 +1,7 @@
 package com.uspray.uspray.controller;
 
 import com.uspray.uspray.DTO.ApiResponseDto;
+import com.uspray.uspray.DTO.auth.request.CheckPwDTO;
 import com.uspray.uspray.DTO.auth.request.OauthNameDto;
 import com.uspray.uspray.DTO.notification.NotificationAgreeDto;
 import com.uspray.uspray.exception.SuccessStatus;
@@ -52,5 +53,14 @@ public class MemberController {
     public ApiResponseDto<?> setOAuthName(@RequestBody OauthNameDto oauthNameDto) {
         memberService.changeName(oauthNameDto);
         return ApiResponseDto.success(SuccessStatus.CHANGE_NAME_SUCCESS);
+    }
+
+    @PostMapping("/check-pw")
+    @Operation(summary = "비밀번호 확인")
+    public ApiResponseDto<Boolean> checkPw(
+        @Parameter(hidden = true) @AuthenticationPrincipal User user,
+        @RequestBody CheckPwDTO checkPwDto) {
+        return ApiResponseDto.success(SuccessStatus.CHECK_USER_PW_SUCCESS, memberService.checkPw(
+            user.getUsername(), checkPwDto));
     }
 }
