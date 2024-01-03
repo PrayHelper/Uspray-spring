@@ -6,7 +6,10 @@ import com.uspray.uspray.common.domain.AuditingTimeEntity;
 import com.uspray.uspray.exception.ErrorStatus;
 import com.uspray.uspray.exception.model.NotFoundException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -17,7 +20,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -54,9 +57,9 @@ public class Pray extends AuditingTimeEntity {
     @Enumerated(EnumType.STRING)
     private PrayType prayType;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
     @JoinColumn(name = "group_pray_id")
-    private GroupPray groupPray;
+    private List<GroupPray> groupPray = new ArrayList<>();
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
@@ -82,7 +85,7 @@ public class Pray extends AuditingTimeEntity {
 
     public void setGroupPray(GroupPray groupPray) {
         if (groupPray != null) {
-            this.groupPray = groupPray;
+            this.groupPray.add(groupPray);
             groupPray.setOriginPray(this);
         }
     }
