@@ -23,17 +23,17 @@ public class CategoryService {
 
     private static int getNewOrder(int index, List<Category> categories, Category category) {
         validateIndex(index, categories.size());
-        Category prevCategory = categories.get(index - 1);
-        if (prevCategory.equals(category)) {
-            return prevCategory.getOrder();
+        Category targetPosition = categories.get(index - 1);
+        if (targetPosition.equals(category)) { // 원하는 위치가 지금 내 위치와 같으면
+            return targetPosition.getOrder();
         }
-        if (index == 1) {
+        if (index == 1) { // 원하는 위치가 첫번째면
             return getFirstPositionOrder(categories);
         }
-        if (index == categories.size()) {
-            return getLastPositionOrder(prevCategory);
+        if (index == categories.size()) { // 원하는 위치가 마지막이면
+            return getLastPositionOrder(targetPosition);
         }
-        return getMiddlePositionOrder(prevCategory, categories.get(index));
+        return getMiddlePositionOrder(targetPosition, categories.get(index - 2));
     }
 
     private static void validateIndex(int index, int size) {
@@ -51,8 +51,11 @@ public class CategoryService {
         return prevCategory.getOrder() + 1024;
     }
 
-    private static int getMiddlePositionOrder(Category prevCategory, Category nextCategory) {
-        return (prevCategory.getOrder() + nextCategory.getOrder()) / 2;
+    private static int getMiddlePositionOrder(Category targetCategory, Category prevCategory) {
+        // 원하는 위치가 중간이면 원하는 자리와 그 앞자리 중간으로
+        System.out.println("prevCategory.getOrder() : " + targetCategory.getOrder());
+        System.out.println("nextCategory.getOrder() : " + prevCategory.getOrder());
+        return (targetCategory.getOrder() + prevCategory.getOrder()) / 2;
     }
 
     public CategoryResponseDto createCategory(String username,
