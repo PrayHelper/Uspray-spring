@@ -139,6 +139,7 @@ public class PrayFacade {
         return prayMap.entrySet().stream()
             .map(entry -> new PrayListResponseDto(entry.getKey(),
                 entry.getValue().get(0).getCategory().getName(),
+                entry.getValue().get(0).getCategory().getColor(),
                 entry.getValue().stream()
                     .map(PrayResponseDto::of)
                     .collect(Collectors.toList())))
