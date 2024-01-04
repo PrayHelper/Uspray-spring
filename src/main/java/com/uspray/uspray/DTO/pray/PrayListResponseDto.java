@@ -18,6 +18,8 @@ public class PrayListResponseDto {
     private Long categoryId;
     @Schema(description = "카테고리 이름", example = "카테고리 이름")
     private String categoryName;
+    @Schema(description = "카테고리 색상", example = "#75BD62")
+    private String categoryColor;
     private List<PrayResponseDto> prays;
 
 }
