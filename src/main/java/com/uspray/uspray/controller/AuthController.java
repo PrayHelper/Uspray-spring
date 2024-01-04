@@ -3,7 +3,7 @@ package com.uspray.uspray.controller;
 import com.uspray.uspray.DTO.ApiResponseDto;
 import com.uspray.uspray.DTO.auth.TokenDto;
 import com.uspray.uspray.DTO.auth.request.ChangePwDto;
-import com.uspray.uspray.DTO.auth.request.CheckPwDto;
+import com.uspray.uspray.DTO.auth.request.FindPwDTO;
 import com.uspray.uspray.DTO.auth.request.FindIdDto;
 import com.uspray.uspray.DTO.auth.request.MemberDeleteDto;
 import com.uspray.uspray.DTO.auth.request.MemberLoginRequestDto;
@@ -84,11 +84,11 @@ public class AuthController {
             authService.findId(findIdDto));
     }
 
-    @PostMapping("/check-pw")
-    @Operation(summary = "비밀번호 확인")
-    public ApiResponseDto<?> checkPw(@RequestBody CheckPwDto checkPwDto) {
-        return ApiResponseDto.success(SuccessStatus.CHECK_USER_PW_SUCCESS, authService.checkPw(
-            checkPwDto));
+    @PostMapping("/find-pw")
+    @Operation(summary = "비밀번호 찾기")
+    public ApiResponseDto<?> findPw(@RequestBody FindPwDTO findPwDTO) {
+        return ApiResponseDto.success(SuccessStatus.FIND_USER_PW_SUCCESS, authService.findPw(
+            findPwDTO));
     }
 
     @PostMapping("/change-pw")

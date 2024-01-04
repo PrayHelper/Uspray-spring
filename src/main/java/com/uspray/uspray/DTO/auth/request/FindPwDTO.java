@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 @Data
-public class CheckPwDto {
+public class FindPwDTO {
     @Schema(example = "test")
     String userId;
     @Schema(example = "01012345678")

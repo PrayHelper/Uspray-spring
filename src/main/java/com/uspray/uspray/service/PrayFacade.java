@@ -190,7 +190,6 @@ public class PrayFacade {
     @Transactional
     public PrayResponseDto deletePray(Long prayId, String username) {
         Pray pray = prayRepository.getPrayByIdAndMemberId(prayId, username);
-        groupPrayRepository.delete(pray.getGroupPray());
         prayRepository.delete(pray);
         return PrayResponseDto.of(pray);
     }
