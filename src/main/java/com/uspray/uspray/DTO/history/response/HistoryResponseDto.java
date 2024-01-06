@@ -27,14 +27,16 @@ public class HistoryResponseDto {
 
     private LocalDateTime createdAt;
 
+    private Long categoryId;
+
     public static HistoryResponseDto of(History history) {
         return new HistoryResponseDto(history.getId(), history.getMember().getUserId(),
-            history.getMember().getName(), history.getContent(), history.getDeadline(), history.getCreatedAt());
+            history.getMember().getName(), history.getContent(), history.getDeadline(), history.getCreatedAt(), history.getCategoryId());
     }
 
     public static HistoryResponseDto shared(History history, Pray originPray) {
         return new HistoryResponseDto(history.getId(), originPray.getMember().getUserId(),
-            originPray.getMember().getName(), history.getContent(), history.getDeadline(), history.getCreatedAt());
+            originPray.getMember().getName(), history.getContent(), history.getDeadline(), history.getCreatedAt(), history.getCategoryId());
     }
 
 }

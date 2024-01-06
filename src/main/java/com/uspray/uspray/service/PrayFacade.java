@@ -116,6 +116,15 @@ public class PrayFacade {
         }
     }
 
+    @Transactional
+    public void convertPrayToHistory(Pray pray) {
+        History history = History.builder()
+            .pray(pray)
+            .build();
+        historyRepository.save(history);
+        prayRepository.delete(pray);
+    }
+
 
     public void createHistory(String username, Long prayId) {
         Pray pray = prayRepository.getPrayByIdAndMemberId(prayId, username);
