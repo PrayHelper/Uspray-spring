@@ -77,8 +77,7 @@ public class CategoryService {
     public CategoryResponseDto deleteCategory(String username, Long categoryId) {
         Category category = categoryRepository.getCategoryByIdAndMember(categoryId,
             memberRepository.getMemberByUserId(username));
-        List<Pray> prays = prayRepository.findByCategoryId(category.getId());
-        prays.forEach(prayFacade::convertPrayToHistory);
+        prayRepository.findByCategoryId(category.getId()).forEach(prayFacade::convertPrayToHistory);
         categoryRepository.delete(category);
         return CategoryResponseDto.of(category);
     }
