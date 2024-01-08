@@ -120,7 +120,7 @@ public class InitDb {
 
             Category category = Category.builder()
                 .name("기타 카테고리")
-                .color("#FFFFFF")
+                .color("#75BD62")
                 .member(member)
                 .order(1024)
                 .categoryType(CategoryType.PERSONAL)
@@ -129,7 +129,7 @@ public class InitDb {
 
             Category category1_by_member = Category.builder()
                 .name("가족")
-                .color("#408CFF")
+                .color("#75BD62")
                 .member(member)
                 .order(2048)
                 .categoryType(CategoryType.PERSONAL)
@@ -138,7 +138,7 @@ public class InitDb {
 
             Category category2_by_member2 = Category.builder()
                 .name("친구")
-                .color("#408CFF")
+                .color("#75BD62")
                 .member(member2)
                 .categoryType(CategoryType.PERSONAL)
                 .order(1024)
@@ -147,7 +147,7 @@ public class InitDb {
 
             Category category3_by_member = Category.builder()
                 .name("공유 카테고리")
-                .color("#408CFF")
+                .color("#75BD62")
                 .member(member)
                 .categoryType(CategoryType.SHARED)
                 .order(1024)
@@ -156,7 +156,7 @@ public class InitDb {
 
             Category category4_by_member2 = Category.builder()
                 .name("공유 카테고리")
-                .color("#408CFF")
+                .color("#75BD62")
                 .member(member2)
                 .categoryType(CategoryType.SHARED)
                 .order(1024)
