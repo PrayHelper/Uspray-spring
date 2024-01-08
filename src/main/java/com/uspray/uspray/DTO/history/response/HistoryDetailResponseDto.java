@@ -23,8 +23,10 @@ public class HistoryDetailResponseDto {
 
     private LocalDate createdAt;
 
+    private Long categoryId;
+
     public static HistoryDetailResponseDto of(History history) {
         return new HistoryDetailResponseDto(history.getId(), history.getMember().getUserId(),
-            history.getContent(), history.getCount(), history.getDeadline(), history.getCreatedAt().toLocalDate());
+            history.getContent(), history.getCount(), history.getDeadline(), history.getCreatedAt().toLocalDate(), history.getCategoryId());
     }
 }

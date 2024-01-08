@@ -38,6 +38,8 @@ public interface PrayRepository extends JpaRepository<Pray, Long>, PrayRepositor
 
     Pray getPrayByOriginPrayId(Long prayId);
 
+    List<Pray> findByCategoryId(Long categoryId);
+
     default void cancelPray(Pray pray) {
         if (pray.getDeleted()) {
             throw new NotFoundException(ErrorStatus.ALREADY_CANCEL_EXCEPTION,

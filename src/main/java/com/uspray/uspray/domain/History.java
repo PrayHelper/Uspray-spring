@@ -37,10 +37,7 @@ public class History extends AuditingTimeEntity {
     @Enumerated(EnumType.STRING)
     private PrayType prayType;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
-    private Category category;
+    private Long categoryId;
 
     @Builder
     public History(Pray pray) {
@@ -50,6 +47,6 @@ public class History extends AuditingTimeEntity {
         this.deadline = pray.getDeadline();
         this.originPrayId = pray.getOriginPrayId();
         this.prayType = pray.getPrayType();
-        this.category = pray.getCategory();
+        this.categoryId = pray.getCategory().getId();
     }
 }

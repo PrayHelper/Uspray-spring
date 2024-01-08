@@ -108,12 +108,23 @@ public class PrayFacade {
     public void convertPrayToHistory() {
         List<Pray> prayList = prayRepository.findAllByDeadlineBefore(LocalDate.now());
         for (Pray pray : prayList) {
+            pray.complete();
             History history = History.builder()
                 .pray(pray)
                 .build();
             historyRepository.save(history);
             prayRepository.delete(pray);
         }
+    }
+
+    @Transactional
+    public void convertPrayToHistory(Pray pray) {
+        pray.complete();
+        History history = History.builder()
+            .pray(pray)
+            .build();
+        historyRepository.save(history);
+        prayRepository.delete(pray);
     }
 
 
