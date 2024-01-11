@@ -27,8 +27,6 @@ import com.uspray.uspray.infrastructure.PrayRepository;
 import com.uspray.uspray.infrastructure.ScrapAndHeartRepository;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -137,25 +135,25 @@ public class PrayFacade {
         historyRepository.save(history);
     }
 
-    @Transactional
-    public List<PrayListResponseDto> getPrayList(String username, String prayType) {
-
-        List<Pray> prays = prayRepository.findAllWithOrderAndType(username, prayType);
-
-        // Pray 엔티티를 categoryId를 기준으로 그룹화한 맵 생성
-        Map<Long, List<Pray>> prayMap = prays.stream()
-            .collect(Collectors.groupingBy(pray -> pray.getCategory().getId()));
-
-        // 그룹화된 맵을 PrayListResponseDto 변환하여 반환
-        return prayMap.entrySet().stream()
-            .map(entry -> new PrayListResponseDto(entry.getKey(),
-                entry.getValue().get(0).getCategory().getName(),
-                entry.getValue().get(0).getCategory().getColor(),
-                entry.getValue().stream()
-                    .map(PrayResponseDto::of)
-                    .collect(Collectors.toList())))
-            .collect(Collectors.toList());
-    }
+//    @Transactional
+//    public List<PrayListResponseDto> getPrayList(String username, String prayType) {
+//
+//        List<Pray> prays = prayRepository.findAllWithOrderAndType(username, prayType);
+//
+//        // Pray 엔티티를 categoryId를 기준으로 그룹화한 맵 생성
+//        Map<Long, List<Pray>> prayMap = prays.stream()
+//            .collect(Collectors.groupingBy(pray -> pray.getCategory().getId()));
+//
+//        // 그룹화된 맵을 PrayListResponseDto 변환하여 반환
+//        return prayMap.entrySet().stream()
+//            .map(entry -> new PrayListResponseDto(entry.getKey(),
+//                entry.getValue().get(0).getCategory().getName(),
+//                entry.getValue().get(0).getCategory().getColor(),
+//                entry.getValue().stream()
+//                    .map(PrayResponseDto::of)
+//                    .collect(Collectors.toList())))
+//            .collect(Collectors.toList());
+//    }
 
     @Transactional
     public List<PrayListResponseDto> todayPray(Long prayId, String username) {
@@ -240,5 +238,26 @@ public class PrayFacade {
                 scrapAndHeartRepository.save(targetScrapAndHeart);
             }
         }
+    }
+
+    @Transactional
+    public List<PrayListResponseDto> getPrayList(String username, String prayType) {
+        return categoryRepository.findAllWithOrderAndType(username, prayType);
+    }
+
+    @Transactional
+    public List<PrayListResponseDto> completePray(Long prayId, String username) {
+        Pray pray = prayRepository.getPrayByIdAndMemberId(prayId, username);
+        prayRepository.delete(pray);
+
+        return getPrayList(username, pray.getPrayType().stringValue());
+    }
+
+    @Transactional
+    public List<PrayListResponseDto> cancelPray(Long prayId, String username) {
+        Pray pray = prayRepository.getPrayByIdAndMemberId(prayId, username);
+        prayRepository.cancelPray(pray);
+
+        return getPrayList(username, PrayType.SHARED.stringValue());
     }
 }

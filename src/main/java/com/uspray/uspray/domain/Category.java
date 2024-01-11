@@ -3,6 +3,7 @@ package com.uspray.uspray.domain;
 import com.uspray.uspray.DTO.category.CategoryRequestDto;
 import com.uspray.uspray.Enums.CategoryType;
 import com.uspray.uspray.common.domain.AuditingTimeEntity;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -12,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -43,6 +45,9 @@ public class Category extends AuditingTimeEntity {
     @NotNull
     @Enumerated(EnumType.STRING)
     private CategoryType categoryType;
+
+    @OneToMany(mappedBy = "category")
+    private List<Pray> prays;
 
     @Builder
     public Category(

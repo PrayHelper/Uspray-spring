@@ -3,8 +3,8 @@ package com.uspray.uspray.controller;
 
 import com.uspray.uspray.DTO.ApiResponseDto;
 import com.uspray.uspray.DTO.pray.PrayListResponseDto;
-import com.uspray.uspray.DTO.pray.request.PrayToGroupPrayDto;
 import com.uspray.uspray.DTO.pray.request.PrayRequestDto;
+import com.uspray.uspray.DTO.pray.request.PrayToGroupPrayDto;
 import com.uspray.uspray.DTO.pray.request.PrayUpdateRequestDto;
 import com.uspray.uspray.DTO.pray.response.PrayResponseDto;
 import com.uspray.uspray.exception.SuccessStatus;
@@ -54,7 +54,7 @@ public class PrayController {
         @Parameter(description = "기도제목 종류(personal, shared)", required = true, example = "personal") String prayType
     ) {
         return ApiResponseDto.success(SuccessStatus.GET_PRAY_LIST_SUCCESS,
-            prayService.getPrayList(user.getUsername(), prayType));
+            prayFacade.getPrayList(user.getUsername(), prayType));
     }
 
     @GetMapping("/{prayId}")
@@ -138,7 +138,7 @@ public class PrayController {
     ) {
         prayFacade.createHistory(user.getUsername(), prayId);
         return ApiResponseDto.success(SuccessStatus.GET_PRAY_LIST_SUCCESS,
-            prayService.completePray(prayId, user.getUsername()));
+            prayFacade.completePray(prayId, user.getUsername()));
     }
 
     @Operation(summary = "기도제목 취소하기")
@@ -152,7 +152,7 @@ public class PrayController {
         @Parameter(hidden = true) @AuthenticationPrincipal User user
     ) {
         return ApiResponseDto.success(SuccessStatus.CANCEL_PRAY_SUCCESS,
-            prayService.cancelPray(prayId, user.getUsername()));
+            prayFacade.cancelPray(prayId, user.getUsername()));
     }
 
     @Operation(summary = "모임 기도제목으로 불러오기")
