@@ -41,7 +41,8 @@ public class CategoryRepositoryImpl implements CategoryRepositoryCustom {
                     pray.deadline,
                     pray.category.id,
                     pray.category.name,
-                    pray.lastPrayedAt))
+                    pray.lastPrayedAt,
+                    pray.isShared))
                 .from(pray)
                 .where(pray.category.id.eq(cat.getId())
                     .and(pray.member.userId.eq(username))
