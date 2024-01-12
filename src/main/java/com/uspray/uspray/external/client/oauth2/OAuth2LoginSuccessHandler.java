@@ -1,6 +1,5 @@
 package com.uspray.uspray.external.client.oauth2;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.uspray.uspray.DTO.auth.TokenDto;
 import com.uspray.uspray.Enums.Authority;
 import com.uspray.uspray.jwt.TokenProvider;
@@ -24,7 +23,6 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
     private final TokenProvider tokenProvider;
     private final RedisTemplate redisTemplate;
-    private final ObjectMapper mapper = new ObjectMapper();
 
     @Override
     @Transactional
@@ -32,7 +30,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         Authentication authentication) throws IOException, ServletException {
 
         CustomOAuth2User customOAuth2User = (CustomOAuth2User) authentication.getPrincipal();
-        String id = customOAuth2User.getName();
+        String id = customOAuth2User.getSocialId();
 
         // User의 Role이 GUEST일 경우 처음 요청한 회원이므로 회원가입 페이지로 리다이렉트
         if(customOAuth2User.getAuthority() == Authority.ROLE_GUEST) {
