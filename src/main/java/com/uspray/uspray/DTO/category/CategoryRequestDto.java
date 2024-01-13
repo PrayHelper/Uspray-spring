@@ -26,16 +26,17 @@ public class CategoryRequestDto {
     private String color;
 
     @NotNull
-    @Schema(description = "카테고리 타입", example = "PERSONAL")
-    private CategoryType type;
+    @Schema(description = "카테고리 타입", example = "personal")
+    private String type;
 
     public Category toEntity(Member member, Integer order) {
+        CategoryType convertCategoryType = CategoryType.valueOf(type.toUpperCase());
         return Category.builder()
             .name(name)
             .color(color)
             .member(member)
             .order(order)
-            .categoryType(type)
+            .categoryType(convertCategoryType)
             .build();
     }
 

@@ -38,6 +38,9 @@ public class PrayResponseDto {
     @Schema(description = "기도제목 마지막 기도일, example = 2021-01-01")
     private LocalDate lastPrayDate;
 
+    @Schema(description = "기도제목 공유 여부", example = "true")
+    private Boolean isShared;
+
 
     public static PrayResponseDto of(Pray pray) {
         return new PrayResponseDto(
@@ -47,7 +50,8 @@ public class PrayResponseDto {
             pray.getDeadline(),
             pray.getCategory().getId(),
             pray.getCategory().getName(),
-            pray.getLastPrayedAt());
+            pray.getLastPrayedAt(),
+            pray.getIsShared());
     }
 
     public static PrayResponseDto shared(Pray pray, Pray originPray) {
@@ -58,7 +62,8 @@ public class PrayResponseDto {
             pray.getDeadline(),
             pray.getCategory().getId(),
             pray.getCategory().getName(),
-            pray.getLastPrayedAt());
+            pray.getLastPrayedAt(),
+            pray.getIsShared());
     }
 
 }

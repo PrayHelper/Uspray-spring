@@ -5,15 +5,13 @@ import com.uspray.uspray.DTO.category.CategoryResponseDto;
 import com.uspray.uspray.Enums.CategoryType;
 import com.uspray.uspray.domain.Category;
 import com.uspray.uspray.domain.Member;
-import com.uspray.uspray.domain.Pray;
 import com.uspray.uspray.exception.ErrorStatus;
 import com.uspray.uspray.exception.model.NotFoundException;
 import com.uspray.uspray.infrastructure.CategoryRepository;
 import com.uspray.uspray.infrastructure.MemberRepository;
+import com.uspray.uspray.infrastructure.PrayRepository;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import com.uspray.uspray.infrastructure.PrayRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -69,9 +67,9 @@ public class CategoryService {
     public CategoryResponseDto createCategory(String username,
         CategoryRequestDto categoryRequestDto) {
         Member member = memberRepository.getMemberByUserId(username);
-
         int maxCategoryOrder = categoryRepository.checkDuplicateAndReturnMaxOrder(
-            categoryRequestDto.getName(), member, categoryRequestDto.getType());
+            categoryRequestDto.getName(), member,
+            CategoryType.valueOf(categoryRequestDto.getType().toUpperCase()));
         Category category = categoryRequestDto.toEntity(member, maxCategoryOrder + 1024);
         categoryRepository.save(category);
         return CategoryResponseDto.of(category);
