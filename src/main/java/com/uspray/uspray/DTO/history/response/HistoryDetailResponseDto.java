@@ -13,11 +13,13 @@ public class HistoryDetailResponseDto {
 
     private Long historyId;
 
-    private String userId;
+    private String name;
 
     private String content;
 
-    private Integer count;
+    private Integer personal_count;
+
+    private Integer total_count;
 
     private LocalDate deadline;
 
@@ -27,6 +29,8 @@ public class HistoryDetailResponseDto {
 
     public static HistoryDetailResponseDto of(History history) {
         return new HistoryDetailResponseDto(history.getId(), history.getMember().getUserId(),
-            history.getContent(), history.getCount(), history.getDeadline(), history.getCreatedAt().toLocalDate(), history.getCategoryId());
+            history.getContent(), history.getPersonalCount(), history.getTotalCount(),
+            history.getDeadline(),
+            history.getCreatedAt().toLocalDate(), history.getCategoryId());
     }
 }

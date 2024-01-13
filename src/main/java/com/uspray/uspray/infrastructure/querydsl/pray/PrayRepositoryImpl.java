@@ -12,9 +12,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 @RequiredArgsConstructor
 public class PrayRepositoryImpl implements PrayRepositoryCustom {
-    
+
     private final JPAQueryFactory queryFactory;
-    
+
     @Override
     public List<Pray> findAllWithOrderAndType(String username, String prayType) {
         return queryFactory
@@ -26,6 +26,17 @@ public class PrayRepositoryImpl implements PrayRepositoryCustom {
             .orderBy(pray.createdAt.asc())
             .orderBy(pray.category.order.asc())
             .fetch();
+    }
+
+    @Override
+    public Integer getSharedCountByOriginPrayId(Long prayId) {
+        Integer result = queryFactory
+            .select(pray.count.sum())
+            .from(pray)
+            .where(pray.originPrayId.eq(prayId))
+            .groupBy(pray.id)
+            .fetchOne();
+        return (result == null) ? 0 : result;
     }
 }
 

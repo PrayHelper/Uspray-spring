@@ -109,8 +109,10 @@ public class PrayFacade {
         List<Pray> prayList = prayRepository.findAllByDeadlineBefore(LocalDate.now());
         for (Pray pray : prayList) {
             pray.complete();
+            Integer sharedCount = prayRepository.getSharedCountByOriginPrayId(pray.getId());
             History history = History.builder()
                 .pray(pray)
+                .totalCount(pray.getCount() + sharedCount)
                 .build();
             historyRepository.save(history);
             prayRepository.delete(pray);
@@ -131,8 +133,10 @@ public class PrayFacade {
     public void createHistory(String username, Long prayId) {
         Pray pray = prayRepository.getPrayByIdAndMemberId(prayId, username);
         pray.complete();
+        Integer sharedCount = prayRepository.getSharedCountByOriginPrayId(prayId);
         History history = History.builder()
             .pray(pray)
+            .totalCount(pray.getCount() + sharedCount)
             .build();
         historyRepository.save(history);
     }
