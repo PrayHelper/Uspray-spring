@@ -37,11 +37,13 @@ import org.hibernate.annotations.Where;
 public class Pray extends AuditingTimeEntity {
 
     private final Boolean deleted = false;
+    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @JoinColumn(name = "group_pray_id")
+    private final List<GroupPray> groupPray = new ArrayList<>();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "pray_id")
     private Long id;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
@@ -49,18 +51,11 @@ public class Pray extends AuditingTimeEntity {
     private Integer count;
     private LocalDate deadline;
     private Boolean isShared = false;
-
     @Column(name = "origin_pray_id")
     private Long originPrayId;
-
     @NotNull
     @Enumerated(EnumType.STRING)
     private PrayType prayType;
-
-    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
-    @JoinColumn(name = "group_pray_id")
-    private List<GroupPray> groupPray = new ArrayList<>();
-
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
@@ -127,6 +122,7 @@ public class Pray extends AuditingTimeEntity {
         this.lastPrayedAt = null;
         this.count--;
     }
+
     public void setIsShared() {
         this.isShared = true;
     }
