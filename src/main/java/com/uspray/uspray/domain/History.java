@@ -49,6 +49,8 @@ public class History extends AuditingTimeEntity {
 
     private Long categoryId;
 
+    private Boolean isShared;
+
     @Builder
     public History(Pray pray, Integer totalCount) {
         this.member = pray.getMember();
@@ -59,5 +61,6 @@ public class History extends AuditingTimeEntity {
         this.originPrayId = pray.getOriginPrayId();
         this.prayType = pray.getPrayType();
         this.categoryId = pray.getCategory().getId();
+        this.isShared = pray.getIsShared();
     }
 }
