@@ -4,6 +4,7 @@ import com.uspray.uspray.DTO.ApiResponseDto;
 import com.uspray.uspray.DTO.auth.request.CheckPwDTO;
 import com.uspray.uspray.DTO.auth.request.OauthNameDto;
 import com.uspray.uspray.DTO.notification.NotificationAgreeDto;
+import com.uspray.uspray.DTO.notification.NotificationInfoDto;
 import com.uspray.uspray.exception.SuccessStatus;
 import com.uspray.uspray.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,12 +15,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -37,6 +33,13 @@ public class MemberController {
         @Schema(example = "01046518879") @PathVariable("changePhone") String changePhone) {
         memberService.changePhone(user.getUsername(), changePhone);
         return ApiResponseDto.success(SuccessStatus.CHANGE_PHONE_SUCCESS);
+    }
+
+    @Operation(summary = "알림 On/Off 조회")
+    @GetMapping("/notification-setting")
+    public ApiResponseDto<NotificationInfoDto> getNotificationAgree(
+        @Parameter(hidden = true) @AuthenticationPrincipal User user) {
+        return ApiResponseDto.success(SuccessStatus.GET_NOTIFICATION_AGREE_SUCCESS, memberService.getNotificationAgree(user.getUsername()));
     }
 
     @Operation(summary = "알림 On/Off")

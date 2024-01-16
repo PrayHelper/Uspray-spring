@@ -3,6 +3,7 @@ package com.uspray.uspray.service;
 import com.uspray.uspray.DTO.auth.request.CheckPwDTO;
 import com.uspray.uspray.DTO.auth.request.OauthNameDto;
 import com.uspray.uspray.DTO.notification.NotificationAgreeDto;
+import com.uspray.uspray.DTO.notification.NotificationInfoDto;
 import com.uspray.uspray.Enums.Authority;
 import com.uspray.uspray.domain.Member;
 import com.uspray.uspray.exception.ErrorStatus;
@@ -14,6 +15,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class MemberService {
@@ -24,6 +27,11 @@ public class MemberService {
     @Transactional
     public void changePhone(String userId, String phone) {
         memberRepository.getMemberByUserId(userId).changePhone(phone);
+    }
+
+    @Transactional(readOnly = true)
+    public NotificationInfoDto getNotificationAgree(String userId) {
+        return memberRepository.getMemberByUserId(userId).getNotificationSetting();
     }
 
     @Transactional

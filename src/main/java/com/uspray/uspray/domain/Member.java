@@ -1,6 +1,7 @@
 package com.uspray.uspray.domain;
 
 import com.uspray.uspray.DTO.notification.NotificationAgreeDto;
+import com.uspray.uspray.DTO.notification.NotificationInfoDto;
 import com.uspray.uspray.Enums.Authority;
 import com.uspray.uspray.common.domain.AuditingTimeEntity;
 import java.util.ArrayList;
@@ -87,6 +88,15 @@ public class Member extends AuditingTimeEntity {
 
     public void changePw(String pw) {
         this.password = pw;
+    }
+
+    public NotificationInfoDto getNotificationSetting() {
+        return NotificationInfoDto.builder()
+            .firstNotiAgree(this.firstNotiAgree)
+            .secondNotiAgree(this.secondNotiAgree)
+            .thirdNotiAgree(this.thirdNotiAgree)
+            .fourthNotiAgree(this.fourthNotiAgree)
+            .build();
     }
 
     public void changeNotificationSetting(NotificationAgreeDto notificationAgreeDto) {

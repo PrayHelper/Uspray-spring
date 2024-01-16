@@ -47,6 +47,7 @@ public enum SuccessStatus {
     PRAY_TO_GROUP_PRAY_SUCCESS(HttpStatus.OK, "모임 기도제목으로 성공적으로 불러왔습니다."),
     LIKE_GROUP_PRAY_SUCCESS(HttpStatus.OK, "모임 기도제목 좋아요를 성공했습니다."),
     SCARP_GROUP_PRAY_SUCCESS(HttpStatus.OK, "모임 기도제목 스크랩을 성공했습니다."),
+    GET_NOTIFICATION_AGREE_SUCCESS(HttpStatus.OK, "알림 설정 조회에 성공했습니다."),
     TEST_SUCCESS(HttpStatus.OK, "Test :: OK"),
 
     /*
