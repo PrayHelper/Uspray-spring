@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -83,6 +84,7 @@ public class CategoryService {
         return CategoryResponseDto.of(category);
     }
 
+    @Transactional
     public CategoryResponseDto updateCategory(String username, Long categoryId,
         CategoryRequestDto categoryRequestDto) {
         Category category = categoryRepository.getCategoryByIdAndMember(categoryId,
@@ -97,6 +99,7 @@ public class CategoryService {
         return CategoryResponseDto.of(category);
     }
 
+    @Transactional
     public CategoryResponseDto updateCategoryOrder(String username, Long categoryId, int index) {
         Member member = memberRepository.getMemberByUserId(username);
         Category category = categoryRepository.getCategoryByIdAndMember(categoryId, member);
