@@ -5,6 +5,7 @@ import com.uspray.uspray.DTO.pray.request.PrayRequestDto;
 import com.uspray.uspray.DTO.pray.request.PrayToGroupPrayDto;
 import com.uspray.uspray.DTO.pray.request.PrayUpdateRequestDto;
 import com.uspray.uspray.DTO.pray.response.PrayResponseDto;
+import com.uspray.uspray.Enums.CategoryType;
 import com.uspray.uspray.Enums.PrayType;
 import com.uspray.uspray.domain.Category;
 import com.uspray.uspray.domain.Group;
@@ -53,6 +54,10 @@ public class PrayFacade {
         Category category = categoryRepository.getCategoryByIdAndMember(
             prayRequestDto.getCategoryId(),
             member);
+        if (!category.getCategoryType().equals(CategoryType.PERSONAL)) {
+            throw new CustomException(ErrorStatus.PRAY_CATEGORY_TYPE_MISMATCH,
+                ErrorStatus.PRAY_CATEGORY_TYPE_MISMATCH.getMessage());
+        }
         Pray pray = prayRequestDto.toEntity(member, category, PrayType.PERSONAL);
         prayRepository.save(pray);
         return PrayResponseDto.of(pray);
