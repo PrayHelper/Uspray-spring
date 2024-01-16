@@ -30,13 +30,16 @@ public interface CategoryRepository extends JpaRepository<Category, Long>,
             ));
     }
 
-
-    default int checkDuplicateAndReturnMaxOrder(String name, Member member, CategoryType type) {
-        boolean isDuplicate = existsByNameAndMemberAndCategoryType(name, member, type);
-        if (isDuplicate) {
+    default void checkDuplicate(String name, Member member, CategoryType type) {
+        if (existsByNameAndMemberAndCategoryType(name, member, type)) {
             throw new NotFoundException(ErrorStatus.CATEGORY_DUPLICATE_EXCEPTION,
                 ErrorStatus.CATEGORY_DUPLICATE_EXCEPTION.getMessage());
         }
+    }
+
+
+    default int checkDuplicateAndReturnMaxOrder(String name, Member member, CategoryType type) {
+        checkDuplicate(name, member, type);
         if (getCategoriesByMemberAndCategoryTypeOrderByOrder(member, type).isEmpty()) {
             return 0;
         }
