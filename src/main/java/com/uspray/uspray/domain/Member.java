@@ -47,6 +47,7 @@ public class Member extends AuditingTimeEntity {
     private Boolean firstNotiAgree = true;
     private Boolean secondNotiAgree = true;
     private Boolean thirdNotiAgree = true;
+    private Boolean fourthNotiAgree = true;
     private String socialId;
     @Enumerated(EnumType.STRING)
     private Authority authority;
@@ -98,6 +99,9 @@ public class Member extends AuditingTimeEntity {
                 break;
             case SHARED_MY_PRAY:
                 this.thirdNotiAgree = notificationAgreeDto.getAgree();
+                break;
+            case GROUP_SETTING:
+                this.fourthNotiAgree = notificationAgreeDto.getAgree();
                 break;
             default:
                 break;
