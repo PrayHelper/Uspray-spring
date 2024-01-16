@@ -63,4 +63,12 @@ public class MemberController {
         return ApiResponseDto.success(SuccessStatus.CHECK_USER_PW_SUCCESS, memberService.checkPw(
             user.getUsername(), checkPwDto));
     }
+
+    @PostMapping("/change-pw")
+    @Operation(summary = "비밀번호 변경")
+    public ApiResponseDto<?> changePw(@Parameter(hidden = true) @AuthenticationPrincipal User user,
+        @RequestBody CheckPwDTO changePwDto) {
+        memberService.changePw(user.getUsername(), changePwDto);
+        return ApiResponseDto.success(SuccessStatus.CHANGE_USER_PW_SUCCESS);
+    }
 }
