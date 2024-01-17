@@ -44,8 +44,15 @@ public class MemberService {
     public Boolean checkPw(String userId, CheckPwDTO checkPwDto) {
         Member member = memberRepository.getMemberByUserId(userId);
         if (!passwordEncoder.matches(checkPwDto.getPassword(), member.getPassword())) {
-            throw new CustomException(ErrorStatus.NOT_FOUND_USER_EXCEPTION, ErrorStatus.NOT_FOUND_USER_EXCEPTION.getMessage());
+            throw new CustomException(ErrorStatus.NOT_FOUND_USER_EXCEPTION,
+                ErrorStatus.NOT_FOUND_USER_EXCEPTION.getMessage());
         }
         return true;
+    }
+
+    @Transactional
+    public void changePw(String userId, CheckPwDTO changePwDto) {
+        memberRepository.getMemberByUserId(userId)
+            .changePw(passwordEncoder.encode(changePwDto.getPassword()));
     }
 }

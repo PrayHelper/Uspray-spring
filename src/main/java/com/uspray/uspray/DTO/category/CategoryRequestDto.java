@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.Length;
 import org.jetbrains.annotations.NotNull;
 
 @Getter
@@ -18,6 +19,7 @@ import org.jetbrains.annotations.NotNull;
 public class CategoryRequestDto {
 
     @NotNull
+    @Length(min = 1, max = 20)
     @Schema(description = "카테고리 이름", example = "카테고리 이름")
     private String name;
 
