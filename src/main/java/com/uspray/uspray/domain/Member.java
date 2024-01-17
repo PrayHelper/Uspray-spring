@@ -1,6 +1,7 @@
 package com.uspray.uspray.domain;
 
 import com.uspray.uspray.DTO.notification.NotificationAgreeDto;
+import com.uspray.uspray.DTO.notification.NotificationInfoDto;
 import com.uspray.uspray.Enums.Authority;
 import com.uspray.uspray.common.domain.AuditingTimeEntity;
 import java.util.ArrayList;
@@ -47,6 +48,7 @@ public class Member extends AuditingTimeEntity {
     private Boolean firstNotiAgree = true;
     private Boolean secondNotiAgree = true;
     private Boolean thirdNotiAgree = true;
+    private Boolean fourthNotiAgree = true;
     private String socialId;
     @Enumerated(EnumType.STRING)
     private Authority authority;
@@ -88,6 +90,15 @@ public class Member extends AuditingTimeEntity {
         this.password = pw;
     }
 
+    public NotificationInfoDto getNotificationSetting() {
+        return NotificationInfoDto.builder()
+            .firstNotiAgree(this.firstNotiAgree)
+            .secondNotiAgree(this.secondNotiAgree)
+            .thirdNotiAgree(this.thirdNotiAgree)
+            .fourthNotiAgree(this.fourthNotiAgree)
+            .build();
+    }
+
     public void changeNotificationSetting(NotificationAgreeDto notificationAgreeDto) {
         switch (notificationAgreeDto.getNotificationType()) {
             case PRAY_TIME:
@@ -98,6 +109,9 @@ public class Member extends AuditingTimeEntity {
                 break;
             case SHARED_MY_PRAY:
                 this.thirdNotiAgree = notificationAgreeDto.getAgree();
+                break;
+            case GROUP_SETTING:
+                this.fourthNotiAgree = notificationAgreeDto.getAgree();
                 break;
             default:
                 break;
