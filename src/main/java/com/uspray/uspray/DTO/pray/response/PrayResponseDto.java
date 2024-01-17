@@ -35,8 +35,8 @@ public class PrayResponseDto {
     @Schema(description = "기도제목 카테고리 이름", example = "카테고리 이름")
     private String categoryName;
 
-    @Schema(description = "기도제목 마지막 기도일, example = 2021-01-01")
-    private LocalDate lastPrayDate;
+    @Schema(description = "오늘 기도 여부", example = "true")
+    private Boolean isPrayedToday;
 
     @Schema(description = "기도제목 공유 여부", example = "true")
     private Boolean isShared;
@@ -50,7 +50,7 @@ public class PrayResponseDto {
             pray.getDeadline(),
             pray.getCategory().getId(),
             pray.getCategory().getName(),
-            pray.getLastPrayedAt(),
+            pray.getLastPrayedAt().isEqual(LocalDate.now()),
             pray.getIsShared());
     }
 
@@ -62,7 +62,7 @@ public class PrayResponseDto {
             pray.getDeadline(),
             pray.getCategory().getId(),
             pray.getCategory().getName(),
-            pray.getLastPrayedAt(),
+            pray.getLastPrayedAt().isEqual(LocalDate.now()),
             pray.getIsShared());
     }
 

@@ -6,19 +6,26 @@ import com.uspray.uspray.DTO.sharedpray.request.SharedPraySaveRequestDto;
 import com.uspray.uspray.DTO.sharedpray.response.SharedPrayResponseDto;
 import com.uspray.uspray.Enums.CategoryType;
 import com.uspray.uspray.Enums.PrayType;
-import com.uspray.uspray.domain.*;
+import com.uspray.uspray.domain.Category;
+import com.uspray.uspray.domain.Member;
+import com.uspray.uspray.domain.NotificationLog;
+import com.uspray.uspray.domain.Pray;
+import com.uspray.uspray.domain.SharedPray;
 import com.uspray.uspray.exception.ErrorStatus;
 import com.uspray.uspray.exception.model.CustomException;
 import com.uspray.uspray.exception.model.NotFoundException;
-import com.uspray.uspray.infrastructure.*;
-
+import com.uspray.uspray.infrastructure.CategoryRepository;
+import com.uspray.uspray.infrastructure.MemberRepository;
+import com.uspray.uspray.infrastructure.NotificationLogRepository;
+import com.uspray.uspray.infrastructure.PrayRepository;
+import com.uspray.uspray.infrastructure.SharedPrayRepository;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.time.LocalDate;
 
 @Slf4j
 @Service
@@ -99,27 +106,29 @@ public class ShareFacade {
             .build();
         prayRepository.save(pray);
         Pray originPray = prayRepository.getPrayById(pray.getOriginPrayId());
-        sendNotificationAndSaveLog(originPray, originPray.getMember());
+        if (originPray.getMember().getThirdNotiAgree()) {
+            sendNotificationAndSaveLog(originPray, originPray.getMember());
+        }
         sharedPrayRepository.deleteById(sharedPrayId);
     }
 
     public void sendNotificationAndSaveLog(Pray pray, Member member) {
         try {
             fcmNotificationService.sendMessageTo(
-                    member.getFirebaseToken(),
-                    "누군가가 당신의 기도제목을 저장했어요.",
-                    "💌");
+                member.getFirebaseToken(),
+                "누군가가 당신의 기도제목을 저장했어요.",
+                "💌");
         } catch (Exception e) {
             log.error(e.getMessage());
         }
         log.error(
-                "send notification to " + memberRepository.getMemberByUserId(member.getUserId())
+            "send notification to " + memberRepository.getMemberByUserId(member.getUserId())
         );
         NotificationLog notificationLog = NotificationLog.builder()
-                .pray(pray)
-                .member(memberRepository.getMemberByUserId(member.getUserId()))
-                .title("누군가가 당신의 기도제목을 저장했어요.")
-                .build();
+            .pray(pray)
+            .member(memberRepository.getMemberByUserId(member.getUserId()))
+            .title("누군가가 당신의 기도제목을 저장했어요.")
+            .build();
         notificationLogRepository.save(notificationLog);
     }
 

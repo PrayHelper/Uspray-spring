@@ -182,7 +182,9 @@ public class PrayFacade {
 
         if (pray.getPrayType() == PrayType.SHARED) {
             Pray originPray = prayRepository.getPrayById(pray.getOriginPrayId());
-            sendNotificationAndSaveLog(pray, originPray.getMember());
+            if (originPray.getMember().getSecondNotiAgree()) {
+                sendNotificationAndSaveLog(pray, originPray.getMember());
+            }
         }
     }
 
