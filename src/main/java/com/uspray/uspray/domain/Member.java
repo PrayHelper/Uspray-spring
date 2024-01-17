@@ -45,9 +45,9 @@ public class Member extends AuditingTimeEntity {
     private String birth;
     private String gender;
     private String firebaseToken;
-    private Boolean firstNotiAgree = true;
-    private Boolean secondNotiAgree = true;
-    private Boolean thirdNotiAgree = true;
+    private Boolean firstNotiAgree = true; // 기도시간 알림
+    private Boolean secondNotiAgree = true; // 다른 사람이 내 기도제목을 기도 했을 때
+    private Boolean thirdNotiAgree = true; // 다른 사람이 내 기도제목을 공유 받았을 때
     private Boolean fourthNotiAgree = true;
     private String socialId;
     @Enumerated(EnumType.STRING)
