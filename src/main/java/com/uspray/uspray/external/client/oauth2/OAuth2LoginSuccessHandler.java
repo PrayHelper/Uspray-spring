@@ -46,13 +46,5 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
             TimeUnit.MILLISECONDS);
 
         response.sendRedirect("http://localhost:3000/social-redirecting"+"?accessToken="+tokenDto.getAccessToken()+"&refreshToken="+tokenDto.getRefreshToken());
-
-//        response.setStatus(HttpServletResponse.SC_OK);
-//        response.setContentType("application/json");
-//        response.setCharacterEncoding("utf-8");
-//        response.getWriter().write(mapper.writeValueAsString(
-//            ApiResponseDto.success(SuccessStatus.LOGIN_SUCCESS, tokenDto)
-//        ));
-        // 로그인에 성공한 경우 access, refresh 토큰 생성
     }
 }
