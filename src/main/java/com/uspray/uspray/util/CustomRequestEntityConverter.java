@@ -34,10 +34,10 @@ public class CustomRequestEntityConverter implements
     }
 
     private final String APPLE_URL = "https://appleid.apple.com";
-    private final String APPLE_KEY_PATH = "static/apple/{apple로 부터 받은 key파일명}.p8";
-    private final String APPLE_CLIENT_ID = "{apple로 부터 받은 clientId";
-    private final String APPLE_TEAM_ID = "{apple로 부터 받은 teamId}";
-    private final String APPLE_KEY_ID = "{apple로 부터 받은 keyId}";
+    private final String APPLE_KEY_PATH = "key/AuthKey_FTS9JLF9CV.p8";
+    private final String APPLE_CLIENT_ID = "uspray.uspray.com";
+    private final String APPLE_TEAM_ID = "2B6VZ6LKYN";
+    private final String APPLE_KEY_ID = "FTS9JLF9CV";
 
 
     @Override
