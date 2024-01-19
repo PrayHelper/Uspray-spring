@@ -44,6 +44,7 @@ jobs:
       run: |
         mkdir -p ./src/main/resources
         cd ./src/main/resources
+        echo "Base64 Encoded Secret: ${{ secrets.APPLICATION }}"
         echo "${{ secrets.APPLICATION }}" | base64 -d > application.yml
 
     - name: Create service-account-file.json
