@@ -1,5 +1,6 @@
 package com.uspray.uspray.DTO.history.response;
 
+import com.uspray.uspray.Enums.PrayType;
 import com.uspray.uspray.domain.History;
 import java.time.LocalDate;
 import lombok.AllArgsConstructor;
@@ -27,10 +28,13 @@ public class HistoryDetailResponseDto {
 
     private Long categoryId;
 
+    private Boolean canEdit;
+
     public static HistoryDetailResponseDto of(History history) {
         return new HistoryDetailResponseDto(history.getId(), history.getMember().getUserId(),
             history.getContent(), history.getPersonalCount(), history.getTotalCount(),
             history.getDeadline(),
-            history.getCreatedAt().toLocalDate(), history.getCategoryId());
+            history.getCreatedAt().toLocalDate(), history.getCategoryId(),
+            history.getPrayType() == PrayType.PERSONAL && !history.getIsShared());
     }
 }
