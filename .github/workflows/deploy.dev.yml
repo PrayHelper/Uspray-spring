@@ -58,6 +58,12 @@ jobs:
         cd ./src/main/resources/key
         echo "${{ secrets.APPLE_AUTH_KEY }}" | base64 -d > AuthKey_FTS9JLF9CV.p8
 
+    - name: Create index.html
+      run: |
+        mkdir -p ./src/main/resources/static
+        cd ./src/main/resources/static
+        echo "${{ secrets.INDEX_HTML }}" | base64 -d > index.html
+
     - name: Build with Gradle
       run: ./gradlew clean build
 
