@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   uspray-spring:
-    image: shinsion/uspray-server:latest
+    image: bae4614/uspray-server:latest
     container_name: prayhelper-spring-dev
     environment:
       TZ: "Asia/Seoul"
