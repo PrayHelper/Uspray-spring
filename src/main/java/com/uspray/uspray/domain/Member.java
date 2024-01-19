@@ -48,7 +48,6 @@ public class Member extends AuditingTimeEntity {
     private Boolean firstNotiAgree = true; // 기도시간 알림
     private Boolean secondNotiAgree = true; // 다른 사람이 내 기도제목을 기도 했을 때
     private Boolean thirdNotiAgree = true; // 다른 사람이 내 기도제목을 공유 받았을 때
-    private Boolean fourthNotiAgree = true;
     private String socialId;
     @Enumerated(EnumType.STRING)
     private Authority authority;
@@ -95,7 +94,6 @@ public class Member extends AuditingTimeEntity {
             .firstNotiAgree(this.firstNotiAgree)
             .secondNotiAgree(this.secondNotiAgree)
             .thirdNotiAgree(this.thirdNotiAgree)
-            .fourthNotiAgree(this.fourthNotiAgree)
             .build();
     }
 
@@ -109,9 +107,6 @@ public class Member extends AuditingTimeEntity {
                 break;
             case SHARED_MY_PRAY:
                 this.thirdNotiAgree = notificationAgreeDto.getAgree();
-                break;
-            case GROUP_SETTING:
-                this.fourthNotiAgree = notificationAgreeDto.getAgree();
                 break;
             default:
                 break;
