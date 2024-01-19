@@ -7,11 +7,13 @@ import com.uspray.uspray.DTO.grouppray.ScrapRequestDto;
 import com.uspray.uspray.Enums.PrayType;
 import com.uspray.uspray.domain.Category;
 import com.uspray.uspray.domain.Group;
+import com.uspray.uspray.domain.GroupMember;
 import com.uspray.uspray.domain.GroupPray;
 import com.uspray.uspray.domain.Member;
 import com.uspray.uspray.domain.Pray;
 import com.uspray.uspray.domain.ScrapAndHeart;
 import com.uspray.uspray.infrastructure.CategoryRepository;
+import com.uspray.uspray.infrastructure.GroupMemberRepository;
 import com.uspray.uspray.infrastructure.GroupPrayRepository;
 import com.uspray.uspray.infrastructure.GroupRepository;
 import com.uspray.uspray.infrastructure.MemberRepository;
@@ -33,6 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class GroupPrayFacade {
 
     private final GroupPrayRepository groupPrayRepository;
+    private final GroupMemberRepository groupMemberRepository;
     private final MemberRepository memberRepository;
     private final ScrapAndHeartRepository scrapAndHeartRepository;
     private final CategoryRepository categoryRepository;
@@ -78,6 +81,8 @@ public class GroupPrayFacade {
 
         Member member = memberRepository.getMemberByUserId(userId);
         Group group = groupRepository.getGroupById(groupId);
+        GroupMember groupMember = groupMemberRepository.getGroupMemberByGroupAndMember(group,
+            member);
         List<GroupPray> groupPrays = groupPrayRepository.findGroupPraysByGroup(group);
 
         Long count = scrapAndHeartRepository.countHeart(groupPrays, true);
@@ -87,13 +92,13 @@ public class GroupPrayFacade {
         for (GroupPray groupPray : groupPrays) {
             Optional<ScrapAndHeart> SH = scrapAndHeartRepository.findScrapAndHeartByGroupPrayAndMember(
                 groupPray, member);
-            if (SH.isPresent()){
+            if (SH.isPresent()) {
                 ScrapAndHeart scrapAndHeart = SH.get();
                 groupPrayList.add(GroupPrayResponseDto.builder()
-                        .groupPray(groupPray)
-                        .member(member)
-                        .scrapAndHeart(scrapAndHeart)
-                        .build());
+                    .groupPray(groupPray)
+                    .member(member)
+                    .scrapAndHeart(scrapAndHeart)
+                    .build());
                 continue;
             }
             groupPrayList.add(GroupPrayResponseDto.builder()
@@ -110,7 +115,7 @@ public class GroupPrayFacade {
             value.sort(Comparator.comparing(GroupPrayResponseDto::getGroupPrayId).reversed());
         }
 
-        return new GroupPrayRappingDto(count, map);
+        return new GroupPrayRappingDto(count, groupMember.getNotificationAgree(), map);
     }
 
     @Transactional
@@ -135,7 +140,8 @@ public class GroupPrayFacade {
 
     @Transactional
     public void scrapGroupPray(ScrapRequestDto scrapRequestDto, String userId) {
-        GroupPray groupPray = groupPrayRepository.getGroupPrayById(scrapRequestDto.getGroupPrayId());
+        GroupPray groupPray = groupPrayRepository.getGroupPrayById(
+            scrapRequestDto.getGroupPrayId());
         Member member = memberRepository.getMemberByUserId(userId);
 
         Optional<ScrapAndHeart> scrapAndHeartByGroupPrayAndMember = scrapAndHeartRepository.findScrapAndHeartByGroupPrayAndMember(

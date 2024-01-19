@@ -1,13 +1,10 @@
 package com.uspray.uspray.infrastructure;
 
 import com.uspray.uspray.domain.Group;
-import com.uspray.uspray.domain.Member;
 import com.uspray.uspray.exception.ErrorStatus;
 import com.uspray.uspray.exception.model.NotFoundException;
 import com.uspray.uspray.infrastructure.querydsl.group.GroupRepositoryCustom;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.util.List;
 
 public interface GroupRepository extends JpaRepository<Group, Long>, GroupRepositoryCustom {
 
@@ -18,5 +15,4 @@ public interface GroupRepository extends JpaRepository<Group, Long>, GroupReposi
             () -> new NotFoundException(ErrorStatus.NOT_FOUND_GROUP_EXCEPTION,
                 ErrorStatus.NOT_FOUND_GROUP_EXCEPTION.getMessage()));
     }
-
 }

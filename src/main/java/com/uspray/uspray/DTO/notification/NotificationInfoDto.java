@@ -9,13 +9,12 @@ public class NotificationInfoDto {
     private Boolean firstNotiAgree;
     private Boolean secondNotiAgree;
     private Boolean thirdNotiAgree;
-    private Boolean fourthNotiAgree;
 
     @Builder
-    public NotificationInfoDto(Boolean firstNotiAgree, Boolean secondNotiAgree, Boolean thirdNotiAgree, Boolean fourthNotiAgree) {
+    public NotificationInfoDto(Boolean firstNotiAgree, Boolean secondNotiAgree,
+        Boolean thirdNotiAgree) {
         this.firstNotiAgree = firstNotiAgree;
         this.secondNotiAgree = secondNotiAgree;
         this.thirdNotiAgree = thirdNotiAgree;
-        this.fourthNotiAgree = fourthNotiAgree;
     }
 }

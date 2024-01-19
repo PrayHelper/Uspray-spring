@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 public class GroupPrayRappingDto {
 
     Long heartCount;
+    Boolean notificationAgree;
 
     Map<LocalDate, List<GroupPrayResponseDto>> groupPray;
 
