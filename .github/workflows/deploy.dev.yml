@@ -44,7 +44,6 @@ jobs:
       run: |
         mkdir -p ./src/main/resources
         cd ./src/main/resources
-        echo "Base64 Encoded Secret: ${{ secrets.APPLICATION }}"
         echo "${{ secrets.APPLICATION }}" | base64 -d > application.yml
 
     - name: Create service-account-file.json
@@ -52,6 +51,12 @@ jobs:
         mkdir -p ./src/main/resources/firebase
         cd ./src/main/resources/firebase
         echo "${{ secrets.SERVICE_ACCOUNT_FILE }}" | base64 -d > service-account-file.json
+
+    - name: Create apple-auth-key
+      run: |
+        mkdir -p ./src/main/resources/key
+        cd ./src/main/resources/key
+        echo "${{ secrets.APPLE_AUTH_KEY }}" | base64 -d > AuthKey_FTS9JLF9CV.p8
 
     - name: Build with Gradle
       run: ./gradlew clean build
