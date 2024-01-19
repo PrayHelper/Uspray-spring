@@ -1,11 +1,16 @@
 package com.uspray.uspray.domain;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-import javax.persistence.*;
 
 @Entity
 @Getter
@@ -25,10 +30,16 @@ public class GroupMember {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    private Boolean notificationAgree = true;
+
     @Builder
     public GroupMember(Group group, Member member) {
         setGroup(group);
         setMember(member);
+    }
+
+    public void setNotificationAgree(Boolean notificationAgree) {
+        this.notificationAgree = notificationAgree;
     }
 
     private void setMember(Member member) {

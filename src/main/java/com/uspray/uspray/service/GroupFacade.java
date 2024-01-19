@@ -109,4 +109,15 @@ public class GroupFacade {
         groupRepository.delete(group);
     }
 
+    @Transactional
+    public void changeGroupNotification(String username, Long groupId) {
+        Member member = memberRepository.getMemberByUserId(username);
+        GroupMember groupMember = groupMemberRepository.findGroupMemberByMemberAndGroupId(
+            member,
+            groupId);
+        System.out.println(groupMember.getNotificationAgree());
+        groupMember.setNotificationAgree(!groupMember.getNotificationAgree());
+        System.out.println(groupMember.getNotificationAgree());
+    }
+
 }

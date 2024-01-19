@@ -49,6 +49,7 @@ public enum SuccessStatus {
     SCARP_GROUP_PRAY_SUCCESS(HttpStatus.OK, "모임 기도제목 스크랩을 성공했습니다."),
     GET_NOTIFICATION_AGREE_SUCCESS(HttpStatus.OK, "알림 설정 조회에 성공했습니다."),
     TEST_SUCCESS(HttpStatus.OK, "Test :: OK"),
+    CHANGE_GROUP_NOTIFICATION_SUCCESS(HttpStatus.OK, "모임 알림 설정 변경에 성공했습니다."),
 
     /*
      * 201 created

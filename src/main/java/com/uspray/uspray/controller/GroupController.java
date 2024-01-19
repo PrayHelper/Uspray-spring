@@ -8,7 +8,6 @@ import com.uspray.uspray.DTO.group.response.GroupMemberResponseDto;
 import com.uspray.uspray.exception.SuccessStatus;
 import com.uspray.uspray.service.GroupFacade;
 import com.uspray.uspray.service.GroupService;
-import io.netty.channel.ChannelHandler;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -16,14 +15,20 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.util.List;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/group")
@@ -90,7 +95,8 @@ public class GroupController {
         @Parameter(hidden = true) @AuthenticationPrincipal User user,
         @PathVariable Long groupId,
         @Valid @RequestBody GroupMemberRequestDto groupLeaderRequestDto) {
-        groupFacade.changeGroupLeader(user.getUsername(), groupId, groupLeaderRequestDto.getMemberId());
+        groupFacade.changeGroupLeader(user.getUsername(), groupId,
+            groupLeaderRequestDto.getMemberId());
         return ApiResponseDto.success(SuccessStatus.CHANGE_GROUP_LEADER_SUCCESS,
             SuccessStatus.CHANGE_GROUP_LEADER_SUCCESS.getMessage());
     }
@@ -106,7 +112,8 @@ public class GroupController {
         @Parameter(hidden = true) @AuthenticationPrincipal User user,
         @PathVariable Long groupId,
         @Valid @RequestBody GroupMemberRequestDto groupMemberRequestDto) {
-        groupFacade.kickGroupMember(user.getUsername(), groupId, groupMemberRequestDto.getMemberId());
+        groupFacade.kickGroupMember(user.getUsername(), groupId,
+            groupMemberRequestDto.getMemberId());
         return ApiResponseDto.success(SuccessStatus.KICK_GROUP_MEMBER_SUCCESS,
             SuccessStatus.KICK_GROUP_MEMBER_SUCCESS.getMessage());
     }
@@ -165,5 +172,19 @@ public class GroupController {
         @RequestParam(required = false) String name) {
         return ApiResponseDto.success(SuccessStatus.GET_MEMBER_LIST_SUCCESS,
             groupService.searchGroupMembers(groupId, name));
+    }
+
+    @Operation(summary = "그룹 알림 설정")
+    @ApiResponse(
+        responseCode = "200",
+        description = "그룹 알림 설정을 변경합니다"
+    )
+    @PutMapping("/{groupId}/notification")
+    public ApiResponseDto<?> changeGroupNotification(
+        @Parameter(hidden = true) @AuthenticationPrincipal User user,
+        @PathVariable Long groupId) {
+        groupFacade.changeGroupNotification(user.getUsername(), groupId);
+        return ApiResponseDto.success(SuccessStatus.CHANGE_GROUP_NOTIFICATION_SUCCESS,
+            SuccessStatus.CHANGE_GROUP_NOTIFICATION_SUCCESS.getMessage());
     }
 }

@@ -36,6 +36,7 @@ public class GroupPrayResponseDto {
         setSC(scrapAndHeart);
         this.createdAt = LocalDate.from(groupPray.getCreatedAt());
     }
+
     private void setSC(ScrapAndHeart scrapAndHeart) {
         if (scrapAndHeart != null) {
             this.heart = scrapAndHeart.isHeart();
