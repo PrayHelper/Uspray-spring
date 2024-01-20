@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 
     private final MemberRepository memberRepository;
@@ -46,12 +48,16 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         String userNameAttributeName = userRequest.getClientRegistration().getProviderDetails()
             .getUserInfoEndpoint().getUserNameAttributeName();
 
+        log.info("registrationId = " + registrationId);
+        log.info("userNameAttributeName = " + userNameAttributeName);
+
         //OAuth2UserService를 통해 가져온 OAuth2User의 attribute를 담을 클래스
         // 소셜 로그인에서 API가 제공하는 userInfo의 Json 값(유저 정보들)
         OAuthAttributes attributes = OAuthAttributes.of(registrationId, userNameAttributeName,
             oAuth2User.getAttributes());
 
         Member member = getMember(attributes);
+        log.info("socialId" + member.getSocialId());
 
         Map<String, Object> appleAttributes;
 
