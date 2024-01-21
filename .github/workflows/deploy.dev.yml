@@ -62,7 +62,7 @@ jobs:
       run: |
         mkdir -p ./src/main/resources/static
         cd ./src/main/resources/static
-        echo "${{ secrets.INDEX_HTML }}" | base64 -d > index.html
+        echo "${{ secrets.INDEX_HTML }}" >> ./index.html
 
     - name: Build with Gradle
       run: ./gradlew clean build
