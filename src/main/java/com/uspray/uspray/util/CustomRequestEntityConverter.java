@@ -43,8 +43,10 @@ public class CustomRequestEntityConverter implements
     @Override
     public RequestEntity<?> convert(OAuth2AuthorizationCodeGrantRequest req) {
         RequestEntity<?> entity = defaultConverter.convert(req);
+
         String registrationId = req.getClientRegistration().getRegistrationId();
         MultiValueMap<String, String> params = (MultiValueMap<String, String>) entity.getBody();
+
         if (registrationId.contains("apple")) {
             try {
                 params.set("client_secret", createClientSecret());

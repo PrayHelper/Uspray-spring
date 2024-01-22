@@ -83,7 +83,7 @@ public class SecurityConfig {
             .tokenEndpoint().accessTokenResponseClient(accessTokenResponseClient()).and()
             .successHandler(oAuth2LoginSuccessHandler) // 동의하고 계속하기를 눌렀을 때 Handler 설정
             .failureHandler(oAuth2LoginFailureHandler) // 소셜 로그인 실패 시 핸들러 설정
-            .userInfoEndpoint().userService(customOAuth2UserService) // customUserService 설정
+            .userInfoEndpoint().userService(customOAuth2UserService) // 로그인 성공 후 받아온 data 핸들링 (customUserService 설정)
             .and()
             .permitAll();
 
