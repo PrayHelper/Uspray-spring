@@ -60,6 +60,7 @@ public class CustomRequestEntityConverter implements
 
     public PrivateKey getPrivateKey() throws IOException {
         ClassPathResource resource = new ClassPathResource(APPLE_KEY_PATH);
+        log.info(resource.getPath() + " // " + resource.getFilename());
         // 배포시 jar 파일을 찾지 못함
         //String privateKey = new String(Files.readAllBytes(Paths.get(resource.getURI())));
 
@@ -78,14 +79,18 @@ public class CustomRequestEntityConverter implements
         jwtHeader.put("kid", APPLE_KEY_ID);
         jwtHeader.put("alg", "ES256");
 
-        return Jwts.builder()
+        String secret = Jwts.builder()
             .setHeaderParams(jwtHeader)
             .setIssuer(APPLE_TEAM_ID)
-            .setIssuedAt(new Date(System.currentTimeMillis())) // 발행 시간 - UNIX 시간
-            .setExpiration(expirationDate) // 만료 시간
             .setAudience(APPLE_URL)
             .setSubject(APPLE_CLIENT_ID)
+            .setIssuedAt(new Date(System.currentTimeMillis())) // 발행 시간 - UNIX 시간
+            .setExpiration(expirationDate) // 만료 시간
             .signWith(getPrivateKey())
             .compact();
+
+        log.info("secret = " + secret);
+
+        return secret;
     }
 }
