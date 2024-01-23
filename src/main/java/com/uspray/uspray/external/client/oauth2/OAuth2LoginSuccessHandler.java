@@ -29,6 +29,8 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
         Authentication authentication) throws IOException, ServletException {
 
+        log.info("성공");
+
         CustomOAuth2User customOAuth2User = (CustomOAuth2User) authentication.getPrincipal();
         String id = customOAuth2User.getSocialId();
 
