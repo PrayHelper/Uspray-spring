@@ -6,7 +6,6 @@ import com.uspray.uspray.external.client.oauth2.OAuth2LoginSuccessHandler;
 import com.uspray.uspray.jwt.JwtAccessDeniedHandler;
 import com.uspray.uspray.jwt.JwtAuthenticationEntryPoint;
 import com.uspray.uspray.jwt.TokenProvider;
-import com.uspray.uspray.util.CustomRequestEntityConverter;
 import java.util.Arrays;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -19,9 +18,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.client.endpoint.DefaultAuthorizationCodeTokenResponseClient;
-import org.springframework.security.oauth2.client.endpoint.OAuth2AccessTokenResponseClient;
-import org.springframework.security.oauth2.client.endpoint.OAuth2AuthorizationCodeGrantRequest;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -111,11 +107,11 @@ public class SecurityConfig {
         return source;
     }
 
-    @Bean
-    public OAuth2AccessTokenResponseClient<OAuth2AuthorizationCodeGrantRequest> accessTokenResponseClient() {
-        DefaultAuthorizationCodeTokenResponseClient accessTokenResponseClient = new DefaultAuthorizationCodeTokenResponseClient();
-        accessTokenResponseClient.setRequestEntityConverter(new CustomRequestEntityConverter());
-
-        return accessTokenResponseClient;
-    }
+//    @Bean
+//    public OAuth2AccessTokenResponseClient<OAuth2AuthorizationCodeGrantRequest> accessTokenResponseClient() {
+//        DefaultAuthorizationCodeTokenResponseClient accessTokenResponseClient = new DefaultAuthorizationCodeTokenResponseClient();
+//        accessTokenResponseClient.setRequestEntityConverter(new CustomRequestEntityConverter());
+//
+//        return accessTokenResponseClient;
+//    }
 }

@@ -39,8 +39,6 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
      */
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-        log.info("서비스");
-
         OAuth2UserService<OAuth2UserRequest, OAuth2User> delegate = new DefaultOAuth2UserService();
         OAuth2User oAuth2User = delegate.loadUser(userRequest); // OAuth2 정보를 가져옵니다.
 
@@ -50,35 +48,31 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         String userNameAttributeName = userRequest.getClientRegistration().getProviderDetails()
             .getUserInfoEndpoint().getUserNameAttributeName();
 
-        log.info("registrationId = " + registrationId);
-        log.info("userNameAttributeName = " + userNameAttributeName);
-
         //OAuth2UserService를 통해 가져온 OAuth2User의 attribute를 담을 클래스
         // 소셜 로그인에서 API가 제공하는 userInfo의 Json 값(유저 정보들)
         OAuthAttributes attributes = OAuthAttributes.of(registrationId, userNameAttributeName,
             oAuth2User.getAttributes());
 
         Member member = getMember(attributes);
-        log.info("socialId" + member.getSocialId());
 
-        Map<String, Object> appleAttributes;
-
-        if (registrationId.contains(APPLE_REGISTRATION_ID)) {
-            String idToken = userRequest.getAdditionalParameters().get("id_token").toString();
-            appleAttributes = decodeJwtTokenPayload(idToken);
-            appleAttributes.put("id_token", idToken);
-            Map<String, Object> userAttributes = new HashMap<>();
-            userAttributes.put("resultcode", "00");
-            userAttributes.put("message", "success");
-            userAttributes.put("response", appleAttributes);
-
-            return new CustomOAuth2User(
-                Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")),
-                userAttributes,
-                "response",
-                member.getAuthority(),
-                attributes.getOAuth2UserInfo().getId());
-        }
+//        Map<String, Object> appleAttributes;
+//
+//        if (registrationId.contains(APPLE_REGISTRATION_ID)) {
+//            String idToken = userRequest.getAdditionalParameters().get("id_token").toString();
+//            appleAttributes = decodeJwtTokenPayload(idToken);
+//            appleAttributes.put("id_token", idToken);
+//            Map<String, Object> userAttributes = new HashMap<>();
+//            userAttributes.put("resultcode", "00");
+//            userAttributes.put("message", "success");
+//            userAttributes.put("response", appleAttributes);
+//
+//            return new CustomOAuth2User(
+//                Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")),
+//                userAttributes,
+//                "response",
+//                member.getAuthority(),
+//                attributes.getOAuth2UserInfo().getId());
+//        }
 
         return new CustomOAuth2User(
             Collections.singleton(new SimpleGrantedAuthority(member.getAuthority().name())),
