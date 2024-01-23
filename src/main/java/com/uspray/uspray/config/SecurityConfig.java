@@ -82,7 +82,7 @@ public class SecurityConfig {
             .apply(new JwtSecurityConfig(tokenProvider));
 
         http.oauth2Login()
-            .tokenEndpoint().accessTokenResponseClient(accessTokenResponseClient()).and()
+//            .tokenEndpoint().accessTokenResponseClient(accessTokenResponseClient()).and()
             .successHandler(oAuth2LoginSuccessHandler) // 동의하고 계속하기를 눌렀을 때 Handler 설정
             .failureHandler(oAuth2LoginFailureHandler) // 소셜 로그인 실패 시 핸들러 설정
             .userInfoEndpoint().userService(customOAuth2UserService) // 로그인 성공 후 받아온 data 핸들링 (customUserService 설정)
@@ -113,7 +113,6 @@ public class SecurityConfig {
 
     @Bean
     public OAuth2AccessTokenResponseClient<OAuth2AuthorizationCodeGrantRequest> accessTokenResponseClient() {
-        log.info("토큰 요청");
         DefaultAuthorizationCodeTokenResponseClient accessTokenResponseClient = new DefaultAuthorizationCodeTokenResponseClient();
         accessTokenResponseClient.setRequestEntityConverter(new CustomRequestEntityConverter());
 

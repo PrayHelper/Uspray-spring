@@ -60,7 +60,6 @@ public class CustomRequestEntityConverter implements
 
     public PrivateKey getPrivateKey() throws IOException {
         ClassPathResource resource = new ClassPathResource(APPLE_KEY_PATH);
-        log.info(resource.getPath() + " // " + resource.getFilename());
         // 배포시 jar 파일을 찾지 못함
         //String privateKey = new String(Files.readAllBytes(Paths.get(resource.getURI())));
 
@@ -88,8 +87,6 @@ public class CustomRequestEntityConverter implements
             .setExpiration(expirationDate) // 만료 시간
             .signWith(getPrivateKey())
             .compact();
-
-        log.info("secret = " + secret);
 
         return secret;
     }
