@@ -1,4 +1,4 @@
-package com.uspray.uspray.external.client.oauth2.apple;
+package com.uspray.uspray.external.client.oauth2.apple.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;

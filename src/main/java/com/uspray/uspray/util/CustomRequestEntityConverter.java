@@ -38,58 +38,6 @@ public class CustomRequestEntityConverter implements
     private final String APPLE_TEAM_ID = "2B6VZ6LKYN";
     private final String APPLE_KEY_ID = "FTS9JLF9CV";
 
-//    public AppleDTO getAppleInfo(String code) throws Exception {
-//        if (code == null) throw new Exception("Failed get authorization code");
-//
-//        String clientSecret = createClientSecret();
-//        String userId = "";
-//        String accessToken = "";
-//
-//        try {
-//            HttpHeaders headers = new HttpHeaders();
-//            headers.add("Content-type", "application/x-www-form-urlencoded");
-//
-//            MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-//            params.add("grant_type"   , "authorization_code");
-//            params.add("client_id"    , APPLE_CLIENT_ID);
-//            params.add("client_secret", clientSecret);
-//            params.add("code"         , code);
-//            params.add("redirect_uri" , APPLE_REDIRECT_URL);
-//
-//            RestTemplate restTemplate = new RestTemplate();
-//            HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(params, headers);
-//
-//            ResponseEntity<String> response = restTemplate.exchange(
-//                APPLE_URL + "/auth/token",
-//                HttpMethod.POST,
-//                httpEntity,
-//                String.class
-//            );
-//
-//            JSONParser jsonParser = new JSONParser();
-//            JSONObject jsonObj = (JSONObject) jsonParser.parse(response.getBody());
-//
-//            accessToken = String.valueOf(jsonObj.get("access_token"));
-//
-//            //ID TOKEN을 통해 회원 고유 식별자 받기
-//            SignedJWT signedJWT = SignedJWT.parse(String.valueOf(jsonObj.get("id_token")));
-//            ReadOnlyJWTClaimsSet getPayload = signedJWT.getJWTClaimsSet();
-//
-//            ObjectMapper objectMapper = new ObjectMapper();
-//            JSONObject payload = objectMapper.readValue(getPayload.toJSONObject().toJSONString(), JSONObject.class);
-//
-//            userId = String.valueOf(payload.get("sub"));
-//        } catch (Exception e) {
-//            throw new Exception("API call failed");
-//        }
-//
-//        return AppleDTO.builder()
-//            .id(userId)
-//            .token(accessToken)
-//            .build();
-//    }
-
-
     @Override
     public RequestEntity<?> convert(OAuth2AuthorizationCodeGrantRequest req) {
         RequestEntity<?> entity = defaultConverter.convert(req);

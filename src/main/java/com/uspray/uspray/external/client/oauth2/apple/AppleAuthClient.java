@@ -1,5 +1,6 @@
 package com.uspray.uspray.external.client.oauth2.apple;
 
+import com.uspray.uspray.external.client.oauth2.apple.dto.AppleSocialTokenInfoResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PostMapping;
