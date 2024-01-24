@@ -1,5 +1,6 @@
 package com.uspray.uspray.domain;
 
+import com.uspray.uspray.common.domain.AuditingTimeEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -15,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor
-public class GroupMember {
+public class GroupMember extends AuditingTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,6 +37,7 @@ public class GroupMember {
     public GroupMember(Group group, Member member) {
         setGroup(group);
         setMember(member);
+
     }
 
     public void setNotificationAgree(Boolean notificationAgree) {
