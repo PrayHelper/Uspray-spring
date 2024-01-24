@@ -33,8 +33,7 @@ public class GetMemberInfoService {
             authorizationCode
         ).getIdToken();
 
-//        return TokenDecoder.decodePayload(idToken, AppleIdTokenPayload.class);
-        return idToken;
+        return TokenDecoder.decodePayload(idToken, AppleIdTokenPayload.class);
     }
 
     private String generateClientSecret() {
