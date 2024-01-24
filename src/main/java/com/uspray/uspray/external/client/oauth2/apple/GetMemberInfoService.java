@@ -24,7 +24,7 @@ public class GetMemberInfoService {
     private final AppleAuthClient appleAuthClient;
     private final AppleProperties appleProperties;
 
-    public AppleIdTokenPayload get(String authorizationCode) {
+    public String get(String authorizationCode) {
 
         String idToken = appleAuthClient.getIdToken(
             appleProperties.getClientId(),
@@ -33,9 +33,8 @@ public class GetMemberInfoService {
             authorizationCode
         ).getIdToken();
 
-        System.out.println(idToken);
-
-        return TokenDecoder.decodePayload(idToken, AppleIdTokenPayload.class);
+//        return TokenDecoder.decodePayload(idToken, AppleIdTokenPayload.class);
+        return idToken;
     }
 
     private String generateClientSecret() {
