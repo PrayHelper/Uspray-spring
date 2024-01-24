@@ -33,6 +33,8 @@ public class GetMemberInfoService {
             authorizationCode
         ).getIdToken();
 
+        System.out.println(idToken);
+
         return TokenDecoder.decodePayload(idToken, AppleIdTokenPayload.class);
     }
 
