@@ -71,7 +71,7 @@ public class SecurityConfig {
             .and()
             .authorizeRequests()
             .antMatchers("/","/css/**","/images/**","/js/**","/favicon.ico","/h2-console/**", "/error").permitAll()
-            .antMatchers("/auth/**", "/login/**").permitAll()
+            .antMatchers("/auth/**", "/login/**", "/apple/**").permitAll()
             .antMatchers("/swagger-ui/**", "/v3/api-docs/**", "/api-docs/**", "/swagger-ui.html").permitAll()
             .antMatchers("/sms/**").permitAll()
             .antMatchers("/admin/**").permitAll()
