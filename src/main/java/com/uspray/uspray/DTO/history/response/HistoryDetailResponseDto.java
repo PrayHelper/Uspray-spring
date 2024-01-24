@@ -31,7 +31,7 @@ public class HistoryDetailResponseDto {
     private Boolean canEdit;
 
     public static HistoryDetailResponseDto of(History history) {
-        return new HistoryDetailResponseDto(history.getId(), history.getMember().getUserId(),
+        return new HistoryDetailResponseDto(history.getId(), history.getMember().getName(),
             history.getContent(), history.getPersonalCount(), history.getTotalCount(),
             history.getDeadline(),
             history.getCreatedAt().toLocalDate(), history.getCategoryId(),
