@@ -6,6 +6,7 @@ import com.uspray.uspray.exception.model.NotFoundException;
 import com.uspray.uspray.infrastructure.querydsl.pray.PrayRepositoryCustom;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -40,11 +41,13 @@ public interface PrayRepository extends JpaRepository<Pray, Long>, PrayRepositor
 
     List<Pray> findByCategoryId(Long categoryId);
 
-    default void cancelPray(Pray pray) {
-        if (pray.getDeleted()) {
+    default Pray cancelPray(Long prayId, String username) {
+        Pray pray = getPrayByIdAndMemberId(prayId, username);
+        if (!Objects.equals(pray.getLastPrayedAt(), LocalDate.now())) {
             throw new NotFoundException(ErrorStatus.ALREADY_CANCEL_EXCEPTION,
                 ErrorStatus.ALREADY_CANCEL_EXCEPTION.getMessage());
         }
         pray.deleteLastPrayedAt();
+        return pray;
     }
 }

@@ -246,9 +246,6 @@ public class PrayFacade {
 
     @Transactional
     public List<PrayListResponseDto> cancelPray(Long prayId, String username) {
-        Pray pray = prayRepository.getPrayByIdAndMemberId(prayId, username);
-        prayRepository.cancelPray(pray);
-
-        return getPrayList(username, PrayType.SHARED.stringValue());
+        return getPrayList(username, prayRepository.cancelPray(prayId, username).getPrayType().stringValue());
     }
 }

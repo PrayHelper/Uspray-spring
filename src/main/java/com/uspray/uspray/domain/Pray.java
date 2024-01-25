@@ -119,7 +119,7 @@ public class Pray extends AuditingTimeEntity {
     }
 
     public void deleteLastPrayedAt() {
-        this.lastPrayedAt = null;
+        this.lastPrayedAt = LocalDate.now().minusDays(1);
         this.count--;
     }
 
