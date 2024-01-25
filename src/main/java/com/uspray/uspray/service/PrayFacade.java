@@ -147,9 +147,8 @@ public class PrayFacade {
     @Transactional
     public List<PrayListResponseDto> todayPray(Long prayId, String username) {
         Pray pray = prayRepository.getPrayByIdAndMemberId(prayId, username);
-        LocalDate today = LocalDate.now();
-        handlePrayedToday(pray, today);
-        return getPrayList(username, PrayType.PERSONAL.stringValue());
+        handlePrayedToday(pray);
+        return getPrayList(username, pray.getPrayType().stringValue());
     }
 
     private void sendNotificationAndSaveLog(Pray pray, Member member) {
@@ -173,8 +172,8 @@ public class PrayFacade {
         notificationLogRepository.save(notificationLog);
     }
 
-    private void handlePrayedToday(Pray pray, LocalDate today) {
-        if (pray.getLastPrayedAt().equals(today)) {
+    private void handlePrayedToday(Pray pray) {
+        if (pray.getLastPrayedAt().equals(LocalDate.now())) {
             throw new NotFoundException(ErrorStatus.ALREADY_PRAYED_TODAY,
                 ErrorStatus.ALREADY_PRAYED_TODAY.getMessage());
         }
