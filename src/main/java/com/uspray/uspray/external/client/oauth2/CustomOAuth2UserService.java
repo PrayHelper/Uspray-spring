@@ -55,25 +55,6 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 
         Member member = getMember(attributes);
 
-        Map<String, Object> appleAttributes;
-
-        if (registrationId.contains(APPLE_REGISTRATION_ID)) {
-            String idToken = userRequest.getAdditionalParameters().get("id_token").toString();
-            appleAttributes = decodeJwtTokenPayload(idToken);
-            appleAttributes.put("id_token", idToken);
-            Map<String, Object> userAttributes = new HashMap<>();
-            userAttributes.put("resultcode", "00");
-            userAttributes.put("message", "success");
-            userAttributes.put("response", appleAttributes);
-
-            return new CustomOAuth2User(
-                Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")),
-                userAttributes,
-                "response",
-                member.getAuthority(),
-                attributes.getOAuth2UserInfo().getId());
-        }
-
         return new CustomOAuth2User(
             Collections.singleton(new SimpleGrantedAuthority(member.getAuthority().name())),
             oAuth2User.getAttributes(),
