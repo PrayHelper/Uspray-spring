@@ -1,14 +1,8 @@
 package com.uspray.uspray.external.client.oauth2;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.uspray.uspray.domain.Member;
 import com.uspray.uspray.infrastructure.MemberRepository;
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -28,8 +22,6 @@ import org.springframework.stereotype.Service;
 public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 
     private final MemberRepository memberRepository;
-
-    private static final String APPLE_REGISTRATION_ID = "apple";
 
     /**
      * DefaultOAuth2UserService 객체를 생성하여, loadUser(userRequest)를 통해 DefaultOAuth2User 객체를 생성 후 반환
@@ -62,25 +54,6 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
             member.getAuthority(),
             attributes.getOAuth2UserInfo().getId()
         );
-    }
-
-    public Map<String, Object> decodeJwtTokenPayload(String jwtToken) {
-        Map<String, Object> jwtClaims = new HashMap<>();
-        try {
-            String[] parts = jwtToken.split("\\.");
-            Base64.Decoder decoder = Base64.getUrlDecoder();
-
-            byte[] decodedBytes = decoder.decode(parts[1].getBytes(StandardCharsets.UTF_8));
-            String decodedString = new String(decodedBytes, StandardCharsets.UTF_8);
-            ObjectMapper mapper = new ObjectMapper();
-
-            Map<String, Object> map = mapper.readValue(decodedString, Map.class);
-            jwtClaims.putAll(map);
-
-        } catch (JsonProcessingException e) {
-//        logger.error("decodeJwtToken: {}-{} / jwtToken : {}", e.getMessage(), e.getCause(), jwtToken);
-        }
-        return jwtClaims;
     }
 
     private Member getMember(OAuthAttributes attributes) {
