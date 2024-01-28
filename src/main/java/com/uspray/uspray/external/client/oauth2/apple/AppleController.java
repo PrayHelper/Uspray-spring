@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/apple")
 public class AppleController {
 
-    private final GetMemberInfoService getMemberInfoService;
+    private final AppleMemberService appleMemberService;
 
-    @PostMapping("/token")
-    public ApiResponseDto<?> getAppleToken(@RequestBody String authCode) {
-        return ApiResponseDto.success(SuccessStatus.TEST_SUCCESS, getMemberInfoService.get(authCode));
+    @PostMapping("/login")
+    public ApiResponseDto<?> appleLogin(@RequestBody String authCode) {
+        return ApiResponseDto.success(SuccessStatus.LOGIN_SUCCESS, appleMemberService.login(authCode));
     }
 
 

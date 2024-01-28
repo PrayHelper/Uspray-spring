@@ -28,7 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class GetMemberInfoService {
+public class AppleMemberService {
 
     private final AppleAuthClient appleAuthClient;
     private final AppleProperties appleProperties;
@@ -36,7 +36,7 @@ public class GetMemberInfoService {
     private final TokenProvider tokenProvider;
 
     @Transactional
-    public AppleLoginResponseDto get(String authorizationCode) {
+    public AppleLoginResponseDto login(String authorizationCode) {
 
         //apple accessToken
         String idToken = appleAuthClient.getIdToken(
