@@ -6,6 +6,6 @@ import lombok.Data;
 public class AppleAuthCodeDto {
 
     String code;
-    String id_token ;
+    String id_token;
 
 }
