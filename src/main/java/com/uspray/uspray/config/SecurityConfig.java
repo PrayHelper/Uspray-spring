@@ -106,6 +106,7 @@ public class SecurityConfig {
 
         corsConfiguration.setAllowedOriginPatterns(Arrays.asList(
                 "http://localhost:3000",
+                "https://appleid.apple.com",
                 "https://*.uspray.kr",
                 "https://uspray.kr"
         ));
