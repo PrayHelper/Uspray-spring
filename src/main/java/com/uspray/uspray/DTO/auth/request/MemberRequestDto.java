@@ -31,11 +31,9 @@ public class MemberRequestDto {
     @Schema(description = "전화번호", example = "01012345678")
     private String phone;
 
-    @NotBlank
     @Schema(description = "생년월일", example = "2002-01-01")
     private String birth;
 
-    @NotBlank
     @Schema(description = "성별", example = "female")
     private String gender;
 
