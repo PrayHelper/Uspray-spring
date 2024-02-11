@@ -63,11 +63,7 @@ public class HistoryService {
 
         Pageable pageable = PageRequest.of(historySearchRequestDto.getPage(),
             historySearchRequestDto.getSize(), Sort.by("deadline").descending());
-        Page<HistoryResponseDto> historyList = historyRepository.findBySearchOption(username,
-                historySearchRequestDto.getKeyword(), historySearchRequestDto.getIsPersonal(),
-                historySearchRequestDto.getIsShared(),
-                historySearchRequestDto.getStartDate(), historySearchRequestDto.getEndDate(),
-                pageable)
+        Page<HistoryResponseDto> historyList = historyRepository.findBySearchOption(username, historySearchRequestDto, pageable)
             .map(HistoryResponseDto::of);
         return new HistoryListResponseDto(historyList.getContent(), historyList.getTotalPages());
     }
