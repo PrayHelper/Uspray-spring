@@ -56,7 +56,7 @@ public class ShareFacade {
 
         Member member = memberRepository.getMemberByUserId(username);
         List<Pray> prayList = prayRepository.findAllByIdIn(sharedPrayRequestDto.getPrayIds());
-        Long total = 0L;
+        long total = 0L;
 
         if (prayList.size() != sharedPrayRequestDto.getPrayIds().size()) {
             throw new NotFoundException(ErrorStatus.PRAY_NOT_FOUND_EXCEPTION,
@@ -73,6 +73,11 @@ public class ShareFacade {
             sharedPrayRepository.save(sharedPray);
             total++;
         }
+
+        if (total == 0L) {
+            throw new CustomException(ErrorStatus.CANNOT_RECEIVE_SHARED_PRAY_EXCEPTION,
+                ErrorStatus.CANNOT_RECEIVE_SHARED_PRAY_EXCEPTION.getMessage());
+        }
         return total;
     }
 
@@ -81,7 +86,8 @@ public class ShareFacade {
             // 자기 자신의 기도제목은 보관함에 넣을 수 없음
             return false;
         }
-        return true;
+        // 이미 보관함에 있는 기도제목은 보관함에 넣을 수 없음
+        return !sharedPrayRepository.existsByMemberAndPray(member, pray);
     }
 
     @Transactional

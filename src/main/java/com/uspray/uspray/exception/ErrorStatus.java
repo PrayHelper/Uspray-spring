@@ -30,6 +30,7 @@ public enum ErrorStatus {
     INVALID_TYPE_EXCEPTION(HttpStatus.BAD_REQUEST, "잘못된 타입입니다."),
     PRAY_CATEGORY_TYPE_MISMATCH(HttpStatus.BAD_REQUEST, "기도제목 타입과 카테고리 타입이 일치하지 않습니다."),
     INDEX_OUT_OF_BOUND_EXCEPTION(HttpStatus.BAD_REQUEST, "인덱스는 1부터 시작합니다."),
+    CANNOT_RECEIVE_SHARED_PRAY_EXCEPTION(HttpStatus.BAD_REQUEST, "이미 보관함에 있는 기도제목이거나 공유받을 수 없는 기도제목입니다."),
 
 
     /*

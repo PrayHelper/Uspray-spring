@@ -1,6 +1,7 @@
 package com.uspray.uspray.infrastructure;
 
 import com.uspray.uspray.domain.Member;
+import com.uspray.uspray.domain.Pray;
 import com.uspray.uspray.domain.SharedPray;
 import java.time.LocalDate;
 import java.util.List;
@@ -18,6 +19,8 @@ public interface SharedPrayRepository extends JpaRepository<SharedPray, Long> {
     // 수신자 기준 모두 찾기 (보관함 조회)
     @EntityGraph(attributePaths = {"member"})
     List<SharedPray> findAllByMemberOrderByCreatedAtDesc(Member member);
+
+    boolean existsByMemberAndPray(Member member, Pray pray);
     
     List<SharedPray> findAllByCreatedAtBefore(LocalDate threshold);
 
