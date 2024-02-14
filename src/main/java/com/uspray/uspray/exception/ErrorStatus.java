@@ -31,6 +31,7 @@ public enum ErrorStatus {
     PRAY_CATEGORY_TYPE_MISMATCH(HttpStatus.BAD_REQUEST, "기도제목 타입과 카테고리 타입이 일치하지 않습니다."),
     INDEX_OUT_OF_BOUND_EXCEPTION(HttpStatus.BAD_REQUEST, "인덱스는 1부터 시작합니다."),
 
+
     /*
      * 401 UNAUTHORIZED
      */

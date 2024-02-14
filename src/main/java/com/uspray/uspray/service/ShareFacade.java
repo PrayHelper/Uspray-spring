@@ -52,22 +52,36 @@ public class ShareFacade {
     }
 
     @Transactional
-    public void receivedSharedPray(String username, SharedPrayRequestDto sharedPrayRequestDto) {
+    public Long receivedSharedPray(String username, SharedPrayRequestDto sharedPrayRequestDto) {
 
         Member member = memberRepository.getMemberByUserId(username);
         List<Pray> prayList = prayRepository.findAllByIdIn(sharedPrayRequestDto.getPrayIds());
+        Long total = 0L;
 
         if (prayList.size() != sharedPrayRequestDto.getPrayIds().size()) {
             throw new NotFoundException(ErrorStatus.PRAY_NOT_FOUND_EXCEPTION,
                 ErrorStatus.PRAY_NOT_FOUND_EXCEPTION.getMessage());
         }
         for (Pray pray : prayList) {
+            if (!receiveCheck(member, pray)) {
+                continue;
+            }
             SharedPray sharedPray = SharedPray.builder()
                 .member(member)
                 .pray(pray)
                 .build();
             sharedPrayRepository.save(sharedPray);
+            total++;
         }
+        return total;
+    }
+
+    private boolean receiveCheck(Member member, Pray pray) {
+        if (pray.getMember().equals(member)) {
+            // 자기 자신의 기도제목은 보관함에 넣을 수 없음
+            return false;
+        }
+        return true;
     }
 
     @Transactional

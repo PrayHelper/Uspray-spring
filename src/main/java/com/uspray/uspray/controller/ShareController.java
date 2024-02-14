@@ -56,11 +56,11 @@ public class ShareController {
         content = @Content(schema = @Schema(implementation = SharedPrayRequestDto.class))
     )
     @Operation(summary = "기도제목 공유받기")
-    public ApiResponseDto<?> receiveSharedPray(
+    public ApiResponseDto<Long> receiveSharedPray(
         @Parameter(hidden = true) @AuthenticationPrincipal User user,
         @RequestBody SharedPrayRequestDto sharedPrayRequestDto) {
-        shareFacade.receivedSharedPray(user.getUsername(), sharedPrayRequestDto);
-        return ApiResponseDto.success(SuccessStatus.SHARE_PRAY_SUCCESS, SuccessStatus.SHARE_PRAY_SUCCESS.getMessage());
+        return ApiResponseDto.success(SuccessStatus.SHARE_PRAY_SUCCESS,
+            shareFacade.receivedSharedPray(user.getUsername(), sharedPrayRequestDto));
     }
 
     @DeleteMapping()
