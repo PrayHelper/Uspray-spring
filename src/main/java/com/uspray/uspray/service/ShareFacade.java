@@ -86,6 +86,10 @@ public class ShareFacade {
             // 자기 자신의 기도제목은 보관함에 넣을 수 없음
             return false;
         }
+        // 이미 저장된 기도제목의 경우 다시 보관함에 담기지 않도록 처리
+        if (prayRepository.existsByMemberAndOriginPrayId(member, pray.getId())) {
+            return false;
+        }
         // 이미 보관함에 있는 기도제목은 보관함에 넣을 수 없음
         return !sharedPrayRepository.existsByMemberAndPray(member, pray);
     }
