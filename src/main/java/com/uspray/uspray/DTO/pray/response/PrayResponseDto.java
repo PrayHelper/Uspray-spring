@@ -1,16 +1,13 @@
 package com.uspray.uspray.DTO.pray.response;
 
+import com.querydsl.core.annotations.QueryProjection;
 import com.uspray.uspray.domain.Pray;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
 import javax.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 
 @Data
-@AllArgsConstructor
-@Builder
 @Schema(description = "기도제목 응답 DTO")
 public class PrayResponseDto {
 
@@ -44,6 +41,20 @@ public class PrayResponseDto {
     @Schema(description = "모임 기도제목 존재 여부", example = "false")
     private Boolean inGroup;
 
+    @QueryProjection
+    public PrayResponseDto(Long prayId, String content, String name, LocalDate deadline,
+        Long categoryId, String categoryName, LocalDate lastPray, Boolean isShared) {
+        this.prayId = prayId;
+        this.content = content;
+        this.name = name;
+        this.deadline = deadline;
+        this.categoryId = categoryId;
+        this.categoryName = categoryName;
+        this.isPrayedToday = lastPray.isEqual(LocalDate.now());
+        this.isShared = isShared;
+        this.inGroup = false;
+    }
+
 
     public static PrayResponseDto of(Pray pray) {
         return new PrayResponseDto(
@@ -53,9 +64,8 @@ public class PrayResponseDto {
             pray.getDeadline(),
             pray.getCategory().getId(),
             pray.getCategory().getName(),
-            pray.getLastPrayedAt().isEqual(LocalDate.now()),
-            pray.getIsShared(),
-            false);
+            pray.getLastPrayedAt(),
+            pray.getIsShared());
     }
 
     public static PrayResponseDto shared(Pray pray, Pray originPray) {
@@ -66,9 +76,8 @@ public class PrayResponseDto {
             pray.getDeadline(),
             pray.getCategory().getId(),
             pray.getCategory().getName(),
-            pray.getLastPrayedAt().isEqual(LocalDate.now()),
-            pray.getIsShared(),
-            false);
+            pray.getLastPrayedAt(),
+            pray.getIsShared());
     }
 
 }
