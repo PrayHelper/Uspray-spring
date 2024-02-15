@@ -5,6 +5,7 @@ import com.uspray.uspray.DTO.grouppray.GroupPrayRequestDto;
 import com.uspray.uspray.DTO.grouppray.GroupPrayResponseDto;
 import com.uspray.uspray.DTO.grouppray.ScrapRequestDto;
 import com.uspray.uspray.DTO.pray.PrayListResponseDto;
+import com.uspray.uspray.DTO.pray.request.PrayToGroupPrayDto;
 import com.uspray.uspray.Enums.PrayType;
 import com.uspray.uspray.domain.Category;
 import com.uspray.uspray.domain.Group;
@@ -43,6 +44,41 @@ public class GroupPrayFacade {
     private final PrayRepository prayRepository;
     private final GroupRepository groupRepository;
 
+    @Transactional
+    public void prayToGroupPray(PrayToGroupPrayDto prayToGroupPrayDto, String userId) {
+        Member member = memberRepository.getMemberByUserId(userId);
+        Group group = groupRepository.getGroupById(prayToGroupPrayDto.getGroupId());
+
+        List<Pray> mainPray = prayRepository.findAllByIdIn(prayToGroupPrayDto.getPrayId());
+        List<Pray> targetPray = prayRepository.findAllByOriginPrayIdIn(
+            prayToGroupPrayDto.getPrayId());
+
+        for (Pray p : mainPray) {
+            GroupPray groupPray = GroupPray.builder()
+                .group(group)
+                .author(member)
+                .content(p.getContent())
+                .deadline(p.getDeadline())
+                .build();
+            p.setGroupPray(groupPray);
+            groupPrayRepository.save(groupPray);
+
+            ScrapAndHeart scrapAndHeart = ScrapAndHeart.builder()
+                .groupPray(groupPray)
+                .member(member)
+                .build();
+            scrapAndHeartRepository.save(scrapAndHeart);
+
+            for (Pray TP : targetPray) {
+                ScrapAndHeart targetScrapAndHeart = ScrapAndHeart.builder()
+                    .groupPray(groupPray)
+                    .member(TP.getMember())
+                    .build();
+                targetScrapAndHeart.scrapPray(TP);
+                scrapAndHeartRepository.save(targetScrapAndHeart);
+            }
+        }
+    }
 
     public List<PrayListResponseDto> getPrayList(String username, String prayType, Long groupId) {
         List<Long> prayIds = groupPrayRepository.getOriginPrayIdByGroupId(groupId);

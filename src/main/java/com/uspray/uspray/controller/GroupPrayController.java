@@ -6,6 +6,7 @@ import com.uspray.uspray.DTO.grouppray.GroupPrayRequestDto;
 import com.uspray.uspray.DTO.grouppray.GroupPrayResponseDto;
 import com.uspray.uspray.DTO.grouppray.ScrapRequestDto;
 import com.uspray.uspray.DTO.pray.PrayListResponseDto;
+import com.uspray.uspray.DTO.pray.request.PrayToGroupPrayDto;
 import com.uspray.uspray.DTO.pray.response.PrayResponseDto;
 import com.uspray.uspray.exception.SuccessStatus;
 import com.uspray.uspray.service.GroupPrayFacade;
@@ -52,6 +53,20 @@ public class GroupPrayController {
     ) {
         return ApiResponseDto.success(SuccessStatus.GET_PRAY_LIST_SUCCESS,
             groupPrayFacade.getPrayList(user.getUsername(), prayType, groupId));
+    }
+
+    @Operation(summary = "모임 기도제목으로 불러오기")
+    @ApiResponse(
+        responseCode = "200",
+        description = "모임 기도제목으로 불러오기",
+        content = @Content(schema = @Schema(implementation = PrayResponseDto.class)))
+    @PostMapping("/pray-to-grouppray")
+    public ApiResponseDto<?> prayToGroupPray(
+        @RequestBody PrayToGroupPrayDto prayToGroupPrayDto,
+        @Parameter(hidden = true) @AuthenticationPrincipal User user
+    ) {
+        groupPrayFacade.prayToGroupPray(prayToGroupPrayDto, user.getUsername());
+        return ApiResponseDto.success(SuccessStatus.PRAY_TO_GROUP_PRAY_SUCCESS);
     }
 
     @Operation(summary = "모임 기도제목 생성")
