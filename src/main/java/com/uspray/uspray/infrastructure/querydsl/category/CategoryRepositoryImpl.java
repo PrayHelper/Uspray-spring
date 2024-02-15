@@ -50,4 +50,37 @@ public class CategoryRepositoryImpl implements CategoryRepositoryCustom {
         }
         return prayListResponseDtos;
     }
+
+    @Override
+    public List<PrayListResponseDto> findAllWithOrderAndType(String username, String prayType,
+        List<Long> prayIds) {
+        List<Category> categories = queryFactory
+            .selectFrom(category)
+            .where(category.member.userId.eq(username))
+            .where(category.categoryType.stringValue().likeIgnoreCase(prayType))
+            .orderBy(category.order.asc())
+            .fetch();
+
+        // 각 카테고리 별로 PrayResponseDto 목록 가져오기
+        List<PrayListResponseDto> prayListResponseDtos = new ArrayList<>();
+        for (Category cat : categories) {
+            List<Pray> prays = queryFactory
+                .selectFrom(pray)
+                .where(pray.category.id.eq(cat.getId())
+                    .and(pray.member.userId.eq(username))
+                    .and(pray.prayType.stringValue().likeIgnoreCase(prayType)))
+                .fetch();
+
+            List<PrayResponseDto> prayResponseDtos = prays.stream()
+                .map(PrayResponseDto::of)
+                .collect(Collectors.toList());
+
+            prayResponseDtos.stream().filter(p -> prayIds.contains(p.getPrayId())).forEach(p -> p.setInGroup(true));
+
+            prayListResponseDtos.add(
+                new PrayListResponseDto(cat.getId(), cat.getName(), cat.getColor(),
+                    prayResponseDtos));
+        }
+        return prayListResponseDtos;
+    }
 }

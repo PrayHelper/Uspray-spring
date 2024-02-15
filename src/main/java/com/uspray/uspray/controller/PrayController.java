@@ -48,7 +48,7 @@ public class PrayController {
         responseCode = "200",
         description = "기도제목 목록 반환",
         content = @Content(schema = @Schema(implementation = PrayResponseDto.class)))
-    @GetMapping()
+    @GetMapping
     public ApiResponseDto<List<PrayListResponseDto>> getPrayList(
         @Parameter(hidden = true) @AuthenticationPrincipal User user,
         @Parameter(description = "기도제목 종류(personal, shared)", required = true, example = "personal") String prayType
@@ -71,7 +71,7 @@ public class PrayController {
             prayService.getPrayDetail(prayId, user.getUsername()));
     }
 
-    @PostMapping()
+    @PostMapping
     @ApiResponse(
         responseCode = "201",
         description = "기도제목 생성",

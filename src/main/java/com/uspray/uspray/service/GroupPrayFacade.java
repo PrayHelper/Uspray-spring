@@ -4,6 +4,7 @@ import com.uspray.uspray.DTO.grouppray.GroupPrayRappingDto;
 import com.uspray.uspray.DTO.grouppray.GroupPrayRequestDto;
 import com.uspray.uspray.DTO.grouppray.GroupPrayResponseDto;
 import com.uspray.uspray.DTO.grouppray.ScrapRequestDto;
+import com.uspray.uspray.DTO.pray.PrayListResponseDto;
 import com.uspray.uspray.Enums.PrayType;
 import com.uspray.uspray.domain.Category;
 import com.uspray.uspray.domain.Group;
@@ -41,6 +42,13 @@ public class GroupPrayFacade {
     private final CategoryRepository categoryRepository;
     private final PrayRepository prayRepository;
     private final GroupRepository groupRepository;
+
+
+    public List<PrayListResponseDto> getPrayList(String username, String prayType, Long groupId) {
+        List<Long> prayIds = groupPrayRepository.getOriginPrayIdByGroupId(groupId);
+        return categoryRepository.findAllWithOrderAndType(username, prayType, prayIds);
+    }
+
 
     @Transactional
     public void createGroupPray(GroupPrayRequestDto groupPrayRequestDto, String userId) {

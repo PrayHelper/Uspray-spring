@@ -6,9 +6,9 @@ import java.time.LocalDate;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 
-@Getter
+@Data
 @AllArgsConstructor
 @Builder
 @Schema(description = "기도제목 응답 DTO")
@@ -41,6 +41,9 @@ public class PrayResponseDto {
     @Schema(description = "기도제목 공유 여부", example = "true")
     private Boolean isShared;
 
+    @Schema(description = "모임 기도제목 존재 여부", example = "false")
+    private Boolean inGroup;
+
 
     public static PrayResponseDto of(Pray pray) {
         return new PrayResponseDto(
@@ -51,7 +54,8 @@ public class PrayResponseDto {
             pray.getCategory().getId(),
             pray.getCategory().getName(),
             pray.getLastPrayedAt().isEqual(LocalDate.now()),
-            pray.getIsShared());
+            pray.getIsShared(),
+            false);
     }
 
     public static PrayResponseDto shared(Pray pray, Pray originPray) {
@@ -63,7 +67,8 @@ public class PrayResponseDto {
             pray.getCategory().getId(),
             pray.getCategory().getName(),
             pray.getLastPrayedAt().isEqual(LocalDate.now()),
-            pray.getIsShared());
+            pray.getIsShared(),
+            false);
     }
 
 }

@@ -5,6 +5,8 @@ import com.uspray.uspray.DTO.grouppray.GroupPrayRappingDto;
 import com.uspray.uspray.DTO.grouppray.GroupPrayRequestDto;
 import com.uspray.uspray.DTO.grouppray.GroupPrayResponseDto;
 import com.uspray.uspray.DTO.grouppray.ScrapRequestDto;
+import com.uspray.uspray.DTO.pray.PrayListResponseDto;
+import com.uspray.uspray.DTO.pray.response.PrayResponseDto;
 import com.uspray.uspray.exception.SuccessStatus;
 import com.uspray.uspray.service.GroupPrayFacade;
 import com.uspray.uspray.service.GroupPrayService;
@@ -15,6 +17,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
@@ -35,6 +38,21 @@ public class GroupPrayController {
 
     private final GroupPrayService groupPrayService;
     private final GroupPrayFacade groupPrayFacade;
+
+    @Operation(summary = "[모임 전용] 기도제목 목록 조회")
+    @ApiResponse(
+        responseCode = "200",
+        description = "기도제목 목록 반환",
+        content = @Content(schema = @Schema(implementation = PrayResponseDto.class)))
+    @GetMapping
+    public ApiResponseDto<List<PrayListResponseDto>> getPrayList(
+        @Parameter(hidden = true) @AuthenticationPrincipal User user,
+        @Parameter(description = "기도제목 종류(personal, shared)", required = true, example = "personal") String prayType,
+        @Parameter(example = "1") Long groupId
+    ) {
+        return ApiResponseDto.success(SuccessStatus.GET_PRAY_LIST_SUCCESS,
+            groupPrayFacade.getPrayList(user.getUsername(), prayType, groupId));
+    }
 
     @Operation(summary = "모임 기도제목 생성")
     @PostMapping
