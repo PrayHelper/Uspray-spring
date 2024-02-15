@@ -1,5 +1,6 @@
 package com.uspray.uspray.infrastructure;
 
+import com.uspray.uspray.domain.Member;
 import com.uspray.uspray.domain.Pray;
 import com.uspray.uspray.exception.ErrorStatus;
 import com.uspray.uspray.exception.model.NotFoundException;
@@ -40,6 +41,8 @@ public interface PrayRepository extends JpaRepository<Pray, Long>, PrayRepositor
     Pray getPrayByOriginPrayId(Long prayId);
 
     List<Pray> findByCategoryId(Long categoryId);
+
+    boolean existsByMemberAndOriginPrayId(Member member, Long originPrayId);
 
     default Pray cancelPray(Long prayId, String username) {
         Pray pray = getPrayByIdAndMemberId(prayId, username);
