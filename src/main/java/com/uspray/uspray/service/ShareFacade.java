@@ -52,22 +52,46 @@ public class ShareFacade {
     }
 
     @Transactional
-    public void receivedSharedPray(String username, SharedPrayRequestDto sharedPrayRequestDto) {
+    public Long receivedSharedPray(String username, SharedPrayRequestDto sharedPrayRequestDto) {
 
         Member member = memberRepository.getMemberByUserId(username);
         List<Pray> prayList = prayRepository.findAllByIdIn(sharedPrayRequestDto.getPrayIds());
+        long total = 0L;
 
         if (prayList.size() != sharedPrayRequestDto.getPrayIds().size()) {
             throw new NotFoundException(ErrorStatus.PRAY_NOT_FOUND_EXCEPTION,
                 ErrorStatus.PRAY_NOT_FOUND_EXCEPTION.getMessage());
         }
         for (Pray pray : prayList) {
+            if (!receiveCheck(member, pray)) {
+                continue;
+            }
             SharedPray sharedPray = SharedPray.builder()
                 .member(member)
                 .pray(pray)
                 .build();
             sharedPrayRepository.save(sharedPray);
+            total++;
         }
+
+        if (total == 0L) {
+            throw new CustomException(ErrorStatus.CANNOT_RECEIVE_SHARED_PRAY_EXCEPTION,
+                ErrorStatus.CANNOT_RECEIVE_SHARED_PRAY_EXCEPTION.getMessage());
+        }
+        return total;
+    }
+
+    private boolean receiveCheck(Member member, Pray pray) {
+        if (pray.getMember().equals(member)) {
+            // 자기 자신의 기도제목은 보관함에 넣을 수 없음
+            return false;
+        }
+        // 이미 저장된 기도제목의 경우 다시 보관함에 담기지 않도록 처리
+        if (prayRepository.existsByMemberAndOriginPrayId(member, pray.getId())) {
+            return false;
+        }
+        // 이미 보관함에 있는 기도제목은 보관함에 넣을 수 없음
+        return !sharedPrayRepository.existsByMemberAndPray(member, pray);
     }
 
     @Transactional
