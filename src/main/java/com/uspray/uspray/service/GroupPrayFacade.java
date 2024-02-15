@@ -14,6 +14,8 @@ import com.uspray.uspray.domain.GroupPray;
 import com.uspray.uspray.domain.Member;
 import com.uspray.uspray.domain.Pray;
 import com.uspray.uspray.domain.ScrapAndHeart;
+import com.uspray.uspray.exception.ErrorStatus;
+import com.uspray.uspray.exception.model.CustomException;
 import com.uspray.uspray.infrastructure.CategoryRepository;
 import com.uspray.uspray.infrastructure.GroupMemberRepository;
 import com.uspray.uspray.infrastructure.GroupPrayRepository;
@@ -48,6 +50,14 @@ public class GroupPrayFacade {
     public void prayToGroupPray(PrayToGroupPrayDto prayToGroupPrayDto, String userId) {
         Member member = memberRepository.getMemberByUserId(userId);
         Group group = groupRepository.getGroupById(prayToGroupPrayDto.getGroupId());
+
+        List<Long> existIds = group.getGroupPrayList().stream().map(gp -> gp.getOriginPray().getId())
+            .collect(Collectors.toList());
+
+        if (existIds.retainAll(prayToGroupPrayDto.getPrayId())) {
+            throw new CustomException(ErrorStatus.ALREADY_EXIST_GROUP_PRAY_EXCEPTION,
+                ErrorStatus.ALREADY_EXIST_GROUP_PRAY_EXCEPTION.getMessage());
+        }
 
         List<Pray> mainPray = prayRepository.findAllByIdIn(prayToGroupPrayDto.getPrayId());
         List<Pray> targetPray = prayRepository.findAllByOriginPrayIdIn(
