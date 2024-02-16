@@ -63,7 +63,7 @@ public enum ErrorStatus {
     NOT_FOUND_GROUP_MEMBER_EXCEPTION(HttpStatus.NOT_FOUND, "존재하지 않는 모임 회원입니다."),
 
     /**
-     * 404 NOT FOUND
+     * 409 NOT CONFLICT
      */
     ALREADY_EXIST_GROUP_PRAY_EXCEPTION(HttpStatus.CONFLICT, "이미 존재하는 모임 기도제목입니다."),
 
