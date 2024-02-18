@@ -28,19 +28,18 @@ public class PrayQueries {
             "ALTER TABLE pray ADD COLUMN pray_type VARCHAR(255);";
 
 
-    // 이렇게 하면 인코딩이 안 될 것 같습니다. "6raM7J2A7Zic: NQ==" 이런 식으로 되어버립니다.
-    // 우선 이렇게 합쳐놓고 인코딩 할때 :로 분리해서 디코딩한 후 다시 합쳐서 인코딩 하는 과정이 필요할 것 같습니다.
+    // concat 하면 인코딩이 안 될 것 같습니다. "6raM7J2A7Zic: NQ==" 이런 식으로 되어버립니다.
+    // 우선 title만 해놓고 나중에 스프링으로 target 불러와서 붙이는 게 좋을 것 같습니다.
     public static final String CREATE_CONTENT_WITH_CONCAT =
         "ALTER TABLE pray ADD COLUMN content VARCHAR(255);" +
             "ALTER TABLE pray ADD COLUMN is_shared BOOLEAN;" +
             "UPDATE storage AS s" +
-            "SET content = (tp.target || ': ' || tp.title)," +
+            "SET content = tp.title," +
             "is_shared = tp.is_shared" +
             "FROM temp_pray AS tp" +
-            "WHERE length(tp.target || ': ' || tp.title) < 255" +
-            "AND s.pray_id = tp.id;";
+            "AND s.pray_id = tp.id;" +
 //            +
-//            "ALTER TABLE pray DROP COLUMN title;" +
+            "ALTER TABLE pray DROP COLUMN title;";
 //            "ALTER TABLE pray DROP COLUMN target;";
 }
 
