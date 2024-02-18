@@ -62,7 +62,6 @@ jobs:
 
     - name: Deploy Docker image
       run: |
-        cd spring-test
         if [ ! -z "$(docker ps -q -f name=${{env.CONTAINER_NAME}})" ]; then
           docker stop ${{env.CONTAINER_NAME}}
           docker rm ${{env.CONTAINER_NAME}}
