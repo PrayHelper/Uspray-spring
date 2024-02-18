@@ -117,7 +117,7 @@ public class AuthController {
 
     }
 
-    @GetMapping("/loginCheck")
+    @GetMapping("/login-check")
     @Operation(summary = "사용한 로그인 방식 체크(일반, 소셜)")
     @SecurityRequirement(name = "JWT Auth")
     public ApiResponseDto<LoginTypeResponseDto> loginCheck (@Parameter(hidden = true) @AuthenticationPrincipal User user) {
