@@ -9,6 +9,7 @@ import com.uspray.uspray.DTO.auth.request.MemberDeleteDto;
 import com.uspray.uspray.DTO.auth.request.MemberLoginRequestDto;
 import com.uspray.uspray.DTO.auth.request.MemberRequestDto;
 import com.uspray.uspray.DTO.auth.response.DupCheckResponseDto;
+import com.uspray.uspray.DTO.auth.response.LoginTypeResponseDto;
 import com.uspray.uspray.DTO.auth.response.MemberResponseDto;
 import com.uspray.uspray.exception.SuccessStatus;
 import com.uspray.uspray.service.AuthService;
@@ -114,5 +115,12 @@ public class AuthController {
         return ApiResponseDto.success(SuccessStatus.CHECK_USER_ID_SUCCESS,
             authService.dupCheck(userId));
 
+    }
+
+    @GetMapping("/loginCheck")
+    @Operation(summary = "사용한 로그인 방식 체크(일반, 소셜)")
+    @SecurityRequirement(name = "JWT Auth")
+    public ApiResponseDto<LoginTypeResponseDto> loginCheck (@Parameter(hidden = true) @AuthenticationPrincipal User user) {
+        return ApiResponseDto.success(SuccessStatus.LOGIN_CHECK_SUCCESS, authService.loginCheck(user.getUsername()));
     }
 }

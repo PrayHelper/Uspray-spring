@@ -8,6 +8,7 @@ import com.uspray.uspray.DTO.auth.request.MemberDeleteDto;
 import com.uspray.uspray.DTO.auth.request.MemberLoginRequestDto;
 import com.uspray.uspray.DTO.auth.request.MemberRequestDto;
 import com.uspray.uspray.DTO.auth.response.DupCheckResponseDto;
+import com.uspray.uspray.DTO.auth.response.LoginTypeResponseDto;
 import com.uspray.uspray.DTO.auth.response.MemberResponseDto;
 import com.uspray.uspray.Enums.WithdrawReason;
 import com.uspray.uspray.domain.Member;
@@ -158,5 +159,17 @@ public class AuthService {
 
     public DupCheckResponseDto dupCheck(String userId) {
         return new DupCheckResponseDto(memberRepository.existsByUserId(userId));
+    }
+
+    public LoginTypeResponseDto loginCheck(String userId) {
+        Member member = memberRepository.getMemberByUserId(userId);
+        if (member.getSocialId() == null) {
+            return LoginTypeResponseDto.builder()
+                .isSocial(false)
+                .build();
+        }
+        return LoginTypeResponseDto.builder()
+            .isSocial(true)
+            .build();
     }
 }
