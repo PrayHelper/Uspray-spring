@@ -4,7 +4,6 @@ package com.uspray.uspray.controller;
 import com.uspray.uspray.DTO.ApiResponseDto;
 import com.uspray.uspray.DTO.pray.PrayListResponseDto;
 import com.uspray.uspray.DTO.pray.request.PrayRequestDto;
-import com.uspray.uspray.DTO.pray.request.PrayToGroupPrayDto;
 import com.uspray.uspray.DTO.pray.request.PrayUpdateRequestDto;
 import com.uspray.uspray.DTO.pray.response.PrayResponseDto;
 import com.uspray.uspray.exception.SuccessStatus;
@@ -48,7 +47,7 @@ public class PrayController {
         responseCode = "200",
         description = "기도제목 목록 반환",
         content = @Content(schema = @Schema(implementation = PrayResponseDto.class)))
-    @GetMapping()
+    @GetMapping
     public ApiResponseDto<List<PrayListResponseDto>> getPrayList(
         @Parameter(hidden = true) @AuthenticationPrincipal User user,
         @Parameter(description = "기도제목 종류(personal, shared)", required = true, example = "personal") String prayType
@@ -71,7 +70,7 @@ public class PrayController {
             prayService.getPrayDetail(prayId, user.getUsername()));
     }
 
-    @PostMapping()
+    @PostMapping
     @ApiResponse(
         responseCode = "201",
         description = "기도제목 생성",
@@ -153,19 +152,5 @@ public class PrayController {
     ) {
         return ApiResponseDto.success(SuccessStatus.CANCEL_PRAY_SUCCESS,
             prayFacade.cancelPray(prayId, user.getUsername()));
-    }
-
-    @Operation(summary = "모임 기도제목으로 불러오기")
-    @ApiResponse(
-        responseCode = "200",
-        description = "모임 기도제목으로 불러오기",
-        content = @Content(schema = @Schema(implementation = PrayResponseDto.class)))
-    @PostMapping("/pray-to-grouppray")
-    public ApiResponseDto<?> prayToGroupPray(
-        @RequestBody PrayToGroupPrayDto prayToGroupPrayDto,
-        @Parameter(hidden = true) @AuthenticationPrincipal User user
-    ) {
-        prayFacade.prayToGroupPray(prayToGroupPrayDto, user.getUsername());
-        return ApiResponseDto.success(SuccessStatus.PRAY_TO_GROUP_PRAY_SUCCESS);
     }
 }
