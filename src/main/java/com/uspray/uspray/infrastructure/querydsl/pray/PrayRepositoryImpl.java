@@ -29,11 +29,12 @@ public class PrayRepositoryImpl implements PrayRepositoryCustom {
     }
 
     @Override
+    // prayId로 originPrayId를 넘겨줌
     public Integer getSharedCountByOriginPrayId(Long prayId) {
         Integer result = queryFactory
             .select(pray.count.sum())
             .from(pray)
-            .where(pray.originPrayId.eq(prayId))
+            .where(pray.originPrayId.eq(prayId).or(pray.id.eq(prayId)))
             .groupBy(pray.id)
             .fetchOne();
         return (result == null) ? 0 : result;
