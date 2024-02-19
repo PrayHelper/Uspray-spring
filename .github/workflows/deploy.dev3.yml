@@ -15,7 +15,7 @@ env:
   KEY: ${{ secrets.SSH_KEY }}
   PORT: ${{ secrets.PORT }}
   IMAGE_NAME: registry.uspray.kr/uspray-server-dev:latest
-  CONTAINER_NAME: uspray-server-dev
+  PROJECT_NAME: uspray-server-dev
 
 jobs:
   deliver:
@@ -69,9 +69,9 @@ jobs:
 
       - name: Deploy Docker image
         run: |
-          if [ ! -z "$(docker ps -q -f name=${{env.CONTAINER_NAME}})" ]; then
-            docker stop ${{env.CONTAINER_NAME}}
-            docker rm ${{env.CONTAINER_NAME}}
-            docker rmi ${{env.IMAGE_NAME}}
+          if [ ! -z "$(docker ps -q -f name=${{env.PROJECT_NAME}})" ]; then
+            docker stop ${{env.PROJECT_NAME}}
+            docker rm ${{env.PROJECT_NAME}}
+            docker rmi ${{env.PROJECT_NAME}}
           fi
           docker compose up -d
