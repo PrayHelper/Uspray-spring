@@ -6,9 +6,13 @@ services:
     environment:
       TZ: "Asia/Seoul"
     ports:
-      - "8002:8080"
+      - "8080"
     depends_on:
       - redis
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.${SERVICE_NAME}.rule=Host(`${DOMAIN_HOST}`)"
+      - "traefik.http.services.${SERVICE_NAME}.loadbalancer.server.port=8080"
 
   redis:
     image: redis:latest

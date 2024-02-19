@@ -4,6 +4,7 @@ on:
   workflow_dispatch:
   push:
     branches:
+      - main
       - chore/v2-workflow
 
 permissions:
@@ -68,6 +69,9 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Deploy Docker image
+        env:
+          SERVICE_NAME: uspray-spring-dev
+          DOMAIN_HOST: api.test.uspray.kr
         run: |
           if [ ! -z "$(docker ps -q -f name=${{env.PROJECT_NAME}})" ]; then
             docker stop ${{env.PROJECT_NAME}}
