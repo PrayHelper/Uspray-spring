@@ -50,6 +50,7 @@ public enum SuccessStatus {
     GET_NOTIFICATION_AGREE_SUCCESS(HttpStatus.OK, "알림 설정 조회에 성공했습니다."),
     TEST_SUCCESS(HttpStatus.OK, "Test :: OK"),
     CHANGE_GROUP_NOTIFICATION_SUCCESS(HttpStatus.OK, "모임 알림 설정 변경에 성공했습니다."),
+    LOGIN_CHECK_SUCCESS(HttpStatus.OK, "로그인 체크에 성공했습니다."),
 
     /*
      * 201 created
