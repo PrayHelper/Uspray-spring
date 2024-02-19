@@ -23,6 +23,7 @@ public class PrayQueries {
             "ALTER TABLE pray ADD COLUMN deleted BOOLEAN;" +
             "UPDATE pray SET deleted = (deleted_at IS NOT NULL);" +
             "ALTER TABLE pray DROP COLUMN deleted_at;" +
+            "ALTER TABLE pray ADD COLUMN last_prayed_at DATE;" +
             "ALTER TABLE pray ADD COLUMN updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP;"
             +
             "ALTER TABLE pray ADD COLUMN pray_type VARCHAR(255);";
@@ -41,6 +42,12 @@ public class PrayQueries {
 //            +
             "ALTER TABLE pray DROP COLUMN title;";
 //            "ALTER TABLE pray DROP COLUMN target;";
+
+    public static final String HANDLE_COMPLETE_PRAY =
+        "UPDATE pray" +
+            "SET last_prayed_at = TO_DATE(c.created_at)" +
+            "FROM complete AS c" +
+            "WHERE pray.pray_id = c.storage_id;";
 }
 
-// TODO: Complete 처리하기, pray_type 추가하기, category_type 추가하기, share 처리하기, history 추가하기
+// TODO: category_type 추가하기, share 처리하기, history 추가하기
