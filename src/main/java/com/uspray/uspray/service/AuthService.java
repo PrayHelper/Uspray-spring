@@ -163,13 +163,8 @@ public class AuthService {
 
     public LoginTypeResponseDto loginCheck(String userId) {
         Member member = memberRepository.getMemberByUserId(userId);
-        if (member.getSocialId() == null) {
-            return LoginTypeResponseDto.builder()
-                .isSocial(false)
-                .build();
-        }
         return LoginTypeResponseDto.builder()
-            .isSocial(true)
+            .isSocial(member.getSocialId() != null)
             .build();
     }
 }
