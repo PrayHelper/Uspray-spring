@@ -9,8 +9,6 @@ name: Deploy Backend on Development Server via DockerHub
 on:
   workflow_dispatch:
   push:
-    branches:
-      - main
 
 permissions:
   contents: read
