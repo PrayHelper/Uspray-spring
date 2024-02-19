@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   uspray-spring:
-    image: bae4614/uspray-server:latest
+    image: registry.uspray.kr/uspray-server-dev:latest
     container_name: prayhelper-spring-dev
     environment:
       TZ: "Asia/Seoul"
