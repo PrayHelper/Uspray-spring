@@ -71,7 +71,7 @@ jobs:
       - name: Deploy Docker image
         env:
           SERVICE_NAME: uspray-spring-dev
-          DOMAIN_HOST: api.test.uspray.kr
+          DOMAIN_HOST: api.dev.uspray.kr
         run: |
           if [ ! -z "$(docker ps -q -f name=${{env.PROJECT_NAME}})" ]; then
             docker stop ${{env.PROJECT_NAME}}

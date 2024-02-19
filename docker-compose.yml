@@ -12,6 +12,9 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.${SERVICE_NAME}.rule=Host(`${DOMAIN_HOST}`)"
+      - "traefik.http.routers.${SERVICE_NAME}.entrypoints=websecure"
+      - "traefik.http.routers.${SERVICE_NAME}.tls=true"
+      - "traefik.http.routers.${SERVICE_NAME}.tls.certresolver=letsencrypt"
       - "traefik.http.services.${SERVICE_NAME}.loadbalancer.server.port=8080"
 
   redis:
