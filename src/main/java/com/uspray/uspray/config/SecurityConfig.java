@@ -40,13 +40,14 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        return new BCryptPasswordEncoder(12);
     }
+
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring()
-                .antMatchers("/h2-console/**", "/favicon.ico");
+            .antMatchers("/h2-console/**", "/favicon.ico");
     }
 
     @Bean
@@ -70,9 +71,11 @@ public class SecurityConfig {
 
             .and()
             .authorizeRequests()
-            .antMatchers("/","/css/**","/images/**","/js/**","/favicon.ico","/h2-console/**", "/error").permitAll()
+            .antMatchers("/", "/css/**", "/images/**", "/js/**", "/favicon.ico", "/h2-console/**",
+                "/error").permitAll()
             .antMatchers("/auth/**", "/login/**", "/apple/**").permitAll()
-            .antMatchers("/swagger-ui/**", "/v3/api-docs/**", "/api-docs/**", "/swagger-ui.html").permitAll()
+            .antMatchers("/swagger-ui/**", "/v3/api-docs/**", "/api-docs/**", "/swagger-ui.html")
+            .permitAll()
             .antMatchers("/sms/**").permitAll()
             .antMatchers("/admin/**").permitAll()
             .anyRequest().authenticated()
@@ -83,7 +86,8 @@ public class SecurityConfig {
             .tokenEndpoint().accessTokenResponseClient(accessTokenResponseClient()).and()
             .successHandler(oAuth2LoginSuccessHandler) // 동의하고 계속하기를 눌렀을 때 Handler 설정
             .failureHandler(oAuth2LoginFailureHandler) // 소셜 로그인 실패 시 핸들러 설정
-            .userInfoEndpoint().userService(customOAuth2UserService) // 로그인 성공 후 받아온 data 핸들링 (customUserService 설정)
+            .userInfoEndpoint()
+            .userService(customOAuth2UserService) // 로그인 성공 후 받아온 data 핸들링 (customUserService 설정)
             .and()
             .permitAll();
 
@@ -105,10 +109,10 @@ public class SecurityConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 
         corsConfiguration.setAllowedOriginPatterns(Arrays.asList(
-                "http://localhost:3000",
-                "https://appleid.apple.com",
-                "https://*.uspray.kr",
-                "https://uspray.kr"
+            "http://localhost:3000",
+            "https://appleid.apple.com",
+            "https://*.uspray.kr",
+            "https://uspray.kr"
         ));
         corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH"));
         corsConfiguration.setAllowedHeaders(List.of("*"));

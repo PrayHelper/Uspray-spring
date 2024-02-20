@@ -42,7 +42,14 @@ public class CategoryRepositoryImpl implements CategoryRepositoryCustom {
                 .fetch();
 
             List<PrayResponseDto> prayResponseDtos = prays.stream()
-                .map(PrayResponseDto::of)
+                .map(pray_iter -> {
+                    Pray originPray = findOriginPray(pray_iter);
+                    if (originPray != null) {
+                        return PrayResponseDto.shared(pray_iter, originPray);
+                    } else {
+                        return PrayResponseDto.of(pray_iter);
+                    }
+                })
                 .collect(Collectors.toList());
 
             prayListResponseDtos.add(
@@ -50,6 +57,15 @@ public class CategoryRepositoryImpl implements CategoryRepositoryCustom {
                     prayResponseDtos));
         }
         return prayListResponseDtos;
+    }
+
+    private Pray findOriginPray(Pray target_pray) {
+        if (target_pray.getOriginPrayId() == null) {
+            return null;
+        }
+        return queryFactory.selectFrom(pray)
+            .where(pray.id.eq(target_pray.getOriginPrayId()))
+            .fetchOne();
     }
 
     @Override
@@ -81,8 +97,8 @@ public class CategoryRepositoryImpl implements CategoryRepositoryCustom {
                     .and(pray.member.userId.eq(username))
                     .and(pray.prayType.stringValue().likeIgnoreCase(prayType)))
                 .fetch();
-
-            prayResponseDtos.stream().filter(p -> prayIds.contains(p.getPrayId())).forEach(p -> p.setInGroup(true));
+            prayResponseDtos.removeIf(p -> !prayIds.contains(p.getPrayId()));
+            prayResponseDtos.forEach(p -> p.setInGroup(true));
 
             prayListResponseDtos.add(
                 new PrayListResponseDto(cat.getId(), cat.getName(), cat.getColor(),

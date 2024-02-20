@@ -102,10 +102,11 @@ public class PrayFacade {
         List<Pray> prayList = prayRepository.findAllByDeadlineBefore(LocalDate.now());
         for (Pray pray : prayList) {
             pray.complete();
-            Integer sharedCount = prayRepository.getSharedCountByOriginPrayId(pray.getId());
+            Integer sharedCount = prayRepository.getSharedCountByOriginPrayId(
+                pray.getOriginPrayId());
             History history = History.builder()
                 .pray(pray)
-                .totalCount(pray.getCount() + sharedCount)
+                .totalCount(sharedCount) //sharedCount에 내 count도 포함되어 있음
                 .build();
             historyRepository.save(history);
             prayRepository.delete(pray);
@@ -199,6 +200,7 @@ public class PrayFacade {
 
     @Transactional
     public List<PrayListResponseDto> cancelPray(Long prayId, String username) {
-        return getPrayList(username, prayRepository.cancelPray(prayId, username).getPrayType().stringValue());
+        return getPrayList(username,
+            prayRepository.cancelPray(prayId, username).getPrayType().stringValue());
     }
 }
