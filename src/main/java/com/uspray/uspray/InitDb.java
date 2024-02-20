@@ -40,7 +40,7 @@ public class InitDb {
         @Transactional
         public void dbInit() {
             Member member = Member.builder()
-                .userId("test")
+                .userId("springtest")
                 .password(passwordEncoder.encode("test"))
                 .name("홍길동")
                 .phone("01012345678")
@@ -51,7 +51,7 @@ public class InitDb {
             em.persist(member);
 
             Member member2 = Member.builder()
-                .userId("test2")
+                .userId("springtest2")
                 .password(passwordEncoder.encode("test2"))
                 .name("김길동")
                 .phone("01012345670")
@@ -62,7 +62,7 @@ public class InitDb {
             em.persist(member2);
 
             Member member_mook = Member.builder()
-                .userId("wjdanr0869")
+                .userId("springwjdanr0869")
                 .password(passwordEncoder.encode("wjdanr0869"))
                 .name("김정묵")
                 .phone("01057770869")
@@ -73,7 +73,7 @@ public class InitDb {
             em.persist(member_mook);
 
             Member member3 = Member.builder()
-                .userId("test3")
+                .userId("springtest3")
                 .password(passwordEncoder.encode("test3"))
                 .name("이수빈")
                 .phone("01022223333")
@@ -84,7 +84,7 @@ public class InitDb {
             em.persist(member3);
 
             Member member4 = Member.builder()
-                .userId("test4")
+                .userId("springtest4")
                 .password(passwordEncoder.encode("test4"))
                 .name("권은혜")
                 .phone("01022223331")
@@ -95,7 +95,7 @@ public class InitDb {
             em.persist(member4);
 
             Member member5 = Member.builder()
-                .userId("test5")
+                .userId("springtest5")
                 .password(passwordEncoder.encode("test5"))
                 .name("배서현")
                 .phone("01022223931")
