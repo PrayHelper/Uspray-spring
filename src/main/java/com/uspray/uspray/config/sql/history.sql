@@ -6,7 +6,7 @@ create table history
     created_at     timestamp,
     updated_at     timestamp,
     category_id    bigint,
-    content        varchar(255),
+    content        varchar(500),
     deadline       date,
     is_shared      boolean,
     origin_pray_id bigint,

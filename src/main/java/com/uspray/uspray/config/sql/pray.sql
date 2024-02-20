@@ -27,7 +27,7 @@ UPDATE pray AS p
 SET content = LEFT(tp.title, 255),
     is_shared = tp.is_shared
     FROM temp_pray AS tp
-WHERE p.pray_id = tp.id;
+WHERE p.origin_pray_id = tp.id;
 -- ALTER TABLE temp_pray DROP COLUMN title;
 -- ALTER TABLE temp_pray DROP COLUMN target;
 
