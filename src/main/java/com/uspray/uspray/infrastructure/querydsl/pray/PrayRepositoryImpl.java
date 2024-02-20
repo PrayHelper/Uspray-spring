@@ -34,10 +34,15 @@ public class PrayRepositoryImpl implements PrayRepositoryCustom {
         Integer result = queryFactory
             .select(pray.count.sum())
             .from(pray)
-            .where(pray.originPrayId.eq(prayId).or(pray.id.eq(prayId)))
+            .where(pray.originPrayId.eq(prayId))
             .groupBy(pray.id)
             .fetchOne();
-        return (result == null) ? 0 : result;
+        Integer result_for_owner = queryFactory
+            .select(pray.count.sum())
+            .from(pray)
+            .where(pray.id.eq(prayId))
+            .fetchOne();
+        return result != null ? result + result_for_owner : result_for_owner;
     }
 }
 
