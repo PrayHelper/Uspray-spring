@@ -51,10 +51,10 @@ public class GroupPrayFacade {
         Member member = memberRepository.getMemberByUserId(userId);
         Group group = groupRepository.getGroupById(prayToGroupPrayDto.getGroupId());
 
-        List<Long> existIds = group.getGroupPrayList().stream().map(gp -> gp.getOriginPray().getId())
+        List<Long> existIds = group.getGroupPrayList().stream()
+            .map(gp -> gp.getOriginPray().getId())
             .collect(Collectors.toList());
-
-        if (existIds.retainAll(prayToGroupPrayDto.getPrayId())) {
+        if (existIds.stream().anyMatch(id -> id.equals(prayToGroupPrayDto.getPrayId()))) {
             throw new CustomException(ErrorStatus.ALREADY_EXIST_GROUP_PRAY_EXCEPTION,
                 ErrorStatus.ALREADY_EXIST_GROUP_PRAY_EXCEPTION.getMessage());
         }
@@ -150,7 +150,7 @@ public class GroupPrayFacade {
                 ScrapAndHeart scrapAndHeart = SH.get();
                 groupPrayList.add(GroupPrayResponseDto.builder()
                     .groupPray(groupPray)
-                    .member(member)
+                    .member(groupPray.getOriginPray().getMember())
                     .scrapAndHeart(scrapAndHeart)
                     .build());
                 continue;
