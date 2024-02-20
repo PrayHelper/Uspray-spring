@@ -1,7 +1,7 @@
 --4번째 실행
 ALTER TABLE share RENAME TO shared_pray;
 
-ALTER TABLE shared_pray DROP CONSTRAINT pk_share;
+ALTER TABLE shared_pray DROP CONSTRAINT fk_share_storage_id_storage;
 
 -- 1. shared_pray_id 열 추가
 ALTER TABLE shared_pray ADD COLUMN shared_pray_id BIGINT;

@@ -15,6 +15,7 @@ ALTER TABLE pray ADD COLUMN deleted BOOLEAN;
 UPDATE pray SET deleted = (deleted_at IS NOT NULL);
 ALTER TABLE pray DROP COLUMN deleted_at;
 ALTER TABLE pray ADD COLUMN last_prayed_at DATE;
+UPDATE pray SET last_prayed_at = created_at;
 ALTER TABLE pray ADD COLUMN updated_at TIMESTAMP;
 ALTER TABLE pray ADD COLUMN pray_type VARCHAR(255);
 ALTER TABLE pray ADD COLUMN temp_origin_pray_id BIGINT;

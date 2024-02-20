@@ -44,27 +44,23 @@ CREATE TRIGGER pray_user_id_update_trigger
     EXECUTE FUNCTION update_pray_user_id();
 
 -- 4. 새로운 외래 키 추가 (pray table)
-ALTER TABLE pray ALTER COLUMN user_id TYPE varchar(255);
-UPDATE pray SET user_id = u.member_id FROM "user" u WHERE pray.user_id = u.id::varchar(255);
-ALTER TABLE pray ALTER COLUMN user_id TYPE bigint USING user_id::bigint;
-ALTER TABLE pray ADD CONSTRAINT pk_pray FOREIGN KEY (user_id) REFERENCES "user"(member_id) ON UPDATE CASCADE;
-ALTER TABLE pray RENAME COLUMN user_id TO member_id;
+ALTER TABLE pray ADD COLUMN member_id bigint;
+UPDATE pray SET member_id = u.member_id FROM "user" u WHERE pray.user_id = u.id;
+ALTER TABLE pray ADD CONSTRAINT pk_pray FOREIGN KEY (member_id) REFERENCES "user"(member_id) ON UPDATE CASCADE;
+ALTER TABLE pray DROP COLUMN user_id;
 
-ALTER TABLE complete ALTER COLUMN user_id TYPE varchar(255);
-UPDATE complete SET user_id = u.member_id FROM "user" u WHERE complete.user_id = u.id::varchar(255);
-ALTER TABLE complete ALTER COLUMN user_id TYPE bigint USING user_id::bigint;
-ALTER TABLE complete ADD CONSTRAINT fk_complete_user_id_user FOREIGN KEY (user_id) REFERENCES "user"(member_id) ON UPDATE CASCADE;
-ALTER TABLE complete RENAME COLUMN user_id TO member_id;
+ALTER TABLE complete ADD COLUMN member_id bigint;
+UPDATE complete SET member_id = u.member_id FROM "user" u WHERE complete.user_id = u.id;
+ALTER TABLE complete ADD CONSTRAINT fk_complete_member_id_user FOREIGN KEY (member_id) REFERENCES "user"(member_id) ON UPDATE CASCADE;
+ALTER TABLE complete DROP COLUMN user_id;
+--
+ALTER TABLE storage ADD COLUMN member_id bigint;
+UPDATE storage SET member_id = u.member_id FROM "user" u WHERE storage.user_id = u.id;
+ALTER TABLE storage ADD CONSTRAINT fk_storage_member_id_user FOREIGN KEY (member_id) REFERENCES "user"(member_id) ON UPDATE CASCADE;
+ALTER TABLE storage DROP COLUMN user_id;
 
-ALTER TABLE storage ALTER COLUMN user_id TYPE varchar(255);
-UPDATE storage SET user_id = u.member_id FROM "user" u WHERE storage.user_id = u.id::varchar(255);
-ALTER TABLE storage ALTER COLUMN user_id TYPE bigint USING user_id::bigint;
-ALTER TABLE storage ADD CONSTRAINT fk_storage_user_id_user FOREIGN KEY (user_id) REFERENCES "user"(member_id) ON UPDATE CASCADE;
-ALTER TABLE storage RENAME COLUMN user_id TO member_id;
-
-ALTER TABLE share ALTER COLUMN receipt_id TYPE varchar(255);
-UPDATE share SET receipt_id = u.member_id FROM "user" u WHERE share.receipt_id = u.id::varchar(255);
-ALTER TABLE share ALTER COLUMN receipt_id TYPE bigint USING receipt_id::bigint;
-ALTER TABLE share ADD CONSTRAINT fk_share_receipt_id_user FOREIGN KEY (receipt_id) REFERENCES "user"(member_id) ON UPDATE CASCADE;
-ALTER TABLE share RENAME COLUMN receipt_id TO member_id;
+ALTER TABLE share ADD COLUMN member_id bigint;
+UPDATE share SET member_id = u.member_id FROM "user" u WHERE share.receipt_id = u.id;
+ALTER TABLE share ADD CONSTRAINT fk_share_member_id_user FOREIGN KEY (member_id) REFERENCES "user"(member_id) ON UPDATE CASCADE;
+ALTER TABLE share DROP COLUMN receipt_id;
 

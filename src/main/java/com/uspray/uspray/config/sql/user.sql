@@ -16,6 +16,8 @@ UPDATE member SET deleted = (deleted_at IS NOT NULL);
 ALTER TABLE member DROP COLUMN deleted_at;
 ALTER TABLE member DROP COLUMN reset_pw;
 ALTER TABLE member ADD COLUMN authority VARCHAR(255);
+UPDATE member
+SET authority = 'ROLE_USER';
 ALTER TABLE member ADD COLUMN social_id VARCHAR(255);
 ALTER TABLE member ADD COLUMN updated_at TIMESTAMP;
 
