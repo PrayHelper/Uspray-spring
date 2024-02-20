@@ -3,6 +3,7 @@ package com.uspray.uspray.domain;
 import com.uspray.uspray.common.domain.AuditingTimeEntity;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -24,36 +25,34 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class GroupPray extends AuditingTimeEntity {
 
+    @OneToMany(mappedBy = "groupPray", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private final List<ScrapAndHeart> scrapAndHeart = new ArrayList<>();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "grouppray_id")
     private Long id;
-
     private String content;
-
     private LocalDate deadline;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_id")
     private Group group;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member author;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pray_id")
     private Pray originPray;
 
-    @OneToMany(mappedBy = "groupPray", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private final List<ScrapAndHeart> scrapAndHeart = new ArrayList<>();
-
     @Builder
     public GroupPray(String content, Group group, Member author, LocalDate deadline) {
-        this.content = content;
+        this.content = new String(Base64.getEncoder().encode(content.getBytes()));
         setGroup(group);
         setAuthor(author);
         this.deadline = deadline;
+    }
+
+    public String getContent() {
+        return new String(Base64.getDecoder().decode(content));
     }
 
     public void setOriginPray(Pray pray) {
