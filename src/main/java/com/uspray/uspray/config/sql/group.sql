@@ -88,6 +88,8 @@ DROP TABLE IF EXISTS test;
 DROP TABLE IF EXISTS user_delete;
 DROP TABLE IF EXISTS user_delete_reason;
 DROP TABLE IF EXISTS temp_pray;
+DROP TABLE IF EXISTS user_notification_log;
+DROP TABLE IF EXISTS user_notification;
 DROP TABLE IF EXISTS notification;
 
 create table notification

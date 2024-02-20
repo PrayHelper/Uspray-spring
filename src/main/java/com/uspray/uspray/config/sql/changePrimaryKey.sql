@@ -66,4 +66,3 @@ ALTER TABLE share ADD COLUMN member_id bigint;
 UPDATE share SET member_id = u.member_id FROM member u WHERE share.receipt_id = u.id;
 ALTER TABLE share ADD CONSTRAINT fk_share_member_id_member FOREIGN KEY (member_id) REFERENCES member(member_id) ON UPDATE CASCADE;
 -- ALTER TABLE share DROP COLUMN receipt_id;
-

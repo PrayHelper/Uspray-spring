@@ -33,3 +33,6 @@ WHERE pray.member_id = c.member_id AND c.category_type = 'PERSONAL' AND pray.pra
 UPDATE pray SET category_id = c.category_id
     FROM category AS c
 WHERE pray.member_id = c.member_id AND c.category_type = 'SHARED' AND pray.pray_type = 'SHARED';
+
+ALTER TABLE member ALTER COLUMN id DROP NOT NULL;
+ALTER TABLE pray ALTER COLUMN user_id DROP NOT NULL;
