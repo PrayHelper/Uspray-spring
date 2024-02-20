@@ -60,6 +60,9 @@ public class CategoryRepositoryImpl implements CategoryRepositoryCustom {
     }
 
     private Pray findOriginPray(Pray target_pray) {
+        if (target_pray.getOriginPrayId() == null) {
+            return null;
+        }
         return queryFactory.selectFrom(pray)
             .where(pray.id.eq(target_pray.getOriginPrayId()))
             .fetchOne();
@@ -94,9 +97,8 @@ public class CategoryRepositoryImpl implements CategoryRepositoryCustom {
                     .and(pray.member.userId.eq(username))
                     .and(pray.prayType.stringValue().likeIgnoreCase(prayType)))
                 .fetch();
-
-            prayResponseDtos.stream().filter(p -> prayIds.contains(p.getPrayId()))
-                .forEach(p -> p.setInGroup(true));
+            prayResponseDtos.removeIf(p -> !prayIds.contains(p.getPrayId()));
+            prayResponseDtos.forEach(p -> p.setInGroup(true));
 
             prayListResponseDtos.add(
                 new PrayListResponseDto(cat.getId(), cat.getName(), cat.getColor(),
