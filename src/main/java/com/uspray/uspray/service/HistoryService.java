@@ -63,7 +63,8 @@ public class HistoryService {
 
         Pageable pageable = PageRequest.of(historySearchRequestDto.getPage(),
             historySearchRequestDto.getSize(), Sort.by("deadline").descending());
-        Page<HistoryResponseDto> historyList = historyRepository.findBySearchOption(username, historySearchRequestDto, pageable)
+        Page<HistoryResponseDto> historyList = historyRepository.findBySearchOption(username,
+                historySearchRequestDto, pageable)
             .map(HistoryResponseDto::of);
         return new HistoryListResponseDto(historyList.getContent(), historyList.getTotalPages());
     }
@@ -76,6 +77,10 @@ public class HistoryService {
         if (!history.getMember().equals(member)) {
             throw new NotFoundException(ErrorStatus.HISTORY_NOT_FOUND_EXCEPTION,
                 ErrorStatus.HISTORY_NOT_FOUND_EXCEPTION.getMessage());
+        }
+        if (history.getIsShared()) {
+            Pray originPray = prayRepository.getPrayById(history.getOriginPrayId());
+            return HistoryDetailResponseDto.shared(history, originPray);
         }
         return HistoryDetailResponseDto.of(history);
     }
