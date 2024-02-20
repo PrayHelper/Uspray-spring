@@ -3,6 +3,7 @@ package com.uspray.uspray.domain;
 import com.uspray.uspray.Enums.PrayType;
 import com.uspray.uspray.common.domain.AuditingTimeEntity;
 import java.time.LocalDate;
+import java.util.Base64;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -54,7 +55,7 @@ public class History extends AuditingTimeEntity {
     @Builder
     public History(Pray pray, Integer totalCount) {
         this.member = pray.getMember();
-        this.content = pray.getContent();
+        this.content = new String(Base64.getEncoder().encode(pray.getContent().getBytes()));
         this.personalCount = pray.getCount();
         this.totalCount = (totalCount == null) ? 0 : totalCount; // totalCount에 기본값 설정
         this.deadline = pray.getDeadline();
@@ -62,5 +63,9 @@ public class History extends AuditingTimeEntity {
         this.prayType = pray.getPrayType();
         this.categoryId = pray.getCategory().getId();
         this.isShared = pray.getIsShared();
+    }
+
+    public String getContent() {
+        return new String(Base64.getDecoder().decode(content));
     }
 }
