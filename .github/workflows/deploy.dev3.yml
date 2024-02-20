@@ -73,8 +73,7 @@ jobs:
           DOMAIN_HOST: api.dev.uspray.kr
         run: |
           if [ ! -z "$(docker ps -q -f name=${{env.PROJECT_NAME}})" ]; then
-            docker stop ${{env.PROJECT_NAME}}
-            docker rm ${{env.PROJECT_NAME}}
+            docker compose -p ${{env.PROJECT_NAME}} down
             docker rmi ${{env.IMAGE_NAME}}
           fi
-          docker compose up -d
+          docker compose -p ${{env.PROJECT_NAME}} up -d
