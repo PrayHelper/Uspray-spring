@@ -71,6 +71,8 @@ public class ShareFacade {
                 .pray(pray)
                 .build();
             sharedPrayRepository.save(sharedPray);
+            // 기도제목을 보관함에 담으면 원래 기도제목의 isShared를 true로 변경
+            pray.setIsShared();
             total++;
         }
 
