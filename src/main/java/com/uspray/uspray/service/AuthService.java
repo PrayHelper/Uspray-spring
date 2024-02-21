@@ -50,6 +50,10 @@ public class AuthService {
             throw new NotFoundException(ErrorStatus.ALREADY_EXIST_ID_EXCEPTION,
                 ErrorStatus.ALREADY_EXIST_ID_EXCEPTION.getMessage());
         }
+        if (memberRepository.existsByPhone(memberRequestDto.getPhone())) {
+            throw new NotFoundException(ErrorStatus.ALREADY_EXIST_PHONE_EXCEPTION,
+                ErrorStatus.ALREADY_EXIST_PHONE_EXCEPTION.getMessage());
+        }
 
         Member member = memberRequestDto.toMember(passwordEncoder);
         return MemberResponseDto.of(memberRepository.save(member));
