@@ -71,6 +71,7 @@ public class ShareFacade {
                 .pray(pray)
                 .build();
             sharedPrayRepository.save(sharedPray);
+            pray.setIsShared();
             total++;
         }
 

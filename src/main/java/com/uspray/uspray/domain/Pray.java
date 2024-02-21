@@ -71,7 +71,6 @@ public class Pray extends AuditingTimeEntity {
         this.count = 0;
         this.deadline = deadline;
         this.originPrayId = originPrayId;
-        this.isShared = (originPrayId != null);
         this.category = category;
         this.prayType = prayType;
         setGroupPray(groupPray);
