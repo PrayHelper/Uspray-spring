@@ -3,6 +3,7 @@ package com.uspray.uspray.DTO.group.response;
 import com.querydsl.core.annotations.QueryProjection;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
+import java.util.Base64;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,7 +33,7 @@ public class GroupResponseDto {
         Integer prayCount, LocalDateTime updatedAt, boolean isLeader) {
         this.id = id;
         this.name = name;
-        this.lastPrayContent = lastPrayContent;
+        this.lastPrayContent = new String(Base64.getDecoder().decode(lastPrayContent));
         this.memberCount = memberCount;
         this.prayCount = prayCount;
         this.updatedAt = updatedAt;
