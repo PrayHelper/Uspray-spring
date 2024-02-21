@@ -22,8 +22,11 @@ public class SharedPrayResponseDto {
     @Schema(description = "기도제목 ID", example = "1")
     private Long prayId;
 
-    @Schema(description = "기도제목 작성자 ID", example = "홍길동")
+    @Schema(description = "기도제목 작성자 ID", example = "honggildong")
     private String userId;
+
+    @Schema(description = "기도제목 작성자 이름", example = "홍길동")
+    private String name;
 
     @NotNull
     @Schema(description = "기도제목 내용", example = "@@이가 $$ 할 수 있도록")
@@ -41,6 +44,7 @@ public class SharedPrayResponseDto {
 
         return new SharedPrayResponseDto(sharedPray.getId(), sharedPray.getPray().getId(),
             sharedPray.getPray().getMember().getUserId(),
+            sharedPray.getPray().getMember().getName(),
             sharedPray.getPray().getContent(), sharedPray.getPray().getDeadline(),
             sharedPray.getCreatedAt());
     }
