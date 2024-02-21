@@ -13,7 +13,7 @@ create table category
     member_id      bigint       not null
         constraint category_member_id_fk
             references member
-)
+);
 
 INSERT INTO category (created_at, updated_at, category_type, color, deleted, name, category_order, member_id)
 SELECT CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'PERSONAL', '#75BD62', false, '기본 카테고리', 1024, member_id

@@ -6,7 +6,7 @@ create table history
     created_at     timestamp,
     updated_at     timestamp,
     category_id    bigint,
-    content        varchar(500),
+    content        TEXT,
     deadline       date,
     is_shared      boolean,
     origin_pray_id bigint,
@@ -42,3 +42,10 @@ SELECT pray.deadline,
        pray.member_id
 FROM pray
 WHERE pray.deadline < CURRENT_DATE;
+
+
+DELETE
+FROM history
+WHERE origin_pray_id IN (SELECT pray_id
+                         FROM Pray
+                         WHERE deleted = true);

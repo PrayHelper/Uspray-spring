@@ -1,4 +1,4 @@
--- auto-generated definition
+-- 7번째로 실행
 create table club
 (
     group_id   bigserial
