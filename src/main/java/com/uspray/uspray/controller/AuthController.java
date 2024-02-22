@@ -10,6 +10,7 @@ import com.uspray.uspray.DTO.auth.request.MemberLoginRequestDto;
 import com.uspray.uspray.DTO.auth.request.MemberRequestDto;
 import com.uspray.uspray.DTO.auth.response.DupCheckResponseDto;
 import com.uspray.uspray.DTO.auth.response.LoginTypeResponseDto;
+import com.uspray.uspray.DTO.auth.response.MemberNameResponseDto;
 import com.uspray.uspray.DTO.auth.response.MemberResponseDto;
 import com.uspray.uspray.exception.SuccessStatus;
 import com.uspray.uspray.service.AuthService;
@@ -97,6 +98,14 @@ public class AuthController {
     public ApiResponseDto<?> changePw(@RequestBody ChangePwDto changePwDto) {
         authService.changePw(changePwDto);
         return ApiResponseDto.success(SuccessStatus.CHANGE_USER_PW_SUCCESS);
+    }
+
+    @GetMapping("/name")
+    @Operation(summary = "회원 이름 조회")
+    @SecurityRequirement(name = "JWT Auth")
+    public ApiResponseDto<MemberNameResponseDto> getName(@Parameter(hidden = true) @AuthenticationPrincipal User user) {
+        return ApiResponseDto.success(SuccessStatus.GET_USER_NAME_SUCCESS,
+            authService.getMemberName(user.getUsername()));
     }
 
     @PostMapping("/withdrawal")
