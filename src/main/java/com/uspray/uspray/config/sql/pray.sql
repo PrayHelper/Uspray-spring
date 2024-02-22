@@ -92,3 +92,5 @@ END;
 
 ALTER TABLE pray DROP COLUMN temp_origin_pray_id;
 DROP TABLE first_origin_pray_table;
+
+UPDATE pray SET deleted = true WHERE pray.deadline < CURRENT_DATE;
