@@ -44,6 +44,9 @@ public class History extends AuditingTimeEntity {
     @Column(name = "origin_pray_id")
     private Long originPrayId;
 
+    @Column(name = "origin_member_id")
+    private Long originMemberId;
+
     @NotNull
     @Enumerated(EnumType.STRING)
     private PrayType prayType;
@@ -60,6 +63,7 @@ public class History extends AuditingTimeEntity {
         this.totalCount = (totalCount == null) ? 0 : totalCount; // totalCount에 기본값 설정
         this.deadline = pray.getDeadline();
         this.originPrayId = pray.getOriginPrayId();
+        this.originMemberId = pray.getOriginMemberId();
         this.prayType = pray.getPrayType();
         this.categoryId = pray.getCategory().getId();
         this.isShared = pray.getIsShared();

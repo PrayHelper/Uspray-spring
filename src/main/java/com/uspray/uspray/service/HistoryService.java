@@ -47,8 +47,8 @@ public class HistoryService {
         if (PrayType.SHARED.name().equalsIgnoreCase(type)) {
             historyList = historyRepository.findByMemberAndOriginPrayIdIsNotNull(
                 member, pageable).map(history -> {
-                Pray originPray = prayRepository.getPrayById(history.getOriginPrayId());
-                return HistoryResponseDto.shared(history, originPray);
+                Member originMember = memberRepository.getMemberById(history.getOriginMemberId());
+                return HistoryResponseDto.shared(history, originMember);
             });
             return new HistoryListResponseDto(historyList.getContent(),
                 historyList.getTotalPages());

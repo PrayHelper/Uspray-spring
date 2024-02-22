@@ -2,7 +2,7 @@ package com.uspray.uspray.DTO.history.response;
 
 import com.uspray.uspray.Enums.PrayType;
 import com.uspray.uspray.domain.History;
-import com.uspray.uspray.domain.Pray;
+import com.uspray.uspray.domain.Member;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -39,9 +39,9 @@ public class HistoryResponseDto {
             history.getPrayType() == PrayType.PERSONAL && !history.getIsShared());
     }
 
-    public static HistoryResponseDto shared(History history, Pray originPray) {
-        return new HistoryResponseDto(history.getId(), originPray.getMember().getUserId(),
-            originPray.getMember().getName(), history.getContent(), history.getDeadline(),
+    public static HistoryResponseDto shared(History history, Member originMember) {
+        return new HistoryResponseDto(history.getId(), originMember.getUserId(),
+            originMember.getName(), history.getContent(), history.getDeadline(),
             history.getCreatedAt(), history.getCategoryId(), false); // 공유받은 기도제목은 수정 불가능, 항상 false
     }
 
