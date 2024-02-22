@@ -1,8 +1,9 @@
 version: '3.8'
 
 services:
-  uspray-spring:
-    image: registry.uspray.kr/uspray-server-dev:latest
+  api:
+    container_name: ${SERVICE_NAME}
+    image: ${IMAGE_NAME}
     environment:
       TZ: "Asia/Seoul"
     ports:

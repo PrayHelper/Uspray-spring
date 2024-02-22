@@ -10,12 +10,9 @@ permissions:
   contents: read
 
 env:
-  HOST: ${{ secrets.HOST }}
-  USERNAME: ${{ secrets.USERNAME }}
-  KEY: ${{ secrets.SSH_KEY }}
-  PORT: ${{ secrets.PORT }}
   IMAGE_NAME: registry.uspray.kr/uspray-server-prod:latest
   PROJECT_NAME: uspray-server-prod
+  DOMAIN_HOST: api.uspray.kr
 
 jobs:
   test:
@@ -100,8 +97,9 @@ jobs:
 
       - name: Deploy Docker image
         env:
-          SERVICE_NAME: uspray-spring-prod
-          DOMAIN_HOST: api.uspray.kr
+          SERVICE_NAME: ${{ env.PROJECT_NAME }}
+          DOMAIN_HOST: ${{ env.DOMAIN_HOST }}
+          IMAGE_NAME: ${{ env.IMAGE_NAME }}
         run: |
           if [ ! -z "$(docker ps -q -f name=${{env.PROJECT_NAME}})" ]; then
             docker compose -p ${{env.PROJECT_NAME}} down
