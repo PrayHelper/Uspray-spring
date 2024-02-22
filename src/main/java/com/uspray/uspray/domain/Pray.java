@@ -104,10 +104,6 @@ public class Pray extends AuditingTimeEntity {
         }
     }
 
-    public String getContent() {
-        return new String(Base64.getDecoder().decode(content));
-    }
-
     public void countUp() {
         this.count++;
         this.lastPrayedAt = LocalDate.now();

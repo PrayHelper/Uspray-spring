@@ -4,6 +4,7 @@ import com.querydsl.core.annotations.QueryProjection;
 import com.uspray.uspray.domain.Pray;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
+import java.util.Base64;
 import javax.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -45,7 +46,7 @@ public class PrayResponseDto {
     public PrayResponseDto(Long prayId, String content, String name, LocalDate deadline,
         Long categoryId, String categoryName, LocalDate lastPray, Boolean isShared) {
         this.prayId = prayId;
-        this.content = content;
+        this.content = new String(Base64.getDecoder().decode(content));
         this.name = name;
         this.deadline = deadline;
         this.categoryId = categoryId;
