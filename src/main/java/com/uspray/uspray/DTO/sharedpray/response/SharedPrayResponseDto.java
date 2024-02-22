@@ -5,6 +5,7 @@ import com.uspray.uspray.domain.SharedPray;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Base64;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -47,5 +48,9 @@ public class SharedPrayResponseDto {
             sharedPray.getPray().getMember().getName(),
             sharedPray.getPray().getContent(), sharedPray.getPray().getDeadline(),
             sharedPray.getCreatedAt());
+    }
+
+    public String getContent() {
+        return new String(Base64.getDecoder().decode(content));
     }
 }
