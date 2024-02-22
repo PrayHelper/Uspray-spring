@@ -5,6 +5,7 @@ import com.uspray.uspray.domain.Member;
 import com.uspray.uspray.domain.ScrapAndHeart;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
+import java.util.Base64;
 import java.util.Objects;
 import lombok.Builder;
 import lombok.Data;
@@ -30,7 +31,7 @@ public class GroupPrayResponseDto {
     @Builder
     public GroupPrayResponseDto(GroupPray groupPray, Member member, ScrapAndHeart scrapAndHeart) {
         this.groupPrayId = groupPray.getId();
-        this.content = groupPray.getContent();
+        this.content = new String(Base64.getDecoder().decode(groupPray.getContent()));
         this.authorName = member.getName();
         setIsOwner(groupPray.getAuthor().getId(), member.getId());
         setSC(scrapAndHeart);

@@ -38,7 +38,6 @@ public class Pray extends AuditingTimeEntity {
 
     private final Boolean deleted = false;
     @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
-    @JoinColumn(name = "group_pray_id")
     private final List<GroupPray> groupPray = new ArrayList<>();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -102,10 +101,6 @@ public class Pray extends AuditingTimeEntity {
             throw new NotFoundException(ErrorStatus.ALREADY_SHARED_EXCEPTION,
                 ErrorStatus.ALREADY_SHARED_EXCEPTION.getMessage());
         }
-    }
-
-    public String getContent() {
-        return new String(Base64.getDecoder().decode(content));
     }
 
     public void countUp() {

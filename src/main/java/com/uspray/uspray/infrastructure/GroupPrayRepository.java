@@ -15,7 +15,7 @@ public interface GroupPrayRepository extends JpaRepository<GroupPray, Long>{
     @EntityGraph(attributePaths = {"author"})
     List<GroupPray> findGroupPraysByGroup(Group group);
 
-    @Query("select g.originPray.id from GroupPray g where g.group.id = :groupId")
+    @Query("select g.originPray.id from GroupPray g left join g.originPray left join g.group where g.group.id = :groupId")
     List<Long> getOriginPrayIdByGroupId(@Param("groupId") Long groupId);
 
     default GroupPray getGroupPrayById(Long id) {
