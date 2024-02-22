@@ -20,6 +20,7 @@ import com.uspray.uspray.infrastructure.NotificationLogRepository;
 import com.uspray.uspray.infrastructure.PrayRepository;
 import com.uspray.uspray.infrastructure.SharedPrayRepository;
 import java.time.LocalDate;
+import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -124,7 +125,7 @@ public class ShareFacade {
         }
         Pray pray = Pray.builder()
             .member(member)
-            .content(sharedPray.getPray().getContent())
+            .content(new String(Base64.getDecoder().decode(sharedPray.getPray().getContent())))
             .deadline(deadline)
             .originPrayId(sharedPray.getPray().getId())
             .category(category)
