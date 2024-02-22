@@ -52,6 +52,8 @@ public class Pray extends AuditingTimeEntity {
     private Boolean isShared = false;
     @Column(name = "origin_pray_id")
     private Long originPrayId;
+    @Column(name = "origin_member_id")
+    private Long originMemberId;
     @NotNull
     @Enumerated(EnumType.STRING)
     private PrayType prayType;
@@ -64,12 +66,14 @@ public class Pray extends AuditingTimeEntity {
 
     @Builder
     public Pray(Member member, String content, LocalDate deadline, Long originPrayId,
+        Long originMemberId,
         Category category, PrayType prayType, GroupPray groupPray) {
         this.member = member;
         this.content = new String(Base64.getEncoder().encode(content.getBytes()));
         this.count = 0;
         this.deadline = deadline;
         this.originPrayId = originPrayId;
+        this.originMemberId = originMemberId;
         this.category = category;
         this.prayType = prayType;
         setGroupPray(groupPray);

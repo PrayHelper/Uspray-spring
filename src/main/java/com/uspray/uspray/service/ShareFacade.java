@@ -128,6 +128,7 @@ public class ShareFacade {
             .content(new String(Base64.getDecoder().decode(sharedPray.getPray().getContent())))
             .deadline(deadline)
             .originPrayId(sharedPray.getPray().getId())
+            .originMemberId(sharedPray.getMember().getId())
             .category(category)
             .prayType(PrayType.SHARED)
             .build();

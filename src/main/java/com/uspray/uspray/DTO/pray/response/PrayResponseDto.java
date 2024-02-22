@@ -1,6 +1,7 @@
 package com.uspray.uspray.DTO.pray.response;
 
 import com.querydsl.core.annotations.QueryProjection;
+import com.uspray.uspray.domain.Member;
 import com.uspray.uspray.domain.Pray;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
@@ -69,11 +70,11 @@ public class PrayResponseDto {
             pray.getIsShared());
     }
 
-    public static PrayResponseDto shared(Pray pray, Pray originPray) {
+    public static PrayResponseDto shared(Pray pray, Member originPrayMember) {
         return new PrayResponseDto(
             pray.getId(),
             pray.getContent(),
-            originPray.getMember().getName(),
+            originPrayMember.getName(),
             pray.getDeadline(),
             pray.getCategory().getId(),
             pray.getCategory().getName(),

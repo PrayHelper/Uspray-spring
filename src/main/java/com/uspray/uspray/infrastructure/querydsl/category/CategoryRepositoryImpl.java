@@ -1,14 +1,16 @@
 package com.uspray.uspray.infrastructure.querydsl.category;
 
 import static com.uspray.uspray.domain.QCategory.category;
-import static com.uspray.uspray.domain.QPray.pray;
 import static com.uspray.uspray.domain.QMember.member;
+import static com.uspray.uspray.domain.QPray.pray;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.uspray.uspray.DTO.pray.PrayListResponseDto;
 import com.uspray.uspray.DTO.pray.response.PrayResponseDto;
 import com.uspray.uspray.DTO.pray.response.QPrayResponseDto;
+import com.uspray.uspray.Enums.PrayType;
 import com.uspray.uspray.domain.Category;
+import com.uspray.uspray.domain.Member;
 import com.uspray.uspray.domain.Pray;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,9 +46,12 @@ public class CategoryRepositoryImpl implements CategoryRepositoryCustom {
 
             List<PrayResponseDto> prayResponseDtos = prays.stream()
                 .map(pray_iter -> {
-                    Pray originPray = findOriginPray(pray_iter);
-                    if (originPray != null) {
-                        return PrayResponseDto.shared(pray_iter, originPray);
+                    if (pray_iter.getPrayType().equals(PrayType.SHARED)) {
+                        Member originMember = queryFactory
+                            .selectFrom(member)
+                            .where(member.id.eq(pray_iter.getOriginMemberId()))
+                            .fetchOne();
+                        return PrayResponseDto.shared(pray_iter, originMember);
                     } else {
                         return PrayResponseDto.of(pray_iter);
                     }
@@ -60,22 +65,12 @@ public class CategoryRepositoryImpl implements CategoryRepositoryCustom {
         return prayListResponseDtos;
     }
 
-    private Pray findOriginPray(Pray target_pray) {
-        if (target_pray.getOriginPrayId() == null) {
-            return null;
-        }
-        return queryFactory.selectFrom(pray)
-            .where(pray.id.eq(target_pray.getOriginPrayId()))
-            .fetchOne();
-    }
-
     @Override
     public List<PrayListResponseDto> findAllWithOrderAndType(String username, String prayType,
         List<Long> prayIds) {
         List<Category> categories = queryFactory
             .selectFrom(category)
-            .join(category.member, member)
-            .where(member.userId.eq(username))
+            .where(category.member.userId.eq(username))
             .where(category.categoryType.stringValue().likeIgnoreCase(prayType))
             .orderBy(category.order.asc())
             .fetch();
@@ -95,14 +90,11 @@ public class CategoryRepositoryImpl implements CategoryRepositoryCustom {
                     pray.isShared
                 ))
                 .from(pray)
-                .join(pray.category, category)
-                .join(pray.member, member)
-                .where(category.id.eq(cat.getId())
-                    .and(member.userId.eq(username))
+                .where(pray.category.id.eq(cat.getId())
+                    .and(pray.member.userId.eq(username))
                     .and(pray.prayType.stringValue().likeIgnoreCase(prayType)))
                 .fetch();
-            
-            prayResponseDtos.stream().filter(p -> prayIds.contains(p.getPrayId())).forEach(p -> p.setInGroup(true));
+            prayResponseDtos.removeIf(p -> !prayIds.contains(p.getPrayId()));
             prayResponseDtos.forEach(p -> p.setInGroup(true));
 
             prayListResponseDtos.add(
