@@ -4,6 +4,7 @@ import com.querydsl.core.annotations.QueryProjection;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 import java.util.Base64;
+import java.util.Optional;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,7 +34,8 @@ public class GroupResponseDto {
         Integer prayCount, LocalDateTime updatedAt, boolean isLeader) {
         this.id = id;
         this.name = name;
-        this.lastPrayContent = new String(Base64.getDecoder().decode(lastPrayContent));
+        this.lastPrayContent = Optional.ofNullable(lastPrayContent).isPresent() ? new String(
+            Base64.getDecoder().decode(lastPrayContent)) : null;
         this.memberCount = memberCount;
         this.prayCount = prayCount;
         this.updatedAt = updatedAt;
