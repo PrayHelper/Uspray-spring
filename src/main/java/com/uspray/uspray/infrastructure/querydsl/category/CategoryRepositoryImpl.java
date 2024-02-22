@@ -2,6 +2,7 @@ package com.uspray.uspray.infrastructure.querydsl.category;
 
 import static com.uspray.uspray.domain.QCategory.category;
 import static com.uspray.uspray.domain.QPray.pray;
+import static com.uspray.uspray.domain.QMember.member;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.uspray.uspray.DTO.pray.PrayListResponseDto;
@@ -73,7 +74,8 @@ public class CategoryRepositoryImpl implements CategoryRepositoryCustom {
         List<Long> prayIds) {
         List<Category> categories = queryFactory
             .selectFrom(category)
-            .where(category.member.userId.eq(username))
+            .join(category.member, member)
+            .where(member.userId.eq(username))
             .where(category.categoryType.stringValue().likeIgnoreCase(prayType))
             .orderBy(category.order.asc())
             .fetch();
@@ -93,11 +95,14 @@ public class CategoryRepositoryImpl implements CategoryRepositoryCustom {
                     pray.isShared
                 ))
                 .from(pray)
-                .where(pray.category.id.eq(cat.getId())
-                    .and(pray.member.userId.eq(username))
+                .join(pray.category, category)
+                .join(pray.member, member)
+                .where(category.id.eq(cat.getId())
+                    .and(member.userId.eq(username))
                     .and(pray.prayType.stringValue().likeIgnoreCase(prayType)))
                 .fetch();
-            prayResponseDtos.removeIf(p -> !prayIds.contains(p.getPrayId()));
+            
+            prayResponseDtos.stream().filter(p -> prayIds.contains(p.getPrayId())).forEach(p -> p.setInGroup(true));
             prayResponseDtos.forEach(p -> p.setInGroup(true));
 
             prayListResponseDtos.add(
