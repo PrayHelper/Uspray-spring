@@ -38,7 +38,6 @@ public class Pray extends AuditingTimeEntity {
 
     private final Boolean deleted = false;
     @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
-    @JoinColumn(name = "group_pray_id")
     private final List<GroupPray> groupPray = new ArrayList<>();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
