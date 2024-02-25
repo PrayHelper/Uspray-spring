@@ -67,8 +67,12 @@ public class Category extends AuditingTimeEntity {
     }
 
     public void update(CategoryRequestDto categoryRequestDto) {
-        this.name = categoryRequestDto.getName();
-        this.color = categoryRequestDto.getColor();
+        if (categoryRequestDto.getName() != null) {
+            this.name = categoryRequestDto.getName();
+        }
+        if (categoryRequestDto.getColor() != null) {
+            this.color = categoryRequestDto.getColor();
+        }
     }
 
     public void updateOrder(int order) {

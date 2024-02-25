@@ -9,7 +9,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
-import org.jetbrains.annotations.NotNull;
 
 @Getter
 @NoArgsConstructor
@@ -18,16 +17,13 @@ import org.jetbrains.annotations.NotNull;
 @Schema(description = "카테고리 DTO")
 public class CategoryRequestDto {
 
-    @NotNull
     @Length(min = 1, max = 20)
     @Schema(description = "카테고리 이름", example = "카테고리 이름")
     private String name;
 
-    @NotNull
     @Schema(description = "카테고리 색상", example = "#75BD62")
     private String color;
 
-    @NotNull
     @Schema(description = "카테고리 타입", example = "personal")
     private String type;
 
