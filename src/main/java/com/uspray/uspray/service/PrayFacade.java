@@ -11,6 +11,7 @@ import com.uspray.uspray.domain.History;
 import com.uspray.uspray.domain.Member;
 import com.uspray.uspray.domain.NotificationLog;
 import com.uspray.uspray.domain.Pray;
+import com.uspray.uspray.domain.ScrapAndHeart;
 import com.uspray.uspray.exception.ErrorStatus;
 import com.uspray.uspray.exception.model.CustomException;
 import com.uspray.uspray.exception.model.NotFoundException;
@@ -19,6 +20,7 @@ import com.uspray.uspray.infrastructure.HistoryRepository;
 import com.uspray.uspray.infrastructure.MemberRepository;
 import com.uspray.uspray.infrastructure.NotificationLogRepository;
 import com.uspray.uspray.infrastructure.PrayRepository;
+import com.uspray.uspray.infrastructure.ScrapAndHeartRepository;
 import java.time.LocalDate;
 import java.util.List;
 import javax.transaction.Transactional;
@@ -37,6 +39,7 @@ public class PrayFacade {
     private final HistoryRepository historyRepository;
     private final NotificationLogRepository notificationLogRepository;
     private final FCMNotificationService fcmNotificationService;
+    private final ScrapAndHeartRepository scrapAndHeartRepository;
 
     @Transactional
     public PrayResponseDto createPray(PrayRequestDto prayRequestDto, String username) {
@@ -181,6 +184,12 @@ public class PrayFacade {
     @Transactional
     public PrayResponseDto deletePray(Long prayId, String username) {
         Pray pray = prayRepository.getPrayByIdAndMemberId(prayId, username);
+        Member member = memberRepository.getMemberByUserId(username);
+        ScrapAndHeart scrapAndHeart = scrapAndHeartRepository.findByMemberAndSharedPray(member,
+            pray);
+        if (scrapAndHeart != null) {
+            scrapAndHeart.deletePrayId();
+        }
         prayRepository.delete(pray);
         return PrayResponseDto.of(pray);
     }

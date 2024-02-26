@@ -68,4 +68,9 @@ public class ScrapAndHeart {
         this.scrap = true;
         this.sharedPray = pray;
     }
+
+    public void deletePrayId() {
+        this.sharedPray = null;
+        this.scrap = false;
+    }
 }
