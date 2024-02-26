@@ -195,6 +195,11 @@ public class GroupPrayFacade {
 
     @Transactional
     public void scrapGroupPray(ScrapRequestDto scrapRequestDto, String userId) {
+        Category category = categoryRepository.getCategoryById(scrapRequestDto.getCategoryId());
+        if (!category.getCategoryType().toString().equals(PrayType.SHARED.toString())) {
+            throw new CustomException(ErrorStatus.PRAY_CATEGORY_TYPE_MISMATCH,
+                ErrorStatus.PRAY_CATEGORY_TYPE_MISMATCH.getMessage());
+        }
         GroupPray groupPray = groupPrayRepository.getGroupPrayById(
             scrapRequestDto.getGroupPrayId());
         Member member = memberRepository.getMemberByUserId(userId);
@@ -229,6 +234,8 @@ public class GroupPrayFacade {
             .content(groupPray.getContent())
             .deadline(scrapRequestDto.getDeadline())
             .member(member)
+            .originMemberId(groupPray.getAuthor().getId())
+            .originPrayId(groupPray.getOriginPray().getId())
             .category(category)
             .prayType(PrayType.SHARED)
             .build();
