@@ -206,6 +206,8 @@ public class GroupPrayFacade {
 
         Optional<ScrapAndHeart> scrapAndHeartByGroupPrayAndMember = scrapAndHeartRepository.findScrapAndHeartByGroupPrayAndMember(
             groupPray, member);
+        Pray originPray = prayRepository.getPrayById(groupPray.getOriginPray().getId());
+        originPray.setIsShared();
 
         if (scrapAndHeartByGroupPrayAndMember.isEmpty()) {
             Pray pray = makePray(scrapRequestDto, groupPray, member);
