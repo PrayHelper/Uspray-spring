@@ -25,6 +25,7 @@ import com.uspray.uspray.infrastructure.PrayRepository;
 import com.uspray.uspray.infrastructure.ScrapAndHeartRepository;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -67,7 +68,7 @@ public class GroupPrayFacade {
             GroupPray groupPray = GroupPray.builder()
                 .group(group)
                 .author(member)
-                .content(p.getContent())
+                .content(new String(Base64.getDecoder().decode(p.getContent().getBytes())))
                 .deadline(p.getDeadline())
                 .build();
             p.setGroupPray(groupPray);
