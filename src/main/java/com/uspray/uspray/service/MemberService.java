@@ -15,8 +15,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 public class MemberService {
@@ -26,6 +24,10 @@ public class MemberService {
 
     @Transactional
     public void changePhone(String userId, String phone) {
+        if (memberRepository.existsByPhone(phone)) {
+            throw new CustomException(ErrorStatus.ALREADY_EXIST_PHONE_EXCEPTION,
+                ErrorStatus.ALREADY_EXIST_PHONE_EXCEPTION.getMessage());
+        }
         memberRepository.getMemberByUserId(userId).changePhone(phone);
     }
 
