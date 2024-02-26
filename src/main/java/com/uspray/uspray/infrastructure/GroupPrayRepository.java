@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface GroupPrayRepository extends JpaRepository<GroupPray, Long>{
+public interface GroupPrayRepository extends JpaRepository<GroupPray, Long> {
 
     @EntityGraph(attributePaths = {"author"})
     List<GroupPray> findGroupPraysByGroup(Group group);
@@ -24,4 +24,7 @@ public interface GroupPrayRepository extends JpaRepository<GroupPray, Long>{
                 ErrorStatus.NOT_FOUND_GROUP_PRAY_EXCEPTION.getMessage()));
     }
 
+    default void deleteAllByGroup(Group group) {
+        this.deleteAll(findGroupPraysByGroup(group));
+    }
 }

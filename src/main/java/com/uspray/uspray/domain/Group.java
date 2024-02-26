@@ -19,29 +19,30 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 @Entity
 @Getter
 @Table(name = "club")
+@SQLDelete(sql = "UPDATE club SET deleted = true WHERE group_id = ?")
+@Where(clause = "deleted=false")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Group extends AuditingTimeEntity {
 
+    @OneToMany(mappedBy = "group", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private final List<GroupMember> groupMemberList = new ArrayList<>();
+    @OneToMany(mappedBy = "group", orphanRemoval = true)
+    private final List<GroupPray> groupPrayList = new ArrayList<>();
+    private final Boolean deleted = false;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "group_id")
     private Long id;
-
     private String name;
-
     @OneToOne
     @JoinColumn(name = "leader_id", referencedColumnName = "member_id")
     private Member leader;
-
-    @OneToMany(mappedBy = "group", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private final List<GroupMember> groupMemberList = new ArrayList<>();
-
-    @OneToMany(mappedBy = "group", orphanRemoval = true)
-    private final List<GroupPray> groupPrayList = new ArrayList<>();
 
     @Builder
     public Group(String name, Member leader) {
@@ -71,6 +72,8 @@ public class Group extends AuditingTimeEntity {
 
     public void checkLeaderAuthorization(Member member) {
         Member leader = this.getLeader();
+        System.out.println(leader.getUserId());
+        System.out.println(member.getUserId());
         if (!leader.equals(member)) {
             throw new CustomException(ErrorStatus.GROUP_UNAUTHORIZED_EXCEPTION,
                 ErrorStatus.GROUP_UNAUTHORIZED_EXCEPTION.getMessage());

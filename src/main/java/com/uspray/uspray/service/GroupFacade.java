@@ -7,6 +7,7 @@ import com.uspray.uspray.domain.Member;
 import com.uspray.uspray.exception.ErrorStatus;
 import com.uspray.uspray.exception.model.CustomException;
 import com.uspray.uspray.infrastructure.GroupMemberRepository;
+import com.uspray.uspray.infrastructure.GroupPrayRepository;
 import com.uspray.uspray.infrastructure.GroupRepository;
 import com.uspray.uspray.infrastructure.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ public class GroupFacade {
     private final GroupMemberRepository groupMemberRepository;
     private final GroupRepository groupRepository;
     private final MemberRepository memberRepository;
+    private final GroupPrayRepository groupPrayRepository;
 
     @Transactional
     public void createGroup(String username, GroupRequestDto groupRequestDto) {
@@ -106,6 +108,7 @@ public class GroupFacade {
         Group group = groupRepository.getGroupById(groupId);
 
         group.checkLeaderAuthorization(leader);
+        groupPrayRepository.deleteAllByGroup(group);
         groupRepository.delete(group);
     }
 

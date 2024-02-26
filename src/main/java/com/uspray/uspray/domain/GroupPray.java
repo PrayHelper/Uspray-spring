@@ -19,14 +19,19 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SQLDelete(sql = "UPDATE group_pray SET deleted = true WHERE grouppray_id = ?")
+@Where(clause = "deleted=false")
 public class GroupPray extends AuditingTimeEntity {
 
     @OneToMany(mappedBy = "groupPray", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private final List<ScrapAndHeart> scrapAndHeart = new ArrayList<>();
+    private final Boolean deleted = false;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "grouppray_id")
