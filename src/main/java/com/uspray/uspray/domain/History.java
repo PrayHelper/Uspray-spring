@@ -58,7 +58,7 @@ public class History extends AuditingTimeEntity {
     @Builder
     public History(Pray pray, Integer totalCount) {
         this.member = pray.getMember();
-        this.content = new String(Base64.getEncoder().encode(pray.getContent().getBytes()));
+        this.content = pray.getContent();
         this.personalCount = pray.getCount();
         this.totalCount = (totalCount == null) ? 0 : totalCount; // totalCount에 기본값 설정
         this.deadline = pray.getDeadline();
