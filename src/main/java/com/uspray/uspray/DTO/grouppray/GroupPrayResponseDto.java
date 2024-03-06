@@ -31,7 +31,7 @@ public class GroupPrayResponseDto {
     public GroupPrayResponseDto(GroupPray groupPray, Member member, ScrapAndHeart scrapAndHeart) {
         this.groupPrayId = groupPray.getId();
         this.content = groupPray.getContent();
-        this.authorName = member.getName();
+        this.authorName = groupPray.getAuthor().getName();
         setIsOwner(groupPray.getAuthor().getId(), member.getId());
         setSC(scrapAndHeart);
         this.createdAt = LocalDate.from(groupPray.getCreatedAt());
