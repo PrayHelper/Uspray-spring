@@ -174,9 +174,9 @@ public class PrayFacade {
         pray.countUp();
 
         if (pray.getPrayType() == PrayType.SHARED) {
-            Pray originPray = prayRepository.getPrayById(pray.getOriginPrayId());
-            if (originPray.getMember().getSecondNotiAgree()) {
-                sendNotificationAndSaveLog(pray, originPray.getMember());
+            Member originMember = memberRepository.getMemberById(pray.getOriginMemberId());
+            if (originMember.getSecondNotiAgree()) {
+                sendNotificationAndSaveLog(pray, originMember);
             }
         }
     }
