@@ -72,13 +72,12 @@ public class HistoryService {
     @Transactional(readOnly = true)
     public HistoryDetailResponseDto getHistoryDetail(String username, Long historyId) {
         Member member = memberRepository.getMemberByUserId(username);
-        History history = historyRepository.findById(historyId)
-            .orElseThrow(() -> new IllegalArgumentException("해당 히스토리가 없습니다. id=" + historyId));
+        History history = historyRepository.getHistoryById(historyId);
         if (!history.getMember().equals(member)) {
             throw new NotFoundException(ErrorStatus.HISTORY_NOT_FOUND_EXCEPTION,
                 ErrorStatus.HISTORY_NOT_FOUND_EXCEPTION.getMessage());
         }
-        if (history.getIsShared()) {
+        if (history.getPrayType().equals(PrayType.SHARED)) {
             Pray originPray = prayRepository.getPrayById(history.getOriginPrayId());
             return HistoryDetailResponseDto.shared(history, originPray);
         }
