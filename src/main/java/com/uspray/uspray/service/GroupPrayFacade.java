@@ -152,7 +152,7 @@ public class GroupPrayFacade {
                 ScrapAndHeart scrapAndHeart = SH.get();
                 groupPrayList.add(GroupPrayResponseDto.builder()
                     .groupPray(groupPray)
-                    .member(groupPray.getOriginPray().getMember())
+                    .member(member)
                     .scrapAndHeart(scrapAndHeart)
                     .build());
                 continue;
