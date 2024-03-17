@@ -74,6 +74,7 @@ public class ShareFacade {
             sharedPrayRepository.save(sharedPray);
             // 기도제목을 보관함에 담으면 원래 기도제목의 isShared를 true로 변경
             pray.setIsShared();
+            prayRepository.save(pray);
             total++;
         }
 
@@ -110,11 +111,11 @@ public class ShareFacade {
         List<Long> sharedPrayIds = sharedPraySaveRequestDto.getSharedPrayIds();
 
         for (Long id : sharedPrayIds) {
-            save(id, category, sharedPraySaveRequestDto.getDeadline());
+            save(member, id, category, sharedPraySaveRequestDto.getDeadline());
         }
     }
 
-    private void save(Long sharedPrayId, Category category, LocalDate deadline) {
+    private void save(Member member, Long sharedPrayId, Category category, LocalDate deadline) {
 
         SharedPray sharedPray = sharedPrayRepository.getSharedPrayById(sharedPrayId);
 
@@ -124,7 +125,7 @@ public class ShareFacade {
                 ErrorStatus.PRAY_ALREADY_DELETED_EXCEPTION.getMessage());
         }
         Pray pray = Pray.builder()
-            .member(sharedPray.getPray().getMember()) // 원래 기도제목의 원자자가 되어야 함
+            .member(member)
             .content(new String(Base64.getDecoder().decode(sharedPray.getPray().getContent())))
             .deadline(deadline)
             .originPrayId(sharedPray.getPray().getId())
