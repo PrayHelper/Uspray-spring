@@ -6,7 +6,6 @@ import com.uspray.uspray.DTO.group.response.GroupResponseDto;
 import com.uspray.uspray.infrastructure.GroupRepository;
 import com.uspray.uspray.util.MaskingUtil;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -35,18 +34,12 @@ public class GroupService {
     }
 
     @Transactional(readOnly = true)
-    public List<GroupMemberResponseDto> searchGroupMembers(Long groupId, String targetname,
+    public List<GroupMemberResponseDto> searchGroupMembers(Long groupId, String targetName,
         String username) {
-        List<GroupMemberResponseDto> groupMemberResponseDtoList = groupRepository.findGroupMembersByGroupAndNameLike(
-            groupId, targetname);
-        Iterator<GroupMemberResponseDto> iterator = groupMemberResponseDtoList.iterator();
-        while (iterator.hasNext()) {
-            GroupMemberResponseDto dto = iterator.next();
-            if (dto.getUserId().equals(username)) {
-                iterator.remove();
-            } else {
-                dto.setUserId(MaskingUtil.maskUserId(dto.getUserId()));
-            }
+        List<GroupMemberResponseDto> groupMemberResponseDtoList = groupRepository.findGroupMembersByGroupAndNameLikeExceptUser(
+            groupId, targetName, username);
+        for (GroupMemberResponseDto dto : groupMemberResponseDtoList) {
+            dto.setUserId(MaskingUtil.maskUserId(dto.getUserId()));
         }
         return groupMemberResponseDtoList;
     }
