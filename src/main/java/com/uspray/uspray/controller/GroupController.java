@@ -169,9 +169,10 @@ public class GroupController {
     @GetMapping("/{groupId}/member/search")
     public ApiResponseDto<List<GroupMemberResponseDto>> searchGroupMembers(
         @PathVariable Long groupId,
+        @Parameter(hidden = true) @AuthenticationPrincipal User user,
         @RequestParam(required = false) String name) {
         return ApiResponseDto.success(SuccessStatus.GET_MEMBER_LIST_SUCCESS,
-            groupService.searchGroupMembers(groupId, name));
+            groupService.searchGroupMembers(groupId, name, user.getUsername()));
     }
 
     @Operation(summary = "그룹 알림 설정")

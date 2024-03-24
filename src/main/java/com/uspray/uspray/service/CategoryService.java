@@ -89,8 +89,10 @@ public class CategoryService {
         CategoryRequestDto categoryRequestDto) {
         Category category = categoryRepository.getCategoryByIdAndMember(categoryId,
             memberRepository.getMemberByUserId(username));
-        categoryRepository.checkDuplicate(categoryRequestDto.getName(), category.getMember(),
-            CategoryType.valueOf(categoryRequestDto.getType().toUpperCase()));
+        if (categoryRequestDto.getName() != null) {
+            categoryRepository.checkDuplicate(categoryRequestDto.getName(), category.getMember(),
+                CategoryType.valueOf(categoryRequestDto.getType().toUpperCase()));
+        }
         category.update(categoryRequestDto);
         return CategoryResponseDto.of(category);
     }

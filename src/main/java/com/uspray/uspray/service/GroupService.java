@@ -34,9 +34,10 @@ public class GroupService {
     }
 
     @Transactional(readOnly = true)
-    public List<GroupMemberResponseDto> searchGroupMembers(Long groupId, String name) {
-        List<GroupMemberResponseDto> groupMemberResponseDtoList = groupRepository.findGroupMembersByGroupAndNameLike(
-            groupId, name);
+    public List<GroupMemberResponseDto> searchGroupMembers(Long groupId, String targetName,
+        String username) {
+        List<GroupMemberResponseDto> groupMemberResponseDtoList = groupRepository.findGroupMembersByGroupAndNameLikeExceptUser(
+            groupId, targetName, username);
         for (GroupMemberResponseDto dto : groupMemberResponseDtoList) {
             dto.setUserId(MaskingUtil.maskUserId(dto.getUserId()));
         }

@@ -45,8 +45,8 @@ public class GroupRepositoryImpl implements GroupRepositoryCustom {
     }
 
     @Override
-    public List<GroupMemberResponseDto> findGroupMembersByGroupAndNameLike(Long groupId,
-        String name) {
+    public List<GroupMemberResponseDto> findGroupMembersByGroupAndNameLikeExceptUser(Long groupId,
+        String name, String username) {
 
         BooleanBuilder builder = new BooleanBuilder();
 
@@ -65,6 +65,7 @@ public class GroupRepositoryImpl implements GroupRepositoryCustom {
             .from(member)
             .join(member.groupMemberList, groupMember)
             .where(builder)
+            .where(member.userId.ne(username))
             .fetch();
     }
 
