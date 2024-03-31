@@ -5,9 +5,7 @@ import com.uspray.uspray.DTO.group.response.GroupMemberResponseDto;
 import com.uspray.uspray.DTO.group.response.GroupResponseDto;
 import com.uspray.uspray.infrastructure.GroupRepository;
 import com.uspray.uspray.util.MaskingUtil;
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,16 +19,7 @@ public class GroupService {
     @Transactional(readOnly = true)
     public GroupListResponseDto getGroupList(String username) {
         List<GroupResponseDto> groupList = groupRepository.findGroupListByMemberId(username);
-        List<GroupResponseDto> filterMostRecentUpdatedAt =
-            groupList.stream()
-                .collect(Collectors.groupingBy(GroupResponseDto::getId))
-                .values().stream()
-                .map(groupResponseDtos -> groupResponseDtos.stream()
-                    .max(Comparator.comparing(GroupResponseDto::getUpdatedAt))
-                    .orElseThrow(() -> new IllegalArgumentException("그룹이 존재하지 않습니다.")))
-                .collect(Collectors.toList());
-
-        return new GroupListResponseDto(filterMostRecentUpdatedAt);
+        return new GroupListResponseDto(groupList);
     }
 
     @Transactional(readOnly = true)
