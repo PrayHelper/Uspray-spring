@@ -62,7 +62,7 @@ public class History extends AuditingTimeEntity {
         this.content = pray.getContent();
         this.personalCount = pray.getCount();
         this.totalCount = (totalCount == null) ? 0 : totalCount; // totalCount에 기본값 설정
-        this.startDate = LocalDate.from(pray.getCreatedAt());
+        this.startDate = LocalDate.from(pray.getStartDate());
         this.deadline = pray.getDeadline();
         this.originPrayId = pray.getOriginPrayId();
         this.originMemberId = pray.getOriginMemberId();
