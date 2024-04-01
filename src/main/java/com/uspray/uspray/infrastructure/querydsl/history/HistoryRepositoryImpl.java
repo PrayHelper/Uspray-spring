@@ -57,7 +57,7 @@ public class HistoryRepositoryImpl implements HistoryRepositoryCustom {
     }
 
     private BooleanExpression dateEq(LocalDate startDate, LocalDate endDate) {
-        return startDate != null && endDate != null ? history.createdAt.before(
-            endDate.atStartOfDay()).and(history.deadline.after(startDate)) : null;
+        return startDate != null && endDate != null ? history.startDate.before(
+            endDate).and(history.deadline.after(startDate)) : null;
     }
 }
