@@ -51,7 +51,9 @@ public class GroupRepositoryImpl implements GroupRepositoryCustom {
                 .max(Comparator.comparing(GroupResponseDto::getUpdatedAt))
                 .orElseThrow(() -> new IllegalArgumentException("그룹이 존재하지 않습니다.")))
             .sorted(
-                Comparator.comparing(GroupResponseDto::getUpdatedAt).reversed()) // 최신 업데이트 날짜로 정렬
+                Comparator.comparing(GroupResponseDto::getUpdatedAt,
+                        Comparator.nullsFirst(Comparator.naturalOrder()))
+                    .reversed()) // 최신 업데이트 날짜로 정렬
             .collect(Collectors.toList());
     }
 
