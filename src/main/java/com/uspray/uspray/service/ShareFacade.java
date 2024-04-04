@@ -145,8 +145,8 @@ public class ShareFacade {
         try {
             fcmNotificationService.sendMessageTo(
                 member.getFirebaseToken(),
-                "누군가가 당신의 기도제목을 저장했어요.",
-                "💌");
+                "💌",
+                "누군가가 당신의 기도제목을 저장했어요.");
         } catch (Exception e) {
             log.error(e.getMessage());
         }
