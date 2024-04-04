@@ -1,6 +1,7 @@
 package com.uspray.uspray.service;
 
 import com.uspray.uspray.DTO.auth.request.CheckPwDTO;
+import com.uspray.uspray.DTO.auth.request.FcmTokenDto;
 import com.uspray.uspray.DTO.auth.request.OauthNameDto;
 import com.uspray.uspray.DTO.notification.NotificationAgreeDto;
 import com.uspray.uspray.DTO.notification.NotificationInfoDto;
@@ -64,5 +65,10 @@ public class MemberService {
     public void changePw(String userId, CheckPwDTO changePwDto) {
         memberRepository.getMemberByUserId(userId)
             .changePw(passwordEncoder.encode(changePwDto.getPassword()));
+    }
+
+    @Transactional
+    public void updateFcmToken(String username, FcmTokenDto fcmTokenDto) {
+        memberRepository.getMemberByUserId(username).updateFcmToken(fcmTokenDto.getFcmToken());
     }
 }

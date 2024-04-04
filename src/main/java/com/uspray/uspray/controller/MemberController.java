@@ -2,6 +2,7 @@ package com.uspray.uspray.controller;
 
 import com.uspray.uspray.DTO.ApiResponseDto;
 import com.uspray.uspray.DTO.auth.request.CheckPwDTO;
+import com.uspray.uspray.DTO.auth.request.FcmTokenDto;
 import com.uspray.uspray.DTO.auth.request.OauthNameDto;
 import com.uspray.uspray.DTO.notification.NotificationAgreeDto;
 import com.uspray.uspray.DTO.notification.NotificationInfoDto;
@@ -15,7 +16,13 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
@@ -39,7 +46,8 @@ public class MemberController {
     @GetMapping("/notification-setting")
     public ApiResponseDto<NotificationInfoDto> getNotificationAgree(
         @Parameter(hidden = true) @AuthenticationPrincipal User user) {
-        return ApiResponseDto.success(SuccessStatus.GET_NOTIFICATION_AGREE_SUCCESS, memberService.getNotificationAgree(user.getUsername()));
+        return ApiResponseDto.success(SuccessStatus.GET_NOTIFICATION_AGREE_SUCCESS,
+            memberService.getNotificationAgree(user.getUsername()));
     }
 
     @Operation(summary = "알림 On/Off")
@@ -73,5 +81,16 @@ public class MemberController {
         @RequestBody CheckPwDTO changePwDto) {
         memberService.changePw(user.getUsername(), changePwDto);
         return ApiResponseDto.success(SuccessStatus.CHANGE_USER_PW_SUCCESS);
+    }
+
+
+    @PutMapping("/fcm-token")
+    @Operation(summary = "FCM 토큰 업데이트")
+    @SecurityRequirement(name = "JWT Auth")
+    public ApiResponseDto<?> updateFcmToken(
+        @Parameter(hidden = true) @AuthenticationPrincipal User user,
+        @RequestBody FcmTokenDto fcmTokenDto) {
+        memberService.updateFcmToken(user.getUsername(), fcmTokenDto);
+        return ApiResponseDto.success(SuccessStatus.UPDATE_FCM_TOKEN_SUCCESS);
     }
 }
