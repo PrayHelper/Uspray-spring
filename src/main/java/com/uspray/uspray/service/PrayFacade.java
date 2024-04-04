@@ -156,8 +156,8 @@ public class PrayFacade {
         try {
             fcmNotificationService.sendMessageTo(
                 member.getFirebaseToken(),
-                "누군가가 당신이 공유한 기도제목을 기도했어요.",
-                "💘");
+                "💘",
+                "누군가가 당신의 기도제목을 두고 기도했어요");
         } catch (Exception e) {
             log.error(e.getMessage());
 
@@ -168,7 +168,7 @@ public class PrayFacade {
         NotificationLog notificationLog = NotificationLog.builder()
             .pray(pray)
             .member(memberRepository.getMemberByUserId(member.getUserId()))
-            .title("누군가가 당신이 공유한 기도제목을 기도했어요.")
+            .title("누군가가 당신의 기도제목을 두고 기도했어요")
             .build();
         notificationLogRepository.save(notificationLog);
     }
