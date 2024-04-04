@@ -11,7 +11,9 @@ import com.uspray.uspray.DTO.group.response.GroupMemberResponseDto;
 import com.uspray.uspray.DTO.group.response.GroupResponseDto;
 import com.uspray.uspray.DTO.group.response.QGroupMemberResponseDto;
 import com.uspray.uspray.DTO.group.response.QGroupResponseDto;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
@@ -25,7 +27,7 @@ public class GroupRepositoryImpl implements GroupRepositoryCustom {
 
     @Override
     public List<GroupResponseDto> findGroupListByMemberId(String userId) {
-        return queryFactory
+        List<GroupResponseDto> result = queryFactory
             .select(new QGroupResponseDto(
                 group.id,
                 group.name,
@@ -42,6 +44,17 @@ public class GroupRepositoryImpl implements GroupRepositoryCustom {
             .groupBy(group.id, group.name, group.leader.userId, groupPray.content)
             .orderBy(groupPray.createdAt.max().desc())
             .fetch();
+        return result.stream()
+            .collect(Collectors.groupingBy(GroupResponseDto::getId))
+            .values().stream()
+            .map(groupResponseDtos -> groupResponseDtos.stream()
+                .max(Comparator.comparing(GroupResponseDto::getUpdatedAt))
+                .orElseThrow(() -> new IllegalArgumentException("그룹이 존재하지 않습니다.")))
+            .sorted(
+                Comparator.comparing(GroupResponseDto::getUpdatedAt,
+                        Comparator.nullsFirst(Comparator.naturalOrder()))
+                    .reversed()) // 최신 업데이트 날짜로 정렬
+            .collect(Collectors.toList());
     }
 
     @Override
