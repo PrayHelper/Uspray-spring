@@ -23,9 +23,9 @@ public class HistoryDetailResponseDto {
 
     private Integer total_count;
 
-    private LocalDate deadline;
+    private LocalDate startDate;
 
-    private LocalDate createdAt;
+    private LocalDate deadline;
 
     private Long categoryId;
 
@@ -34,16 +34,16 @@ public class HistoryDetailResponseDto {
     public static HistoryDetailResponseDto of(History history) {
         return new HistoryDetailResponseDto(history.getId(), history.getMember().getName(),
             history.getContent(), history.getPersonalCount(), history.getTotalCount(),
-            history.getDeadline(),
-            history.getCreatedAt().toLocalDate(), history.getCategoryId(),
+            history.getStartDate(), history.getDeadline(),
+            history.getCategoryId(),
             history.getPrayType() == PrayType.PERSONAL && !history.getIsShared());
     }
 
     public static HistoryDetailResponseDto shared(History history, Pray originPray) {
         return new HistoryDetailResponseDto(history.getId(), originPray.getMember().getName(),
             history.getContent(), history.getPersonalCount(), history.getTotalCount(),
-            history.getDeadline(),
-            history.getCreatedAt().toLocalDate(), history.getCategoryId(),
+            history.getStartDate(), history.getDeadline(),
+            history.getCategoryId(),
             history.getPrayType() == PrayType.PERSONAL && !history.getIsShared());
     }
 }

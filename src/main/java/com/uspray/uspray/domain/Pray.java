@@ -62,12 +62,14 @@ public class Pray extends AuditingTimeEntity {
     @JoinColumn(name = "category_id")
     private Category category;
 
+    @NotNull
+    private LocalDate startDate;
+
     private LocalDate lastPrayedAt;
 
     @Builder
     public Pray(Member member, String content, LocalDate deadline, Long originPrayId,
-        Long originMemberId,
-        Category category, PrayType prayType, GroupPray groupPray) {
+        Long originMemberId, Category category, PrayType prayType, GroupPray groupPray, LocalDate startDate) {
         this.member = member;
         this.content = new String(Base64.getEncoder().encode(content.getBytes()));
         this.count = 0;
@@ -77,6 +79,7 @@ public class Pray extends AuditingTimeEntity {
         this.category = category;
         this.prayType = prayType;
         setGroupPray(groupPray);
+        this.startDate = startDate;
         this.lastPrayedAt = LocalDate.of(2002, 2, 24);
     }
 

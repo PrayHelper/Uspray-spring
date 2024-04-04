@@ -4,7 +4,6 @@ import com.uspray.uspray.DTO.pray.PrayListResponseDto;
 import com.uspray.uspray.DTO.pray.request.PrayRequestDto;
 import com.uspray.uspray.DTO.pray.request.PrayUpdateRequestDto;
 import com.uspray.uspray.DTO.pray.response.PrayResponseDto;
-import com.uspray.uspray.Enums.CategoryType;
 import com.uspray.uspray.Enums.PrayType;
 import com.uspray.uspray.domain.Category;
 import com.uspray.uspray.domain.History;
@@ -47,11 +46,19 @@ public class PrayFacade {
         Category category = categoryRepository.getCategoryByIdAndMember(
             prayRequestDto.getCategoryId(),
             member);
-        if (!category.getCategoryType().equals(CategoryType.PERSONAL)) {
-            throw new CustomException(ErrorStatus.PRAY_CATEGORY_TYPE_MISMATCH,
-                ErrorStatus.PRAY_CATEGORY_TYPE_MISMATCH.getMessage());
-        }
-        Pray pray = prayRequestDto.toEntity(member, category, PrayType.PERSONAL);
+
+        Pray pray = prayRequestDto.toEntity(member, category);
+        prayRepository.save(pray);
+        return PrayResponseDto.of(pray);
+    }
+
+    @Transactional
+    public PrayResponseDto createPray(PrayRequestDto prayRequestDto, String username, LocalDate startDate) {
+        Member member = memberRepository.getMemberByUserId(username);
+        Category category = categoryRepository.getCategoryByIdAndMember(
+            prayRequestDto.getCategoryId(),
+            member);
+        Pray pray = prayRequestDto.toEntity(member, category, startDate);
         prayRepository.save(pray);
         return PrayResponseDto.of(pray);
     }

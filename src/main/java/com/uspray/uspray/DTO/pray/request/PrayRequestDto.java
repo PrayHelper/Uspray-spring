@@ -31,13 +31,25 @@ public class PrayRequestDto {
   @Schema(description = "기도제목 카테고리", example = "1")
   private Long categoryId;
 
-  public Pray toEntity(Member member, Category category, PrayType prayType) {
+  public Pray toEntity(Member member, Category category) {
     return Pray.builder()
         .content(content)
         .deadline(deadline)
         .member(member)
         .category(category)
-        .prayType(prayType)
+        .prayType(PrayType.PERSONAL)
+        .startDate(LocalDate.now())
+        .build();
+  }
+
+  public Pray toEntity(Member member, Category category, LocalDate startDate) {
+    return Pray.builder()
+        .content(content)
+        .deadline(deadline)
+        .member(member)
+        .category(category)
+        .prayType(PrayType.PERSONAL)
+        .startDate(startDate)
         .build();
   }
 }

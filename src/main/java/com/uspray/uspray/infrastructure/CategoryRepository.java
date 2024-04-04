@@ -4,6 +4,7 @@ import com.uspray.uspray.Enums.CategoryType;
 import com.uspray.uspray.domain.Category;
 import com.uspray.uspray.domain.Member;
 import com.uspray.uspray.exception.ErrorStatus;
+import com.uspray.uspray.exception.model.CustomException;
 import com.uspray.uspray.exception.model.NotFoundException;
 import com.uspray.uspray.infrastructure.querydsl.category.CategoryRepositoryCustom;
 import java.util.List;
@@ -22,12 +23,19 @@ public interface CategoryRepository extends JpaRepository<Category, Long>,
         CategoryType categoryType);
 
     default Category getCategoryByIdAndMember(Long categoryId, Member member) {
-        return findById(categoryId)
-            .filter(category -> category.getMember().equals(member))
+        Category category = findById(categoryId)
+            .filter(c ->  c.getMember().equals(member))
             .orElseThrow(() -> new NotFoundException(
                 ErrorStatus.CATEGORY_NOT_FOUND_EXCEPTION,
                 ErrorStatus.CATEGORY_NOT_FOUND_EXCEPTION.getMessage()
             ));
+
+        if (!category.getCategoryType().equals(CategoryType.PERSONAL)) {
+            throw new CustomException(ErrorStatus.PRAY_CATEGORY_TYPE_MISMATCH,
+                ErrorStatus.PRAY_CATEGORY_TYPE_MISMATCH.getMessage());
+        }
+
+        return category;
     }
 
     default void checkDuplicate(String name, Member member, CategoryType type) {

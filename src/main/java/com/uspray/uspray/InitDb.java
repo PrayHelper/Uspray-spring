@@ -166,6 +166,7 @@ public class InitDb {
                 .member(member)
                 .category(category)
                 .prayType(PrayType.PERSONAL)
+                .startDate(LocalDate.of(2022, 12, 24))
                 .build();
             em.persist(pray);
 
@@ -175,6 +176,7 @@ public class InitDb {
                 .member(member2)
                 .category(category2_by_member2)
                 .prayType(PrayType.PERSONAL)
+                .startDate(LocalDate.of(2023, 12, 24))
                 .build();
             em.persist(pray_1);
 
@@ -184,6 +186,7 @@ public class InitDb {
                 .member(member)
                 .category(category3_by_member)
                 .prayType(PrayType.SHARED)
+                .startDate(LocalDate.of(2023, 12, 24))
                 .originPrayId(pray_1.getId())
                 .build();
             em.persist(pray1);
@@ -194,6 +197,7 @@ public class InitDb {
                 .member(member2)
                 .category(category4_by_member2)
                 .prayType(PrayType.SHARED)
+                .startDate(LocalDate.of(2023, 12, 24))
                 .originPrayId(pray.getId())
                 .build();
             em.persist(pray2);
@@ -204,6 +208,7 @@ public class InitDb {
                 .member(member)
                 .category(category1_by_member)
                 .prayType(PrayType.PERSONAL)
+                .startDate(LocalDate.of(2023, 12, 24))
                 .build();
             em.persist(pray3);
 

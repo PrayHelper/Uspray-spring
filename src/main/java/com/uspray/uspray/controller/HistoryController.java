@@ -6,17 +6,28 @@ import com.uspray.uspray.DTO.history.request.HistorySearchRequestDto;
 import com.uspray.uspray.DTO.history.response.HistoryDetailResponseDto;
 import com.uspray.uspray.DTO.history.response.HistoryListResponseDto;
 import com.uspray.uspray.DTO.pray.request.PrayRequestDto;
+import com.uspray.uspray.DTO.pray.response.PrayResponseDto;
 import com.uspray.uspray.exception.SuccessStatus;
+import com.uspray.uspray.service.HistoryFacade;
 import com.uspray.uspray.service.HistoryService;
-import com.uspray.uspray.service.PrayFacade;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/history")
@@ -26,7 +37,7 @@ import org.springframework.web.bind.annotation.*;
 public class HistoryController {
 
     private final HistoryService historyService;
-    private final PrayFacade prayFacadeService;
+    private final HistoryFacade historyFacade;
 
     @GetMapping
     public ApiResponseDto<HistoryListResponseDto> getHistoryList(
@@ -57,14 +68,18 @@ public class HistoryController {
             historyService.getHistoryDetail(user.getUsername(), historyId));
     }
 
+    @Operation(summary = "히스토리 다시 기도하기")
+    @ApiResponse(
+        responseCode = "200",
+        description = "기도제목 반환",
+        content = @Content(schema = @Schema(implementation = PrayResponseDto.class)))
     @PostMapping("/pray/{historyId}")
-    public ApiResponseDto<HistoryListResponseDto> createPray(
+    public ApiResponseDto<PrayResponseDto> historyToPray(
         @Parameter(hidden = true) @AuthenticationPrincipal User user,
         @PathVariable Long historyId,
         @RequestBody @Valid PrayRequestDto prayRequestDto) {
-        prayFacadeService.createPray(prayRequestDto, user.getUsername());
-        historyService.deleteHistory(historyId, user.getUsername());
         return ApiResponseDto.success(SuccessStatus.CREATE_PRAY_SUCCESS,
-            historyService.getHistoryList(user.getUsername(), "PERSONAL", 0, 10));
+            historyFacade.historyToPray(prayRequestDto, user.getUsername(), historyId)
+        );
     }
 }

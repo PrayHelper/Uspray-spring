@@ -5,7 +5,6 @@ import com.uspray.uspray.domain.History;
 import com.uspray.uspray.domain.Member;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,9 +23,9 @@ public class HistoryResponseDto {
 
     private String content;
 
-    private LocalDate deadline;
+    private LocalDate createdAt;
 
-    private LocalDateTime createdAt;
+    private LocalDate deadline;
 
     private Long categoryId;
 
@@ -34,15 +33,14 @@ public class HistoryResponseDto {
 
     public static HistoryResponseDto of(History history) {
         return new HistoryResponseDto(history.getId(), history.getMember().getUserId(),
-            history.getMember().getName(), history.getContent(), history.getDeadline(),
-            history.getCreatedAt(), history.getCategoryId(),
+            history.getMember().getName(), history.getContent(), history.getStartDate(), history.getDeadline(), history.getCategoryId(),
             history.getPrayType() == PrayType.PERSONAL && !history.getIsShared());
     }
 
     public static HistoryResponseDto shared(History history, Member originMember) {
         return new HistoryResponseDto(history.getId(), originMember.getUserId(),
-            originMember.getName(), history.getContent(), history.getDeadline(),
-            history.getCreatedAt(), history.getCategoryId(), false); // 공유받은 기도제목은 수정 불가능, 항상 false
+            originMember.getName(), history.getContent(), history.getStartDate(), history.getDeadline(),
+            history.getCategoryId(), false); // 공유받은 기도제목은 수정 불가능, 항상 false
     }
 
 }

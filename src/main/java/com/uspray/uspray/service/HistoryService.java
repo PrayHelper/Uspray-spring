@@ -83,14 +83,4 @@ public class HistoryService {
         }
         return HistoryDetailResponseDto.of(history);
     }
-
-    public void deleteHistory(Long historyId, String username) {
-        Member member = memberRepository.getMemberByUserId(username);
-        History history = historyRepository.findByIdAndMember(historyId, member);
-        if (history == null) {
-            throw new NotFoundException(ErrorStatus.HISTORY_NOT_FOUND_EXCEPTION,
-                ErrorStatus.HISTORY_NOT_FOUND_EXCEPTION.getMessage());
-        }
-        historyRepository.delete(history);
-    }
 }
