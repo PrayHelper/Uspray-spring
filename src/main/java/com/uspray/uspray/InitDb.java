@@ -10,7 +10,6 @@ import com.uspray.uspray.domain.History;
 import com.uspray.uspray.domain.Member;
 import com.uspray.uspray.domain.Pray;
 import java.time.LocalDate;
-import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,10 +22,10 @@ public class InitDb {
 
     private final InitService initService;
 
-    @PostConstruct
-    public void init() {
-        initService.dbInit();
-    }
+//    @PostConstruct
+//    public void init() {
+//        initService.dbInit();
+//    }
 
     @Component
     @Transactional
