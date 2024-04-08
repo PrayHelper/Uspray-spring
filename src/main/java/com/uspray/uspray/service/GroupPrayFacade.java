@@ -125,6 +125,7 @@ public class GroupPrayFacade {
             .deadline(groupPrayRequestDto.getDeadline())
             .member(author)
             .category(category)
+            .startDate(LocalDate.now())
             .prayType(PrayType.PERSONAL)
             .groupPray(groupPray)
             .build();

@@ -112,4 +112,8 @@ public class Member extends AuditingTimeEntity {
                 break;
         }
     }
+
+    public void updateFcmToken(String fcmToken) {
+        this.firebaseToken = fcmToken;
+    }
 }
