@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 //@DataJpaTest
 @Transactional
 @SpringBootTest
-@ActiveProfiles("set3")
+@ActiveProfiles("test")
 public abstract class RepositoryTest {
 
     @Autowired

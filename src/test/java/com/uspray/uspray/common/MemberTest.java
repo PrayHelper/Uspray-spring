@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
-@ActiveProfiles("set3")
+@ActiveProfiles("test")
 public abstract class MemberTest {
 
     @Autowired
