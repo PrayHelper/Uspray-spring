@@ -198,15 +198,11 @@ public class GroupPrayFacade {
                 .build();
             scrapAndHeart.heartPray();
             scrapAndHeartRepository.save(scrapAndHeart);
-            groupMembers.stream().map(GroupMember::getMember).forEach(
-                receiver -> sendNotificationAndSaveLog(scrapAndHeart, groupPray, receiver, true)
-            );
+            sendNotificationAndSaveLog(scrapAndHeart, groupPray, groupPray.getAuthor(), true);
             return;
         }
         scrapAndHeartByGroupPrayAndMember.get().heartPray();
-        groupMembers.stream().map(GroupMember::getMember).forEach(
-            receiver -> sendNotificationAndSaveLog(scrapAndHeartByGroupPrayAndMember.get(), groupPray, receiver, true)
-        );
+        sendNotificationAndSaveLog(scrapAndHeartByGroupPrayAndMember.get(), groupPray, groupPray.getAuthor(), true);
     }
 
     @Transactional
@@ -225,8 +221,6 @@ public class GroupPrayFacade {
         Pray originPray = prayRepository.getPrayById(groupPray.getOriginPray().getId());
         originPray.setIsShared();
 
-        List<GroupMember> groupMembers = groupMemberRepository.findByGroupId(groupPray.getGroup().getId());
-
         if (scrapAndHeartByGroupPrayAndMember.isEmpty()) {
             Pray pray = makePray(scrapRequestDto, groupPray, member);
 
@@ -238,17 +232,13 @@ public class GroupPrayFacade {
             prayRepository.save(pray);
             scrapAndHeart.scrapPray(pray);
             scrapAndHeartRepository.save(scrapAndHeart);
-            groupMembers.stream().map(GroupMember::getMember).forEach(
-                receiver -> sendNotificationAndSaveLog(scrapAndHeart, groupPray, receiver, false)
-            );
+            sendNotificationAndSaveLog(scrapAndHeart, groupPray, groupPray.getAuthor(), false);
             return;
         }
         Pray pray = makePray(scrapRequestDto, groupPray, member);
         prayRepository.save(pray);
         scrapAndHeartByGroupPrayAndMember.get().scrapPray(pray);
-        groupMembers.stream().map(GroupMember::getMember).forEach(
-            receiver -> sendNotificationAndSaveLog(scrapAndHeartByGroupPrayAndMember.get(), groupPray, receiver, false)
-        );
+        sendNotificationAndSaveLog(scrapAndHeartByGroupPrayAndMember.get(), groupPray, groupPray.getAuthor(), false);
     }
 
     private Pray makePray(ScrapRequestDto scrapRequestDto, GroupPray groupPray, Member member) {
