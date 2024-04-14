@@ -8,7 +8,7 @@ import com.uspray.uspray.DTO.history.response.HistoryListResponseDto;
 import com.uspray.uspray.DTO.pray.request.PrayRequestDto;
 import com.uspray.uspray.DTO.pray.response.PrayResponseDto;
 import com.uspray.uspray.exception.SuccessStatus;
-import com.uspray.uspray.service.HistoryFacade;
+import com.uspray.uspray.service.facade.HistoryFacade;
 import com.uspray.uspray.service.HistoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

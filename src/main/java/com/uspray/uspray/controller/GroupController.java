@@ -6,7 +6,7 @@ import com.uspray.uspray.DTO.group.request.GroupRequestDto;
 import com.uspray.uspray.DTO.group.response.GroupListResponseDto;
 import com.uspray.uspray.DTO.group.response.GroupMemberResponseDto;
 import com.uspray.uspray.exception.SuccessStatus;
-import com.uspray.uspray.service.GroupFacade;
+import com.uspray.uspray.service.facade.GroupFacade;
 import com.uspray.uspray.service.GroupService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

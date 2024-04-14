@@ -1,4 +1,4 @@
-package com.uspray.uspray.service;
+package com.uspray.uspray.service.facade;
 
 import com.uspray.uspray.DTO.grouppray.GroupPrayRappingDto;
 import com.uspray.uspray.DTO.grouppray.GroupPrayRequestDto;
@@ -25,6 +25,7 @@ import com.uspray.uspray.infrastructure.MemberRepository;
 import com.uspray.uspray.infrastructure.NotificationLogRepository;
 import com.uspray.uspray.infrastructure.PrayRepository;
 import com.uspray.uspray.infrastructure.ScrapAndHeartRepository;
+import com.uspray.uspray.service.FCMNotificationService;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Base64;

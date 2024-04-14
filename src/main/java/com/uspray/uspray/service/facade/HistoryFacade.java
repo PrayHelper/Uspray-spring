@@ -1,4 +1,4 @@
-package com.uspray.uspray.service;
+package com.uspray.uspray.service.facade;
 
 import com.uspray.uspray.DTO.pray.request.PrayRequestDto;
 import com.uspray.uspray.DTO.pray.response.PrayResponseDto;
