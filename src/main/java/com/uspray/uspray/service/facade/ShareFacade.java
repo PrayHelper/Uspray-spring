@@ -1,4 +1,4 @@
-package com.uspray.uspray.service;
+package com.uspray.uspray.service.facade;
 
 import com.uspray.uspray.DTO.sharedpray.request.SharedPrayDeleteRequestDto;
 import com.uspray.uspray.DTO.sharedpray.request.SharedPrayRequestDto;
@@ -19,6 +19,7 @@ import com.uspray.uspray.infrastructure.MemberRepository;
 import com.uspray.uspray.infrastructure.NotificationLogRepository;
 import com.uspray.uspray.infrastructure.PrayRepository;
 import com.uspray.uspray.infrastructure.SharedPrayRepository;
+import com.uspray.uspray.service.FCMNotificationService;
 import java.time.LocalDate;
 import java.util.Base64;
 import java.util.List;

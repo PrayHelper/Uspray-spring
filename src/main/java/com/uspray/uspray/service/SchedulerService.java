@@ -2,6 +2,7 @@ package com.uspray.uspray.service;
 
 import com.uspray.uspray.Enums.NotificationType;
 import com.uspray.uspray.infrastructure.query.MemberQueryRepository;
+import com.uspray.uspray.service.facade.PrayFacade;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;

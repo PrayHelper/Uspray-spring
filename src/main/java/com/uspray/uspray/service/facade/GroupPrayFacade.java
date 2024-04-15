@@ -1,4 +1,4 @@
-package com.uspray.uspray.service;
+package com.uspray.uspray.service.facade;
 
 import com.uspray.uspray.DTO.grouppray.GroupPrayRappingDto;
 import com.uspray.uspray.DTO.grouppray.GroupPrayRequestDto;
@@ -12,6 +12,7 @@ import com.uspray.uspray.domain.Group;
 import com.uspray.uspray.domain.GroupMember;
 import com.uspray.uspray.domain.GroupPray;
 import com.uspray.uspray.domain.Member;
+import com.uspray.uspray.domain.NotificationLog;
 import com.uspray.uspray.domain.Pray;
 import com.uspray.uspray.domain.ScrapAndHeart;
 import com.uspray.uspray.exception.ErrorStatus;
@@ -21,8 +22,10 @@ import com.uspray.uspray.infrastructure.GroupMemberRepository;
 import com.uspray.uspray.infrastructure.GroupPrayRepository;
 import com.uspray.uspray.infrastructure.GroupRepository;
 import com.uspray.uspray.infrastructure.MemberRepository;
+import com.uspray.uspray.infrastructure.NotificationLogRepository;
 import com.uspray.uspray.infrastructure.PrayRepository;
 import com.uspray.uspray.infrastructure.ScrapAndHeartRepository;
+import com.uspray.uspray.service.FCMNotificationService;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -32,9 +35,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class GroupPrayFacade {
@@ -46,6 +51,8 @@ public class GroupPrayFacade {
     private final CategoryRepository categoryRepository;
     private final PrayRepository prayRepository;
     private final GroupRepository groupRepository;
+    private final NotificationLogRepository notificationLogRepository;
+    private final FCMNotificationService fcmNotificationService;
 
     @Transactional
     public void prayToGroupPray(PrayToGroupPrayDto prayToGroupPrayDto, String userId) {
@@ -183,6 +190,8 @@ public class GroupPrayFacade {
         Optional<ScrapAndHeart> scrapAndHeartByGroupPrayAndMember = scrapAndHeartRepository.findScrapAndHeartByGroupPrayAndMember(
             groupPray, member);
 
+        List<GroupMember> groupMembers = groupMemberRepository.findByGroupId(groupPray.getGroup().getId());
+
         if (scrapAndHeartByGroupPrayAndMember.isEmpty()) {
             ScrapAndHeart scrapAndHeart = ScrapAndHeart.builder()
                 .groupPray(groupPray)
@@ -190,9 +199,11 @@ public class GroupPrayFacade {
                 .build();
             scrapAndHeart.heartPray();
             scrapAndHeartRepository.save(scrapAndHeart);
+            sendNotificationAndSaveLog(scrapAndHeart, groupPray, groupPray.getAuthor(), true);
             return;
         }
         scrapAndHeartByGroupPrayAndMember.get().heartPray();
+        sendNotificationAndSaveLog(scrapAndHeartByGroupPrayAndMember.get(), groupPray, groupPray.getAuthor(), true);
     }
 
     @Transactional
@@ -222,11 +233,13 @@ public class GroupPrayFacade {
             prayRepository.save(pray);
             scrapAndHeart.scrapPray(pray);
             scrapAndHeartRepository.save(scrapAndHeart);
+            sendNotificationAndSaveLog(scrapAndHeart, groupPray, groupPray.getAuthor(), false);
             return;
         }
         Pray pray = makePray(scrapRequestDto, groupPray, member);
         prayRepository.save(pray);
         scrapAndHeartByGroupPrayAndMember.get().scrapPray(pray);
+        sendNotificationAndSaveLog(scrapAndHeartByGroupPrayAndMember.get(), groupPray, groupPray.getAuthor(), false);
     }
 
     private Pray makePray(ScrapRequestDto scrapRequestDto, GroupPray groupPray, Member member) {
@@ -243,5 +256,48 @@ public class GroupPrayFacade {
             .category(category)
             .prayType(PrayType.SHARED)
             .build();
+    }
+
+    private void sendNotificationAndSaveLog(ScrapAndHeart scrapAndHeart, GroupPray groupPray, Member receiver, boolean isHeart) {
+        String groupName = groupPray.getGroup().getName();
+        String name = scrapAndHeart.getMember().getName();
+        if (isHeart) {
+            try {
+                fcmNotificationService.sendMessageTo(
+                    receiver.getFirebaseToken(),
+                    groupName + " 💘",
+                    name + "님이 당신의 기도제목을 두고 기도했어요");
+            } catch (Exception e) {
+                log.error(e.getMessage());
+            }
+            log.error(
+                "send notification to " + memberRepository.getMemberByUserId(receiver.getUserId())
+            );
+            NotificationLog notificationLog = NotificationLog.builder()
+                .pray(groupPray.getOriginPray())
+                .member(memberRepository.getMemberByUserId(receiver.getUserId()))
+                .title(name + "님이 당신의 기도제목을 두고 기도했어요")
+                .build();
+            notificationLogRepository.save(notificationLog);
+            return;
+        }
+        try {
+            fcmNotificationService.sendMessageTo(
+                receiver.getFirebaseToken(),
+                groupName + " 💌 ",
+                name + "님이 당신의 기도제목을 저장했어요");
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+        log.error(
+            "send notification to " + memberRepository.getMemberByUserId(receiver.getUserId())
+        );
+        NotificationLog notificationLog = NotificationLog.builder()
+            .pray(groupPray.getOriginPray())
+            .member(memberRepository.getMemberByUserId(receiver.getUserId()))
+            .title(name + "님이 당신의 기도제목을 저장했어요")
+            .build();
+        notificationLogRepository.save(notificationLog);
+
     }
 }

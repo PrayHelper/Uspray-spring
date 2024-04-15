@@ -10,6 +10,7 @@ import com.uspray.uspray.exception.model.NotFoundException;
 import com.uspray.uspray.infrastructure.CategoryRepository;
 import com.uspray.uspray.infrastructure.MemberRepository;
 import com.uspray.uspray.infrastructure.PrayRepository;
+import com.uspray.uspray.service.facade.PrayFacade;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;

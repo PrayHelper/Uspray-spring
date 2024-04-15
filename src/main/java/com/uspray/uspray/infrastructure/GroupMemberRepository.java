@@ -5,6 +5,7 @@ import com.uspray.uspray.domain.GroupMember;
 import com.uspray.uspray.domain.Member;
 import com.uspray.uspray.exception.ErrorStatus;
 import com.uspray.uspray.exception.model.NotFoundException;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -16,6 +17,8 @@ public interface GroupMemberRepository extends JpaRepository<GroupMember, Long> 
     Optional<GroupMember> findByGroupAndMember(Group group, Member member);
 
     Optional<GroupMember> findByGroupIdAndMemberId(Long groupId, Long memberId);
+
+    List<GroupMember> findByGroupId(Long groupId);
 
     default GroupMember getGroupMemberByGroupAndMember(Group group, Member member) {
         return this.findByGroupAndMember(group, member).orElseThrow(

@@ -8,7 +8,7 @@ import com.uspray.uspray.DTO.sharedpray.request.SharedPrayRequestDto;
 import com.uspray.uspray.DTO.sharedpray.request.SharedPraySaveRequestDto;
 import com.uspray.uspray.DTO.sharedpray.response.SharedPrayResponseDto;
 import com.uspray.uspray.exception.SuccessStatus;
-import com.uspray.uspray.service.ShareFacade;
+import com.uspray.uspray.service.facade.ShareFacade;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;

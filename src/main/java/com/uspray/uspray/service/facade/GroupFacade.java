@@ -1,4 +1,4 @@
-package com.uspray.uspray.service;
+package com.uspray.uspray.service.facade;
 
 import com.uspray.uspray.DTO.group.request.GroupRequestDto;
 import com.uspray.uspray.domain.Group;
