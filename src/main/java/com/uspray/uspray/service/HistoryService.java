@@ -73,7 +73,7 @@ public class HistoryService {
     public HistoryDetailResponseDto getHistoryDetail(String username, Long historyId) {
         Member member = memberRepository.getMemberByUserId(username);
         History history = historyRepository.getHistoryById(historyId);
-        if (!history.getMember().equals(member)) {
+        if (!history.getMember().getId().equals(member.getId())) {
             throw new NotFoundException(ErrorStatus.HISTORY_NOT_FOUND_EXCEPTION,
                 ErrorStatus.HISTORY_NOT_FOUND_EXCEPTION.getMessage());
         }
