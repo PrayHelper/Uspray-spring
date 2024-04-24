@@ -26,13 +26,11 @@ public interface CategoryRepository extends JpaRepository<Category, Long>,
         Category category = findById(categoryId)
             .filter(c ->  c.getMember().equals(member))
             .orElseThrow(() -> new NotFoundException(
-                ErrorStatus.CATEGORY_NOT_FOUND_EXCEPTION,
-                ErrorStatus.CATEGORY_NOT_FOUND_EXCEPTION.getMessage()
+                ErrorStatus.CATEGORY_NOT_FOUND_EXCEPTION
             ));
 
         if (!category.getCategoryType().equals(CategoryType.PERSONAL)) {
-            throw new CustomException(ErrorStatus.PRAY_CATEGORY_TYPE_MISMATCH,
-                ErrorStatus.PRAY_CATEGORY_TYPE_MISMATCH.getMessage());
+            throw new CustomException(ErrorStatus.PRAY_CATEGORY_TYPE_MISMATCH);
         }
 
         return category;
@@ -40,8 +38,7 @@ public interface CategoryRepository extends JpaRepository<Category, Long>,
 
     default void checkDuplicate(String name, Member member, CategoryType type) {
         if (existsByNameAndMemberAndCategoryType(name, member, type)) {
-            throw new NotFoundException(ErrorStatus.CATEGORY_DUPLICATE_EXCEPTION,
-                ErrorStatus.CATEGORY_DUPLICATE_EXCEPTION.getMessage());
+            throw new NotFoundException(ErrorStatus.CATEGORY_DUPLICATE_EXCEPTION);
         }
     }
 
@@ -59,8 +56,7 @@ public interface CategoryRepository extends JpaRepository<Category, Long>,
     default int getMaxCategoryOrder(Member member, CategoryType type) {
         Category category = getCategoriesByMemberAndCategoryTypeOrderByOrder(member, type).stream()
             .reduce((first, second) -> second)
-            .orElseThrow(() -> new NotFoundException(ErrorStatus.CATEGORY_NOT_FOUND_EXCEPTION,
-                ErrorStatus.CATEGORY_NOT_FOUND_EXCEPTION.getMessage()));
+            .orElseThrow(() -> new NotFoundException(ErrorStatus.CATEGORY_NOT_FOUND_EXCEPTION));
         return category.getOrder();
     }
 }

@@ -22,14 +22,12 @@ public interface GroupMemberRepository extends JpaRepository<GroupMember, Long> 
 
     default GroupMember getGroupMemberByGroupAndMember(Group group, Member member) {
         return this.findByGroupAndMember(group, member).orElseThrow(
-            () -> new NotFoundException(ErrorStatus.NOT_FOUND_GROUP_MEMBER_EXCEPTION,
-                ErrorStatus.NOT_FOUND_GROUP_MEMBER_EXCEPTION.getMessage()));
+            () -> new NotFoundException(ErrorStatus.NOT_FOUND_GROUP_MEMBER_EXCEPTION));
     }
 
     default GroupMember getGroupMemberByGroupIdAndMemberId(Long groupId, Long memberId) {
         return this.findByGroupIdAndMemberId(groupId, memberId).orElseThrow(
-            () -> new NotFoundException(ErrorStatus.NOT_FOUND_GROUP_MEMBER_EXCEPTION,
-                ErrorStatus.NOT_FOUND_GROUP_MEMBER_EXCEPTION.getMessage()));
+            () -> new NotFoundException(ErrorStatus.NOT_FOUND_GROUP_MEMBER_EXCEPTION));
     }
 
     GroupMember findGroupMemberByMemberAndGroupId(Member member, Long groupId);

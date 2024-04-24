@@ -61,8 +61,7 @@ public class ShareFacade {
         long total = 0L;
 
         if (prayList.size() != sharedPrayRequestDto.getPrayIds().size()) {
-            throw new NotFoundException(ErrorStatus.PRAY_NOT_FOUND_EXCEPTION,
-                ErrorStatus.PRAY_NOT_FOUND_EXCEPTION.getMessage());
+            throw new NotFoundException(ErrorStatus.PRAY_NOT_FOUND_EXCEPTION);
         }
         for (Pray pray : prayList) {
             if (!receiveCheck(member, pray)) {
@@ -80,8 +79,7 @@ public class ShareFacade {
         }
 
         if (total == 0L) {
-            throw new CustomException(ErrorStatus.CANNOT_RECEIVE_SHARED_PRAY_EXCEPTION,
-                ErrorStatus.CANNOT_RECEIVE_SHARED_PRAY_EXCEPTION.getMessage());
+            throw new CustomException(ErrorStatus.CANNOT_RECEIVE_SHARED_PRAY_EXCEPTION);
         }
         return total;
     }
@@ -106,8 +104,7 @@ public class ShareFacade {
         Category category = categoryRepository.getCategoryById(
             sharedPraySaveRequestDto.getCategoryId());
         if (!category.getCategoryType().equals(CategoryType.SHARED)) {
-            throw new CustomException(ErrorStatus.PRAY_CATEGORY_TYPE_MISMATCH,
-                ErrorStatus.PRAY_CATEGORY_TYPE_MISMATCH.getMessage());
+            throw new CustomException(ErrorStatus.PRAY_CATEGORY_TYPE_MISMATCH);
         }
         List<Long> sharedPrayIds = sharedPraySaveRequestDto.getSharedPrayIds();
 
@@ -122,8 +119,7 @@ public class ShareFacade {
 
         if (sharedPray.getPray().getDeleted()) {
             sharedPrayRepository.deleteById(sharedPrayId);
-            throw new CustomException(ErrorStatus.PRAY_ALREADY_DELETED_EXCEPTION,
-                ErrorStatus.PRAY_ALREADY_DELETED_EXCEPTION.getMessage());
+            throw new CustomException(ErrorStatus.PRAY_ALREADY_DELETED_EXCEPTION);
         }
         Pray pray = Pray.builder()
             .member(member)
@@ -180,8 +176,7 @@ public class ShareFacade {
         SharedPray sharedPray = sharedPrayRepository.getSharedPrayById(sharedPrayId);
 
         if (!sharedPray.getMember().equals(member)) {
-            throw new CustomException(ErrorStatus.DELETE_NOT_AUTHORIZED_EXCEPTION,
-                ErrorStatus.DELETE_NOT_AUTHORIZED_EXCEPTION.getMessage());
+            throw new CustomException(ErrorStatus.DELETE_NOT_AUTHORIZED_EXCEPTION);
         }
         sharedPrayRepository.deleteById(sharedPrayId);
     }

@@ -37,7 +37,7 @@ public class CategoryRepositoryImpl implements CategoryRepositoryCustom {
             .fetch();
 
         if (categories.size() == 0) {
-            throw new CustomException(ErrorStatus.NO_CATEGORY_EXCEPTION, ErrorStatus.NO_CATEGORY_EXCEPTION.getMessage());
+            throw new CustomException(ErrorStatus.NO_CATEGORY_EXCEPTION);
         }
 
         // 각 카테고리 별로 PrayResponseDto 목록 가져오기

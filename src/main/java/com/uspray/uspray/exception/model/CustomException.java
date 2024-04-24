@@ -7,8 +7,8 @@ import lombok.Getter;
 public class CustomException extends RuntimeException{
     private final ErrorStatus errorStatus;
 
-    public CustomException(ErrorStatus errorStatus, String message) {
-        super(message);
+    public CustomException(ErrorStatus errorStatus) {
+        super(errorStatus.getMessage());
         this.errorStatus = errorStatus;
     }
 

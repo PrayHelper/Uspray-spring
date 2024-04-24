@@ -105,8 +105,7 @@ public class Pray extends AuditingTimeEntity {
 
     private void handleUpdateContentSharedPray(boolean isShared, String content) {
         if (isShared && content != null) {
-            throw new NotFoundException(ErrorStatus.ALREADY_SHARED_EXCEPTION,
-                ErrorStatus.ALREADY_SHARED_EXCEPTION.getMessage());
+            throw new NotFoundException(ErrorStatus.ALREADY_SHARED_EXCEPTION);
         }
     }
 
