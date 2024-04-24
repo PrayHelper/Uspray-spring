@@ -133,6 +133,7 @@ public class ShareFacade {
             .originMemberId(sharedPray.getPray().getMember().getId()) // 원래 기도제목의 원자자가 되어야 함
             .category(category)
             .prayType(PrayType.SHARED)
+            .startDate(LocalDate.now())
             .build();
         prayRepository.save(pray);
         Pray originPray = prayRepository.getPrayById(pray.getOriginPrayId());
