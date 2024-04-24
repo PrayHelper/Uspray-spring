@@ -33,6 +33,7 @@ public enum ErrorStatus {
     CANNOT_RECEIVE_SHARED_PRAY_EXCEPTION(HttpStatus.BAD_REQUEST,
         "이미 보관함에 있는 기도제목이거나 공유받을 수 없는 기도제목입니다."),
     ALREADY_EXIST_PHONE_EXCEPTION(HttpStatus.BAD_REQUEST, "이미 사용중인 핸드폰 번호입니다."),
+    NO_CATEGORY_EXCEPTION(HttpStatus.BAD_REQUEST, "카테고리가 존재하지 않습니다."),
 
     /*
      * 401 UNAUTHORIZED
