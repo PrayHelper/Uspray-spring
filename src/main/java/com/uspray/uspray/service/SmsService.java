@@ -145,7 +145,7 @@ public class SmsService {
             .get(certificationDto.getRequestId());
 
         if (!Objects.equals(verificationCode, certificationDto.getSmsConfirmNum())) {
-            throw new CustomException(ErrorStatus.MISS_MATCH_SMS_CODE, ErrorStatus.MISS_MATCH_SMS_CODE.getMessage());
+            throw new CustomException(ErrorStatus.MISS_MATCH_SMS_CODE);
         }
         return true;
     }

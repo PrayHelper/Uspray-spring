@@ -45,8 +45,7 @@ public class CategoryService {
 
     private static void validateIndex(int index, int size) {
         if (index < 1 || index > size) {
-            throw new NotFoundException(ErrorStatus.INDEX_OUT_OF_BOUND_EXCEPTION,
-                ErrorStatus.INDEX_OUT_OF_BOUND_EXCEPTION.getMessage());
+            throw new NotFoundException(ErrorStatus.INDEX_OUT_OF_BOUND_EXCEPTION);
         }
     }
 

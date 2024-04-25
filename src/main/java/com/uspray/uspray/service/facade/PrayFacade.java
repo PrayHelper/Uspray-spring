@@ -84,8 +84,7 @@ public class PrayFacade {
                 pray.getMember());
             // 기도 제목 타입과 카테고리 타입 일치하는 지 확인
             if (!pray.getPrayType().toString().equals(category.getCategoryType().toString())) {
-                throw new CustomException(ErrorStatus.PRAY_CATEGORY_TYPE_MISMATCH,
-                    ErrorStatus.PRAY_CATEGORY_TYPE_MISMATCH.getMessage());
+                throw new CustomException(ErrorStatus.PRAY_CATEGORY_TYPE_MISMATCH);
             }
             pray.update(prayUpdateRequestDto,
                 checkIsShared(sharedPray, pray), category);
@@ -103,8 +102,7 @@ public class PrayFacade {
 
     public void checkGroupPray(Pray pray) {
         if (pray.getPrayType() == PrayType.GROUP) {
-            throw new CustomException(ErrorStatus.PRAY_UNAUTHORIZED_EXCEPTION,
-                ErrorStatus.PRAY_UNAUTHORIZED_EXCEPTION.getMessage());
+            throw new CustomException(ErrorStatus.PRAY_UNAUTHORIZED_EXCEPTION);
         }
     }
 
@@ -176,8 +174,7 @@ public class PrayFacade {
 
     private void handlePrayedToday(Pray pray) {
         if (pray.getLastPrayedAt().equals(LocalDate.now())) {
-            throw new NotFoundException(ErrorStatus.ALREADY_PRAYED_TODAY,
-                ErrorStatus.ALREADY_PRAYED_TODAY.getMessage());
+            throw new NotFoundException(ErrorStatus.ALREADY_PRAYED_TODAY);
         }
         pray.countUp();
 

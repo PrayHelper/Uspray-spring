@@ -65,8 +65,7 @@ public class Group extends AuditingTimeEntity {
 
     public void validateGroupName(String newName) {
         if (this.name.equals(newName)) {
-            throw new CustomException(ErrorStatus.ALREADY_EXIST_GROUP_NAME_EXCEPTION,
-                ErrorStatus.ALREADY_EXIST_GROUP_NAME_EXCEPTION.getMessage());
+            throw new CustomException(ErrorStatus.ALREADY_EXIST_GROUP_NAME_EXCEPTION);
         }
     }
 
@@ -75,8 +74,7 @@ public class Group extends AuditingTimeEntity {
         System.out.println(leader.getUserId());
         System.out.println(member.getUserId());
         if (!leader.equals(member)) {
-            throw new CustomException(ErrorStatus.GROUP_UNAUTHORIZED_EXCEPTION,
-                ErrorStatus.GROUP_UNAUTHORIZED_EXCEPTION.getMessage());
+            throw new CustomException(ErrorStatus.GROUP_UNAUTHORIZED_EXCEPTION);
         }
     }
 }
