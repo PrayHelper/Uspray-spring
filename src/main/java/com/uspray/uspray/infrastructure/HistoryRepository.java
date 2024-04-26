@@ -23,15 +23,13 @@ public interface HistoryRepository extends JpaRepository<History, Long>, History
 
     default History getHistoryByIdAndMember(Long historyId, Member member) {
         return findByIdAndMember(historyId, member)
-            .orElseThrow(() -> new NotFoundException(ErrorStatus.HISTORY_NOT_FOUND_EXCEPTION,
-                ErrorStatus.HISTORY_NOT_FOUND_EXCEPTION.getMessage()));
+            .orElseThrow(() -> new NotFoundException(ErrorStatus.HISTORY_NOT_FOUND_EXCEPTION));
     }
 
     default History getHistoryById(Long historyId) {
         return findById(historyId)
             .orElseThrow(() -> new NotFoundException(
-                ErrorStatus.HISTORY_NOT_FOUND_EXCEPTION,
-                ErrorStatus.HISTORY_NOT_FOUND_EXCEPTION.getMessage()
+                ErrorStatus.HISTORY_NOT_FOUND_EXCEPTION
             ));
     }
 }

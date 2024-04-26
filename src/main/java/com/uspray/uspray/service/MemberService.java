@@ -26,8 +26,7 @@ public class MemberService {
     @Transactional
     public void changePhone(String userId, String phone) {
         if (memberRepository.existsByPhone(phone)) {
-            throw new CustomException(ErrorStatus.ALREADY_EXIST_PHONE_EXCEPTION,
-                ErrorStatus.ALREADY_EXIST_PHONE_EXCEPTION.getMessage());
+            throw new CustomException(ErrorStatus.ALREADY_EXIST_PHONE_EXCEPTION);
         }
         memberRepository.getMemberByUserId(userId).changePhone(phone);
     }
@@ -46,8 +45,8 @@ public class MemberService {
     public void changeName(OauthNameDto oauthNameDto) {
         Member member = memberRepository.findBySocialId(oauthNameDto.getId())
             .orElseThrow(() -> new NotFoundException(
-                ErrorStatus.NOT_FOUND_USER_EXCEPTION,
-                ErrorStatus.NOT_FOUND_USER_EXCEPTION.getMessage()));
+                ErrorStatus.NOT_FOUND_USER_EXCEPTION)
+            );
         member.changeName(oauthNameDto.getName());
         member.changeAuthority(Authority.ROLE_USER);
     }
@@ -55,8 +54,7 @@ public class MemberService {
     public Boolean checkPw(String userId, CheckPwDTO checkPwDto) {
         Member member = memberRepository.getMemberByUserId(userId);
         if (!passwordEncoder.matches(checkPwDto.getPassword(), member.getPassword())) {
-            throw new CustomException(ErrorStatus.NOT_FOUND_USER_EXCEPTION,
-                ErrorStatus.NOT_FOUND_USER_EXCEPTION.getMessage());
+            throw new CustomException(ErrorStatus.NOT_FOUND_USER_EXCEPTION);
         }
         return true;
     }

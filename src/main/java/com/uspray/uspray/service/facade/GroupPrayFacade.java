@@ -64,8 +64,7 @@ public class GroupPrayFacade {
             .map(gp -> gp.getOriginPray().getId())
             .collect(Collectors.toList());
         if (existIds.stream().anyMatch(id -> id.equals(prayToGroupPrayDto.getPrayId()))) {
-            throw new CustomException(ErrorStatus.ALREADY_EXIST_GROUP_PRAY_EXCEPTION,
-                ErrorStatus.ALREADY_EXIST_GROUP_PRAY_EXCEPTION.getMessage());
+            throw new CustomException(ErrorStatus.ALREADY_EXIST_GROUP_PRAY_EXCEPTION);
         }
 
         List<Pray> mainPray = prayRepository.findAllByIdIn(prayToGroupPrayDto.getPrayId());
@@ -197,9 +196,6 @@ public class GroupPrayFacade {
         Optional<ScrapAndHeart> scrapAndHeartByGroupPrayAndMember = scrapAndHeartRepository.findScrapAndHeartByGroupPrayAndMember(
             groupPray, member);
 
-        List<GroupMember> groupMembers = groupMemberRepository.findByGroupId(
-            groupPray.getGroup().getId());
-
         if (scrapAndHeartByGroupPrayAndMember.isEmpty()) {
             ScrapAndHeart scrapAndHeart = ScrapAndHeart.builder()
                 .groupPray(groupPray)
@@ -219,8 +215,7 @@ public class GroupPrayFacade {
     public void scrapGroupPray(ScrapRequestDto scrapRequestDto, String userId) {
         Category category = categoryRepository.getCategoryById(scrapRequestDto.getCategoryId());
         if (!category.getCategoryType().toString().equals(PrayType.SHARED.toString())) {
-            throw new CustomException(ErrorStatus.PRAY_CATEGORY_TYPE_MISMATCH,
-                ErrorStatus.PRAY_CATEGORY_TYPE_MISMATCH.getMessage());
+            throw new CustomException(ErrorStatus.PRAY_CATEGORY_TYPE_MISMATCH);
         }
         GroupPray groupPray = groupPrayRepository.getGroupPrayById(
             scrapRequestDto.getGroupPrayId());

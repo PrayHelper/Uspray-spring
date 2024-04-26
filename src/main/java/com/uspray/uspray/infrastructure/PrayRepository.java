@@ -17,8 +17,7 @@ public interface PrayRepository extends JpaRepository<Pray, Long>, PrayRepositor
 
     default Pray getPrayById(Long id) {
         return findById(id).orElseThrow(
-            () -> new NotFoundException(ErrorStatus.PRAY_NOT_FOUND_EXCEPTION,
-                ErrorStatus.PRAY_NOT_FOUND_EXCEPTION.getMessage()));
+            () -> new NotFoundException(ErrorStatus.PRAY_NOT_FOUND_EXCEPTION));
     }
 
     @EntityGraph(attributePaths = {"groupPray"})
@@ -26,8 +25,7 @@ public interface PrayRepository extends JpaRepository<Pray, Long>, PrayRepositor
         return findById(prayId)
             .filter(pray -> pray.getMember().getUserId().equals(username))
             .orElseThrow(() -> new NotFoundException(
-                ErrorStatus.PRAY_NOT_FOUND_EXCEPTION,
-                ErrorStatus.PRAY_NOT_FOUND_EXCEPTION.getMessage()
+                ErrorStatus.PRAY_NOT_FOUND_EXCEPTION
             ));
     }
 
@@ -47,8 +45,7 @@ public interface PrayRepository extends JpaRepository<Pray, Long>, PrayRepositor
     default Pray cancelPray(Long prayId, String username) {
         Pray pray = getPrayByIdAndMemberId(prayId, username);
         if (!Objects.equals(pray.getLastPrayedAt(), LocalDate.now())) {
-            throw new NotFoundException(ErrorStatus.ALREADY_CANCEL_EXCEPTION,
-                ErrorStatus.ALREADY_CANCEL_EXCEPTION.getMessage());
+            throw new NotFoundException(ErrorStatus.ALREADY_CANCEL_EXCEPTION);
         }
         pray.deleteLastPrayedAt();
         return pray;

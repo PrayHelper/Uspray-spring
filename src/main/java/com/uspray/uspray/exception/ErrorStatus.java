@@ -33,6 +33,7 @@ public enum ErrorStatus {
     CANNOT_RECEIVE_SHARED_PRAY_EXCEPTION(HttpStatus.BAD_REQUEST,
         "이미 보관함에 있는 기도제목이거나 공유받을 수 없는 기도제목입니다."),
     ALREADY_EXIST_PHONE_EXCEPTION(HttpStatus.BAD_REQUEST, "이미 사용중인 핸드폰 번호입니다."),
+    NO_CATEGORY_EXCEPTION(HttpStatus.BAD_REQUEST, "카테고리가 존재하지 않습니다."),
 
     /*
      * 401 UNAUTHORIZED
@@ -44,10 +45,11 @@ public enum ErrorStatus {
      * 403 FORBIDDEN
      */
     PRAY_UNAUTHORIZED_EXCEPTION(HttpStatus.FORBIDDEN, "해당 기도제목에 대한 권한이 없습니다."),
-    SHARE_NOT_AUTHORIZED_EXCEPTION(HttpStatus.UNAUTHORIZED, "기도제목을 공유할 권한이 없습니다."),
-    DELETE_NOT_AUTHORIZED_EXCEPTION(HttpStatus.UNAUTHORIZED, "기도제목을 삭제할 권한이 없습니다."),
-    CATEGORY_UNAUTHORIZED_EXCEPTION(HttpStatus.UNAUTHORIZED, "해당 카테고리에 대한 권한이 없습니다."),
-    GROUP_UNAUTHORIZED_EXCEPTION(HttpStatus.UNAUTHORIZED, "해당 모임에 대한 권한이 없습니다."),
+    SHARE_NOT_AUTHORIZED_EXCEPTION(HttpStatus.FORBIDDEN, "기도제목을 공유할 권한이 없습니다."),
+    DELETE_NOT_AUTHORIZED_EXCEPTION(HttpStatus.FORBIDDEN, "기도제목을 삭제할 권한이 없습니다."),
+    CATEGORY_UNAUTHORIZED_EXCEPTION(HttpStatus.FORBIDDEN, "해당 카테고리에 대한 권한이 없습니다."),
+    GROUP_UNAUTHORIZED_EXCEPTION(HttpStatus.FORBIDDEN, "해당 모임에 대한 권한이 없습니다."),
+    HISTORY_MISS_MATCH_EXCEPTION(HttpStatus.FORBIDDEN, "해당 히스토리에 대한 접근 권한이 없습니다."),
 
     /**
      * 404 NOT FOUND

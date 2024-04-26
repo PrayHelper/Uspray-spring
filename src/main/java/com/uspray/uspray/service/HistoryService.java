@@ -53,8 +53,7 @@ public class HistoryService {
             return new HistoryListResponseDto(historyList.getContent(),
                 historyList.getTotalPages());
         }
-        throw new CustomException(ErrorStatus.INVALID_TYPE_EXCEPTION,
-            ErrorStatus.INVALID_TYPE_EXCEPTION.getMessage());
+        throw new CustomException(ErrorStatus.INVALID_TYPE_EXCEPTION);
     }
 
     @Transactional(readOnly = true)
@@ -73,9 +72,8 @@ public class HistoryService {
     public HistoryDetailResponseDto getHistoryDetail(String username, Long historyId) {
         Member member = memberRepository.getMemberByUserId(username);
         History history = historyRepository.getHistoryById(historyId);
-        if (!history.getMember().equals(member)) {
-            throw new NotFoundException(ErrorStatus.HISTORY_NOT_FOUND_EXCEPTION,
-                ErrorStatus.HISTORY_NOT_FOUND_EXCEPTION.getMessage());
+        if (!history.getMember().getId().equals(member.getId())) {
+            throw new NotFoundException(ErrorStatus.HISTORY_NOT_FOUND_EXCEPTION);
         }
         if (history.getPrayType().equals(PrayType.SHARED)) {
             Pray originPray = prayRepository.getPrayById(history.getOriginPrayId());

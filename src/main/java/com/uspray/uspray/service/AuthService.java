@@ -48,12 +48,10 @@ public class AuthService {
         // 핸드폰번호가 존재하거나 아이디가 존재하면 에러
         // 핸드폰 번호 또는 아이디가 이미 존재하는지 확인
         if (memberRepository.existsByUserId(memberRequestDto.getUserId())) {
-            throw new NotFoundException(ErrorStatus.ALREADY_EXIST_ID_EXCEPTION,
-                ErrorStatus.ALREADY_EXIST_ID_EXCEPTION.getMessage());
+            throw new NotFoundException(ErrorStatus.ALREADY_EXIST_ID_EXCEPTION);
         }
         if (memberRepository.existsByPhone(memberRequestDto.getPhone())) {
-            throw new NotFoundException(ErrorStatus.ALREADY_EXIST_PHONE_EXCEPTION,
-                ErrorStatus.ALREADY_EXIST_PHONE_EXCEPTION.getMessage());
+            throw new NotFoundException(ErrorStatus.ALREADY_EXIST_PHONE_EXCEPTION);
         }
 
         Member member = memberRequestDto.toMember(passwordEncoder);
@@ -83,11 +81,9 @@ public class AuthService {
 
             return tokenDto;
         } catch (AuthenticationException e) {
-            throw new NotFoundException(ErrorStatus.WRONG_LOGIN_INFO_EXCEPTION,
-                ErrorStatus.WRONG_LOGIN_INFO_EXCEPTION.getMessage());
+            throw new NotFoundException(ErrorStatus.WRONG_LOGIN_INFO_EXCEPTION);
         } catch (Exception e) {
-            throw new CustomException(ErrorStatus.INTERNAL_SERVER_ERROR,
-                ErrorStatus.INTERNAL_SERVER_ERROR.getMessage());
+            throw new CustomException(ErrorStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -95,8 +91,7 @@ public class AuthService {
     public TokenDto reissue(String refreshToken) {
         // 1. Refresh Token 검증
         if (!tokenProvider.validateToken(refreshToken)) {
-            throw new NotFoundException(ErrorStatus.REFRESH_TOKEN_NOT_VALID_EXCEPTION,
-                ErrorStatus.REFRESH_TOKEN_NOT_VALID_EXCEPTION.getMessage());
+            throw new NotFoundException(ErrorStatus.REFRESH_TOKEN_NOT_VALID_EXCEPTION);
         }
 
         // 2. Access Token 에서 Member ID 가져오기
@@ -108,8 +103,7 @@ public class AuthService {
 
         // 4. Refresh Token 일치하는지 검사
         if (!refreshToken.equals(refreshTokenValue)) {
-            throw new NotFoundException(ErrorStatus.REFRESH_TOKEN_NOT_VALID_EXCEPTION,
-                ErrorStatus.REFRESH_TOKEN_NOT_VALID_EXCEPTION.getMessage());
+            throw new NotFoundException(ErrorStatus.REFRESH_TOKEN_NOT_VALID_EXCEPTION);
         }
 
         // 5. 새로운 토큰 생성
