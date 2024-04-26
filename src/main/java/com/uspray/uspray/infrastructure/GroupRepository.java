@@ -12,7 +12,6 @@ public interface GroupRepository extends JpaRepository<Group, Long>, GroupReposi
 
     default Group getGroupById(Long id) {
         return this.findById(id).orElseThrow(
-            () -> new NotFoundException(ErrorStatus.NOT_FOUND_GROUP_EXCEPTION,
-                ErrorStatus.NOT_FOUND_GROUP_EXCEPTION.getMessage()));
+            () -> new NotFoundException(ErrorStatus.NOT_FOUND_GROUP_EXCEPTION));
     }
 }

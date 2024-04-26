@@ -20,8 +20,7 @@ public interface GroupPrayRepository extends JpaRepository<GroupPray, Long> {
 
     default GroupPray getGroupPrayById(Long id) {
         return this.findById(id).orElseThrow(
-            () -> new NotFoundException(ErrorStatus.NOT_FOUND_GROUP_PRAY_EXCEPTION,
-                ErrorStatus.NOT_FOUND_GROUP_PRAY_EXCEPTION.getMessage()));
+            () -> new NotFoundException(ErrorStatus.NOT_FOUND_GROUP_PRAY_EXCEPTION));
     }
 
     default void deleteAllByGroup(Group group) {

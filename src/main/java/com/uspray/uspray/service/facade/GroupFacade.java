@@ -64,8 +64,7 @@ public class GroupFacade {
 
         group.checkLeaderAuthorization(leader);
         if (group.getLeader().getId().equals(kickedMemberId)) {
-            throw new CustomException(ErrorStatus.LEADER_CANNOT_LEAVE_GROUP_EXCEPTION,
-                ErrorStatus.LEADER_CANNOT_LEAVE_GROUP_EXCEPTION.getMessage());
+            throw new CustomException(ErrorStatus.LEADER_CANNOT_LEAVE_GROUP_EXCEPTION);
         }
         group.kickMember(kickedgroupMember);
         groupMemberRepository.delete(kickedgroupMember);
@@ -77,8 +76,7 @@ public class GroupFacade {
         Group group = groupRepository.getGroupById(groupId);
 
         if (groupMemberRepository.existsByGroupAndMember(group, member)) {
-            throw new CustomException(ErrorStatus.ALREADY_EXIST_GROUP_MEMBER_EXCEPTION,
-                ErrorStatus.ALREADY_EXIST_GROUP_MEMBER_EXCEPTION.getMessage());
+            throw new CustomException(ErrorStatus.ALREADY_EXIST_GROUP_MEMBER_EXCEPTION);
         }
         GroupMember groupMember = GroupMember.builder()
             .group(group)
@@ -95,8 +93,7 @@ public class GroupFacade {
             member);
 
         if (group.getLeader().equals(member)) {
-            throw new CustomException(ErrorStatus.LEADER_CANNOT_LEAVE_GROUP_EXCEPTION,
-                ErrorStatus.LEADER_CANNOT_LEAVE_GROUP_EXCEPTION.getMessage());
+            throw new CustomException(ErrorStatus.LEADER_CANNOT_LEAVE_GROUP_EXCEPTION);
         }
         group.kickMember(groupMember);
         groupMemberRepository.delete(groupMember);
