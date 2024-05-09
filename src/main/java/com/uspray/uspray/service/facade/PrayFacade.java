@@ -21,6 +21,7 @@ import com.uspray.uspray.infrastructure.NotificationLogRepository;
 import com.uspray.uspray.infrastructure.PrayRepository;
 import com.uspray.uspray.infrastructure.ScrapAndHeartRepository;
 import com.uspray.uspray.service.FCMNotificationService;
+import com.uspray.uspray.service.ShareService;
 import java.time.LocalDate;
 import java.util.List;
 import javax.transaction.Transactional;
@@ -40,6 +41,7 @@ public class PrayFacade {
     private final NotificationLogRepository notificationLogRepository;
     private final FCMNotificationService fcmNotificationService;
     private final ScrapAndHeartRepository scrapAndHeartRepository;
+    private final ShareService shareService;
 
     @Transactional
     public PrayResponseDto createPray(PrayRequestDto prayRequestDto, String username) {
@@ -195,6 +197,7 @@ public class PrayFacade {
         if (scrapAndHeart != null) {
             scrapAndHeart.deletePrayId();
         }
+        shareService.deleteByOriginPray(pray);
         prayRepository.delete(pray);
         return PrayResponseDto.of(pray);
     }
