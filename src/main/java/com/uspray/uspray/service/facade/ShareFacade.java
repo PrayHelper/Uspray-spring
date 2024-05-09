@@ -21,9 +21,9 @@ import com.uspray.uspray.infrastructure.PrayRepository;
 import com.uspray.uspray.infrastructure.SharedPrayRepository;
 import com.uspray.uspray.service.FCMNotificationService;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -48,9 +48,15 @@ public class ShareFacade {
         List<SharedPray> sharedPrayList = sharedPrayRepository.findAllByMemberOrderByCreatedAtDesc(
             member);
 
-        return sharedPrayList.stream()
-            .map(SharedPrayResponseDto::of)
-            .collect(Collectors.toList());
+        List<SharedPrayResponseDto> result = new ArrayList<>();
+
+        for (SharedPray sharedPray : sharedPrayList) {
+            Pray pray = prayRepository.getPrayByIdIgnoreDelete(
+                sharedPray.getPray().getId());
+            result.add(SharedPrayResponseDto.of(sharedPray, pray));
+        }
+
+        return result;
     }
 
     @Transactional

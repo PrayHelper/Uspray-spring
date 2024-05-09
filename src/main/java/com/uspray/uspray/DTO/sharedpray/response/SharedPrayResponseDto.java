@@ -1,5 +1,6 @@
 package com.uspray.uspray.DTO.sharedpray.response;
 
+import com.uspray.uspray.domain.Pray;
 import com.uspray.uspray.domain.SharedPray;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
@@ -39,12 +40,12 @@ public class SharedPrayResponseDto {
     @Schema(description = "기도제목 생성일", example = "2021-01-01 00:00:00")
     private LocalDateTime createdAt;
 
-    public static SharedPrayResponseDto of(SharedPray sharedPray) {
+    public static SharedPrayResponseDto of(SharedPray sharedPray, Pray pray) {
 
-        return new SharedPrayResponseDto(sharedPray.getId(), sharedPray.getPray().getId(),
-            sharedPray.getPray().getMember().getUserId(),
-            sharedPray.getPray().getMember().getName(),
-            sharedPray.getPray().getContent(), sharedPray.getPray().getDeadline(),
+        return new SharedPrayResponseDto(sharedPray.getId(), pray.getId(),
+            pray.getMember().getUserId(),
+            pray.getMember().getName(),
+            pray.getContent(), pray.getDeadline(),
             sharedPray.getCreatedAt());
     }
 
