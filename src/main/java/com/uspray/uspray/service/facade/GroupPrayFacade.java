@@ -33,6 +33,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -170,15 +171,21 @@ public class GroupPrayFacade {
                 .build());
         }
 
-        Map<LocalDate, List<GroupPrayResponseDto>> map = groupPrayList.stream()
-            .collect(Collectors.groupingBy(GroupPrayResponseDto::getCreatedAt));
+        // 역순으로 정렬하는 트리맵 정의
+        Map<LocalDate, List<GroupPrayResponseDto>> sortedMap = new TreeMap<>(
+            Comparator.reverseOrder());
 
-        for (Map.Entry<LocalDate, List<GroupPrayResponseDto>> entry : map.entrySet()) {
+        // 트리맵에 날짜별로 그룹화 된 기도제목 리스트 입력
+        sortedMap.putAll(groupPrayList.stream()
+            .collect(Collectors.groupingBy(GroupPrayResponseDto::getCreatedAt)));
+
+        // 날짜별로 그룹화 된 기도제목을 기도제목 id 순으로 정렬
+        for (Map.Entry<LocalDate, List<GroupPrayResponseDto>> entry : sortedMap.entrySet()) {
             List<GroupPrayResponseDto> value = entry.getValue();
             value.sort(Comparator.comparing(GroupPrayResponseDto::getGroupPrayId).reversed());
         }
 
-        return new GroupPrayRappingDto(count, groupMember.getNotificationAgree(), map);
+        return new GroupPrayRappingDto(count, groupMember.getNotificationAgree(), sortedMap);
     }
 
     @Transactional
@@ -200,7 +207,8 @@ public class GroupPrayFacade {
             return;
         }
         scrapAndHeartByGroupPrayAndMember.get().heartPray();
-        sendNotificationAndSaveLog(scrapAndHeartByGroupPrayAndMember.get(), groupPray, groupPray.getAuthor(), true);
+        sendNotificationAndSaveLog(scrapAndHeartByGroupPrayAndMember.get(), groupPray,
+            groupPray.getAuthor(), true);
     }
 
     @Transactional
@@ -235,7 +243,8 @@ public class GroupPrayFacade {
         Pray pray = makePray(scrapRequestDto, groupPray, member);
         prayRepository.save(pray);
         scrapAndHeartByGroupPrayAndMember.get().scrapPray(pray);
-        sendNotificationAndSaveLog(scrapAndHeartByGroupPrayAndMember.get(), groupPray, groupPray.getAuthor(), false);
+        sendNotificationAndSaveLog(scrapAndHeartByGroupPrayAndMember.get(), groupPray,
+            groupPray.getAuthor(), false);
     }
 
     private Pray makePray(ScrapRequestDto scrapRequestDto, GroupPray groupPray, Member member) {
@@ -254,7 +263,8 @@ public class GroupPrayFacade {
             .build();
     }
 
-    private void sendNotificationAndSaveLog(ScrapAndHeart scrapAndHeart, GroupPray groupPray, Member receiver, boolean isHeart) {
+    private void sendNotificationAndSaveLog(ScrapAndHeart scrapAndHeart, GroupPray groupPray,
+        Member receiver, boolean isHeart) {
         String groupName = groupPray.getGroup().getName();
         String name = scrapAndHeart.getMember().getName();
         if (isHeart) {

@@ -48,6 +48,7 @@ public class CategoryRepositoryImpl implements CategoryRepositoryCustom {
                 .where(pray.category.id.eq(cat.getId())
                     .and(pray.member.userId.eq(username))
                     .and(pray.prayType.stringValue().likeIgnoreCase(prayType)))
+                .orderBy(pray.createdAt.asc())
                 .fetch();
 
             List<PrayResponseDto> prayResponseDtos = prays.stream()
