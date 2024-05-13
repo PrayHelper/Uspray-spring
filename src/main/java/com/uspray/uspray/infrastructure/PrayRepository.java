@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Objects;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -50,4 +52,7 @@ public interface PrayRepository extends JpaRepository<Pray, Long>, PrayRepositor
         pray.deleteLastPrayedAt();
         return pray;
     }
+
+    @Query(value = "SELECT * FROM Pray p where (p.pray_id = :id)", nativeQuery = true)
+    Pray getPrayByIdIgnoreDelete(@Param("id") Long id);
 }

@@ -1,5 +1,6 @@
 package com.uspray.uspray.service;
 
+import com.uspray.uspray.domain.Pray;
 import com.uspray.uspray.domain.SharedPray;
 import com.uspray.uspray.infrastructure.SharedPrayRepository;
 import java.time.LocalDate;
@@ -17,6 +18,12 @@ public class ShareService {
     @Transactional
     public void cleanSharedPray(LocalDate threshold) {
         List<SharedPray> sharedPrayList = sharedPrayRepository.findAllByCreatedAtBefore(threshold);
-        sharedPrayRepository.deleteAll(sharedPrayList);
+        sharedPrayRepository.deleteAllInBatch(sharedPrayList);
+    }
+
+    @Transactional
+    public void deleteByOriginPray(Pray pray) {
+        List<SharedPray> sharedPrays = sharedPrayRepository.findAllByPray(pray);
+        sharedPrayRepository.deleteAllInBatch(sharedPrays);
     }
 }

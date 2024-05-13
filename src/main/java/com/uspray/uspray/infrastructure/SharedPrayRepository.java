@@ -18,6 +18,9 @@ public interface SharedPrayRepository extends JpaRepository<SharedPray, Long> {
     @EntityGraph(attributePaths = {"member"})
     List<SharedPray> findAllByMemberOrderByCreatedAtDesc(Member member);
 
+    @EntityGraph(attributePaths = {"pray"})
+    List<SharedPray> findAllByPray(Pray pray);
+
     boolean existsByMemberAndPray(Member member, Pray pray);
     
     List<SharedPray> findAllByCreatedAtBefore(LocalDate threshold);
