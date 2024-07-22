@@ -49,6 +49,7 @@ public class OAuthAttributes {
             .name("Uspray")
             .userId(randomId)
             .password("uspray")
+            .phone("010-0000-0000")
             .socialId(oAuth2UserInfo.getId())
             .authority(Authority.ROLE_GUEST)
             .build();
