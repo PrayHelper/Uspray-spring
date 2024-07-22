@@ -48,6 +48,7 @@ public class OAuthAttributes {
         return Member.builder()
             .name("Uspray")
             .userId(randomId)
+            .password("uspray")
             .socialId(oAuth2UserInfo.getId())
             .authority(Authority.ROLE_GUEST)
             .build();
