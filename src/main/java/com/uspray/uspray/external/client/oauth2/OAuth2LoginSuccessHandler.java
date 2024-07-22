@@ -35,7 +35,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         // User의 Role이 GUEST일 경우 처음 요청한 회원이므로 회원가입 페이지로 리다이렉트
         if(customOAuth2User.getAuthority() == Authority.ROLE_GUEST) {
             String accessToken = tokenProvider.generateTokenDto(authentication).getAccessToken();
-            response.sendRedirect("http://localhost:3000/socialLoginNameInput"+"?token="+accessToken+"&id="+id); // 프론트의 회원가입 추가 정보 입력 폼으로 리다이렉트 (추가 컨트롤러를 만들고 거기서 post 해야지 User로 바뀜)
+            response.sendRedirect("https://www.uspray.kr/socialLoginNameInput"+"?token="+accessToken+"&id="+id); // 프론트의 회원가입 추가 정보 입력 폼으로 리다이렉트 (추가 컨트롤러를 만들고 거기서 post 해야지 User로 바뀜)
             return;
         }
 
@@ -45,6 +45,6 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
             tokenProvider.getRefreshTokenExpireTime(),
             TimeUnit.MILLISECONDS);
 
-        response.sendRedirect("http://localhost:3000/social-redirecting"+"?accessToken="+tokenDto.getAccessToken()+"&refreshToken="+tokenDto.getRefreshToken());
+        response.sendRedirect("https://www.uspray.kr/social-redirecting"+"?accessToken="+tokenDto.getAccessToken()+"&refreshToken="+tokenDto.getRefreshToken());
     }
 }
