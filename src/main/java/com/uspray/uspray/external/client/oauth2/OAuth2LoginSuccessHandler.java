@@ -40,7 +40,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         }
 
         TokenDto tokenDto = tokenProvider.generateTokenDto(authentication, customOAuth2User.getUserId());
-        System.out.println(customOAuth2User.getUserId());
+
         redisTemplate.opsForValue().set("RT:" + authentication.getName(),
             tokenDto.getRefreshToken(),
             tokenProvider.getRefreshTokenExpireTime(),
