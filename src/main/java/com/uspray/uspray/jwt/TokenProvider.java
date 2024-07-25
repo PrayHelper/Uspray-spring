@@ -73,6 +73,39 @@ public class TokenProvider {
             .build();
     }
 
+    public TokenDto generateTokenDto(Authentication authentication, String userId) {
+        String authorities = authentication.getAuthorities().stream()
+            .map(GrantedAuthority::getAuthority)
+            .collect(Collectors.joining(","));
+
+        long now = (new Date()).getTime();
+
+        System.out.println(authentication.getName());
+        // access token
+        Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
+        String accessToken = Jwts.builder()
+            .setSubject(userId)
+            .claim(AUTHORITIES_KEY, authorities)
+            .setExpiration(accessTokenExpiresIn)
+            .signWith(key, SignatureAlgorithm.HS512)
+            .compact();
+
+        // refresh token
+        String refreshToken = Jwts.builder()
+            .setSubject(userId)
+            .claim(AUTHORITIES_KEY, authorities)
+            .setExpiration(new Date(now + REFRESH_TOKEN_EXPIRE_TIME))
+            .signWith(key, SignatureAlgorithm.HS512)
+            .compact();
+
+        return TokenDto.builder()
+            .grantType(BEARER_TYPE)
+            .accessToken(accessToken)
+            .accessTokenExpiresIn(accessTokenExpiresIn.getTime())
+            .refreshToken(refreshToken)
+            .build();
+    }
+
     public Authentication getAuthentication(String accessToken) {
 
         Claims claims = parseClaims(accessToken);
