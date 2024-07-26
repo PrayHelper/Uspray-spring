@@ -36,7 +36,8 @@ public interface PrayRepository extends JpaRepository<Pray, Long>, PrayRepositor
 
     List<Pray> findAllByIdIn(List<Long> prayIds);
 
-    List<Pray> findAllByDeadlineBefore(LocalDate date);
+    @Query("SELECT p FROM Pray p WHERE p.deadline <= :date")
+    List<Pray> findAllByDeadlineBefore(@Param("date") LocalDate date);
 
     Pray getPrayByOriginPrayId(Long prayId);
 
