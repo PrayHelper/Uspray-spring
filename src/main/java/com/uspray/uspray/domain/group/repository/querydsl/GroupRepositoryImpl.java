@@ -1,16 +1,16 @@
 package com.uspray.uspray.domain.group.repository.querydsl;
 
-import static com.uspray.uspray.domain.QGroup.group;
-import static com.uspray.uspray.domain.QGroupMember.groupMember;
-import static com.uspray.uspray.domain.QGroupPray.groupPray;
-import static com.uspray.uspray.domain.QMember.member;
+import static com.uspray.uspray.domain.group.model.QGroup.group;
+import static com.uspray.uspray.domain.group.model.QGroupMember.groupMember;
+import static com.uspray.uspray.domain.group.model.QGroupPray.groupPray;
+import static com.uspray.uspray.domain.member.model.QMember.member;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.uspray.uspray.domain.group.dto.group.response.GroupMemberResponseDto;
 import com.uspray.uspray.domain.group.dto.group.response.GroupResponseDto;
-import com.uspray.uspray.DTO.group.response.QGroupMemberResponseDto;
-import com.uspray.uspray.DTO.group.response.QGroupResponseDto;
+import com.uspray.uspray.domain.group.dto.group.response.QGroupMemberResponseDto;
+import com.uspray.uspray.domain.group.dto.group.response.QGroupResponseDto;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;

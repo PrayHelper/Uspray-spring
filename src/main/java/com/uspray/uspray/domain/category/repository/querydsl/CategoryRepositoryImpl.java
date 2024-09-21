@@ -1,17 +1,17 @@
 package com.uspray.uspray.domain.category.repository.querydsl;
 
-import static com.uspray.uspray.domain.QCategory.category;
-import static com.uspray.uspray.domain.QMember.member;
-import static com.uspray.uspray.domain.QPray.pray;
+import static com.uspray.uspray.domain.category.model.QCategory.category;
+import static com.uspray.uspray.domain.member.model.QMember.member;
+import static com.uspray.uspray.domain.pray.model.QPray.pray;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.uspray.uspray.domain.pray.dto.pray.PrayListResponseDto;
-import com.uspray.uspray.domain.pray.dto.pray.response.PrayResponseDto;
-import com.uspray.uspray.DTO.pray.response.QPrayResponseDto;
-import com.uspray.uspray.global.enums.PrayType;
 import com.uspray.uspray.domain.category.model.Category;
 import com.uspray.uspray.domain.member.model.Member;
+import com.uspray.uspray.domain.pray.dto.pray.PrayListResponseDto;
+import com.uspray.uspray.domain.pray.dto.pray.response.PrayResponseDto;
+import com.uspray.uspray.domain.pray.dto.pray.response.QPrayResponseDto;
 import com.uspray.uspray.domain.pray.model.Pray;
+import com.uspray.uspray.global.enums.PrayType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;

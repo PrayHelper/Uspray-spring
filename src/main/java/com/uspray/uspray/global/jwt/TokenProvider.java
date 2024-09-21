@@ -1,6 +1,6 @@
 package com.uspray.uspray.global.jwt;
 
-import com.uspray.uspray.DTO.auth.TokenDto;
+import com.uspray.uspray.global.auth.dto.member.TokenDto;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;

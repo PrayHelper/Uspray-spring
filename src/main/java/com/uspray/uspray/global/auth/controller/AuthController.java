@@ -1,19 +1,11 @@
 package com.uspray.uspray.global.auth.controller;
 
-import com.uspray.uspray.global.common.dto.ApiResponseDto;
-import com.uspray.uspray.DTO.auth.TokenDto;
-import com.uspray.uspray.global.auth.dto.member.request.ChangePwDto;
-import com.uspray.uspray.global.auth.dto.member.request.FindIdDto;
-import com.uspray.uspray.global.auth.dto.member.request.FindPwDTO;
-import com.uspray.uspray.global.auth.dto.member.request.MemberDeleteDto;
-import com.uspray.uspray.global.auth.dto.member.request.MemberLoginRequestDto;
 import com.uspray.uspray.DTO.auth.request.MemberRequestDto;
-import com.uspray.uspray.global.auth.dto.member.response.DupCheckResponseDto;
-import com.uspray.uspray.global.auth.dto.member.response.LoginTypeResponseDto;
 import com.uspray.uspray.DTO.auth.response.MemberNameResponseDto;
-import com.uspray.uspray.global.auth.dto.member.response.MemberResponseDto;
-import com.uspray.uspray.global.exception.SuccessStatus;
+import com.uspray.uspray.global.auth.dto.member.TokenDto;
 import com.uspray.uspray.global.auth.service.AuthService;
+import com.uspray.uspray.global.common.dto.ApiResponseDto;
+import com.uspray.uspray.global.exception.SuccessStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -46,8 +38,8 @@ public class AuthController {
     @ApiResponse(
         responseCode = "201",
         description = "회원가입 성공",
-        content = @Content(schema = @Schema(implementation = MemberResponseDto.class)))
-    public ApiResponseDto<MemberResponseDto> signup(
+        content = @Content(schema = @Schema(implementation = com.uspray.uspray.DTO.auth.response.MemberResponseDto.class)))
+    public ApiResponseDto<com.uspray.uspray.DTO.auth.response.MemberResponseDto> signup(
         @RequestBody @Valid MemberRequestDto memberRequestDto) {
         return ApiResponseDto.success(SuccessStatus.SIGNUP_SUCCESS,
             authService.signup(memberRequestDto));
@@ -57,9 +49,9 @@ public class AuthController {
     @ApiResponse(
         responseCode = "200",
         description = "로그인 성공",
-        content = @Content(schema = @Schema(implementation = MemberResponseDto.class)))
+        content = @Content(schema = @Schema(implementation = com.uspray.uspray.DTO.auth.response.MemberResponseDto.class)))
     public ApiResponseDto<TokenDto> login(
-        @RequestBody @Valid MemberLoginRequestDto memberLoginRequestDto) {
+        @RequestBody @Valid com.uspray.uspray.DTO.auth.request.MemberLoginRequestDto memberLoginRequestDto) {
         return ApiResponseDto.success(SuccessStatus.LOGIN_SUCCESS,
             authService.login(memberLoginRequestDto));
     }
@@ -81,21 +73,21 @@ public class AuthController {
 
     @PostMapping("/find-id")
     @Operation(summary = "아이디 찾기")
-    public ApiResponseDto<String> findId(@RequestBody FindIdDto findIdDto) {
+    public ApiResponseDto<String> findId(@RequestBody com.uspray.uspray.DTO.auth.request.FindIdDto findIdDto) {
         return ApiResponseDto.success(SuccessStatus.FIND_USER_ID_SUCCESS,
             authService.findId(findIdDto));
     }
 
     @PostMapping("/find-pw")
     @Operation(summary = "비밀번호 찾기")
-    public ApiResponseDto<?> findPw(@RequestBody FindPwDTO findPwDTO) {
+    public ApiResponseDto<?> findPw(@RequestBody com.uspray.uspray.DTO.auth.request.FindPwDTO findPwDTO) {
         return ApiResponseDto.success(SuccessStatus.FIND_USER_PW_SUCCESS, authService.findPw(
             findPwDTO));
     }
 
     @PostMapping("/change-pw")
     @Operation(summary = "비밀번호 변경")
-    public ApiResponseDto<?> changePw(@RequestBody ChangePwDto changePwDto) {
+    public ApiResponseDto<?> changePw(@RequestBody com.uspray.uspray.DTO.auth.request.ChangePwDto changePwDto) {
         authService.changePw(changePwDto);
         return ApiResponseDto.success(SuccessStatus.CHANGE_USER_PW_SUCCESS);
     }
@@ -113,14 +105,14 @@ public class AuthController {
     @SecurityRequirement(name = "JWT Auth")
     public ApiResponseDto<?> withdrawal(
         @Parameter(hidden = true) @AuthenticationPrincipal User user,
-        @RequestBody MemberDeleteDto memberDeleteDto) {
+        @RequestBody com.uspray.uspray.DTO.auth.request.MemberDeleteDto memberDeleteDto) {
         authService.withdrawal(user.getUsername(), memberDeleteDto);
         return ApiResponseDto.success(SuccessStatus.WITHDRAWAL_SUCCESS);
     }
 
     @GetMapping("/dup-check/{userId}")
     @Operation(summary = "아이디 중복 체크")
-    public ApiResponseDto<DupCheckResponseDto> dupCheck(@PathVariable("userId") String userId) {
+    public ApiResponseDto<com.uspray.uspray.DTO.auth.response.DupCheckResponseDto> dupCheck(@PathVariable("userId") String userId) {
         return ApiResponseDto.success(SuccessStatus.CHECK_USER_ID_SUCCESS,
             authService.dupCheck(userId));
 
@@ -129,7 +121,7 @@ public class AuthController {
     @GetMapping("/login-check")
     @Operation(summary = "사용한 로그인 방식 체크(일반, 소셜)")
     @SecurityRequirement(name = "JWT Auth")
-    public ApiResponseDto<LoginTypeResponseDto> loginCheck (@Parameter(hidden = true) @AuthenticationPrincipal User user) {
+    public ApiResponseDto<com.uspray.uspray.DTO.auth.response.LoginTypeResponseDto> loginCheck (@Parameter(hidden = true) @AuthenticationPrincipal User user) {
         return ApiResponseDto.success(SuccessStatus.LOGIN_CHECK_SUCCESS, authService.loginCheck(user.getUsername()));
     }
 }

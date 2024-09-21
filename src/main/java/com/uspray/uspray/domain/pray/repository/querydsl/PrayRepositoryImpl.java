@@ -1,7 +1,7 @@
 package com.uspray.uspray.domain.pray.repository.querydsl;
 
-import static com.uspray.uspray.domain.QCategory.category;
-import static com.uspray.uspray.domain.QPray.pray;
+import static com.uspray.uspray.domain.category.model.QCategory.category;
+import static com.uspray.uspray.domain.pray.model.QPray.pray;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.uspray.uspray.domain.pray.model.Pray;

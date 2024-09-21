@@ -1,6 +1,6 @@
 package com.uspray.uspray.domain.history.repository.querydsl;
 
-import static com.uspray.uspray.domain.QHistory.history;
+import static com.uspray.uspray.domain.history.model.QHistory.history;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;

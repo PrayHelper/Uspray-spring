@@ -1,12 +1,12 @@
 package com.uspray.uspray.global.external.client.oauth2.apple;
 
-import com.uspray.uspray.DTO.auth.TokenDto;
-import com.uspray.uspray.global.enums.Authority;
 import com.uspray.uspray.domain.member.model.Member;
+import com.uspray.uspray.domain.member.repository.MemberRepository;
+import com.uspray.uspray.global.auth.dto.member.TokenDto;
+import com.uspray.uspray.global.enums.Authority;
 import com.uspray.uspray.global.external.client.oauth2.apple.dto.AppleIdTokenPayload;
 import com.uspray.uspray.global.external.client.oauth2.apple.dto.AppleLoginResponseDto;
 import com.uspray.uspray.global.external.client.oauth2.apple.dto.AppleProperties;
-import com.uspray.uspray.domain.member.repository.MemberRepository;
 import com.uspray.uspray.global.jwt.TokenProvider;
 import io.jsonwebtoken.JwsHeader;
 import io.jsonwebtoken.Jwts;

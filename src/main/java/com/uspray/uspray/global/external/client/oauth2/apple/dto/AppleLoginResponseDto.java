@@ -1,6 +1,6 @@
 package com.uspray.uspray.global.external.client.oauth2.apple.dto;
 
-import com.uspray.uspray.DTO.auth.TokenDto;
+import com.uspray.uspray.global.auth.dto.member.TokenDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;

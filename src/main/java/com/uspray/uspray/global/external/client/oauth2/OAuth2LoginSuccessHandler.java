@@ -1,6 +1,6 @@
 package com.uspray.uspray.global.external.client.oauth2;
 
-import com.uspray.uspray.DTO.auth.TokenDto;
+import com.uspray.uspray.global.auth.dto.member.TokenDto;
 import com.uspray.uspray.global.enums.Authority;
 import com.uspray.uspray.global.jwt.TokenProvider;
 import java.io.IOException;
