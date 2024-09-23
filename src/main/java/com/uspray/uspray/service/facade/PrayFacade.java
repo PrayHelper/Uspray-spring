@@ -70,9 +70,6 @@ public class PrayFacade {
     public PrayResponseDto updatePray(Long prayId, String username,
         PrayUpdateRequestDto prayUpdateRequestDto) {
         Pray pray = prayRepository.getPrayByIdAndMemberId(prayId, username);
-        categoryRepository.getCategoryByIdAndMember(
-            prayUpdateRequestDto.getCategoryId(),
-            pray.getMember());
 
         // 그룹 기도 제목은 이 API로 수정 불가능
         checkGroupPray(pray);
