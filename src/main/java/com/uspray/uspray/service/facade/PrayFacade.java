@@ -88,8 +88,7 @@ public class PrayFacade {
                 throw new CustomException(ErrorStatus.PRAY_CATEGORY_TYPE_MISMATCH);
             }
         }
-        pray.update(prayUpdateRequestDto,
-            checkIsShared(sharedPray, pray), category);
+        pray.update(prayUpdateRequestDto, checkIsShared(sharedPray, pray), category);
 
         return PrayResponseDto.of(pray);
     }
@@ -149,7 +148,7 @@ public class PrayFacade {
         return getPrayList(username, pray.getPrayType().stringValue());
     }
 
-    private void sendNotificationAndSaveLog(Pray pray, Member member) {
+    private void sendNotification(Member member) {
         try {
             fcmNotificationService.sendMessageTo(
                 member.getFirebaseToken(),
@@ -162,6 +161,9 @@ public class PrayFacade {
         log.error(
             "send notification to " + memberRepository.getMemberByUserId(member.getUserId())
         );
+    }
+
+    private void saveNotificationLog(Pray pray, Member member) {
         NotificationLog notificationLog = NotificationLog.builder()
             .pray(pray)
             .member(memberRepository.getMemberByUserId(member.getUserId()))
@@ -179,7 +181,8 @@ public class PrayFacade {
         if (pray.getPrayType() == PrayType.SHARED) {
             Member originMember = memberRepository.getMemberById(pray.getOriginMemberId());
             if (originMember.getSecondNotiAgree()) {
-                sendNotificationAndSaveLog(pray, originMember);
+                sendNotification(originMember);
+                saveNotificationLog(pray, originMember);
             }
         }
     }
