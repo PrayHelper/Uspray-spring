@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/group")
 @RequiredArgsConstructor
-public class GroupController {
+public class GroupController implements GroupApi {
 
     private final GroupService groupService;
     private final GroupFacade groupFacade;
