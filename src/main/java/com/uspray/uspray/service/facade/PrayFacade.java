@@ -130,17 +130,6 @@ public class PrayFacade {
     }
 
 
-    public void createHistory(String username, Long prayId) {
-        Pray pray = prayRepository.getPrayByIdAndMemberId(prayId, username);
-        pray.complete();
-        Integer sharedCount = prayRepository.getSharedCountByOriginPrayId(prayId);
-        History history = History.builder()
-            .pray(pray)
-            .totalCount(pray.getCount() + sharedCount)
-            .build();
-        historyRepository.save(history);
-    }
-
     @Transactional
     public List<PrayListResponseDto> todayPray(Long prayId, String username) {
         Pray pray = prayRepository.getPrayByIdAndMemberId(prayId, username);
@@ -209,9 +198,21 @@ public class PrayFacade {
     @Transactional
     public List<PrayListResponseDto> completePray(Long prayId, String username) {
         Pray pray = prayRepository.getPrayByIdAndMemberId(prayId, username);
+        pray.complete();
+
+        createHistory(pray);
         prayRepository.delete(pray);
 
         return getPrayList(username, pray.getPrayType().stringValue());
+    }
+
+    private void createHistory(Pray pray) {
+        Integer sharedCount = prayRepository.getSharedCountByOriginPrayId(pray.getId());
+        History history = History.builder()
+            .pray(pray)
+            .totalCount(pray.getCount() + sharedCount)
+            .build();
+        historyRepository.save(history);
     }
 
     @Transactional

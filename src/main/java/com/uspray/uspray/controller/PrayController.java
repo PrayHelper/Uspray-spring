@@ -135,7 +135,6 @@ public class PrayController {
         @Parameter(description = "기도제목 ID", required = true) @PathVariable("prayId") Long prayId,
         @Parameter(hidden = true) @AuthenticationPrincipal User user
     ) {
-        prayFacade.createHistory(user.getUsername(), prayId);
         return ApiResponseDto.success(SuccessStatus.GET_PRAY_LIST_SUCCESS,
             prayFacade.completePray(prayId, user.getUsername()));
     }
