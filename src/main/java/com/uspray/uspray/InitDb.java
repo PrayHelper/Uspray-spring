@@ -1,15 +1,16 @@
 package com.uspray.uspray;
 
-import com.uspray.uspray.Enums.Authority;
-import com.uspray.uspray.Enums.CategoryType;
-import com.uspray.uspray.Enums.PrayType;
-import com.uspray.uspray.domain.Category;
-import com.uspray.uspray.domain.Group;
-import com.uspray.uspray.domain.GroupMember;
-import com.uspray.uspray.domain.History;
-import com.uspray.uspray.domain.Member;
-import com.uspray.uspray.domain.Pray;
+import com.uspray.uspray.global.enums.Authority;
+import com.uspray.uspray.global.enums.CategoryType;
+import com.uspray.uspray.global.enums.PrayType;
+import com.uspray.uspray.domain.category.model.Category;
+import com.uspray.uspray.domain.group.model.Group;
+import com.uspray.uspray.domain.group.model.GroupMember;
+import com.uspray.uspray.domain.history.model.History;
+import com.uspray.uspray.domain.member.model.Member;
+import com.uspray.uspray.domain.pray.model.Pray;
 import java.time.LocalDate;
+import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,10 +23,10 @@ public class InitDb {
 
     private final InitService initService;
 
-//    @PostConstruct
-//    public void init() {
-//        initService.dbInit();
-//    }
+    @PostConstruct
+    public void init() {
+        initService.dbInit();
+    }
 
     @Component
     @Transactional
@@ -188,6 +189,7 @@ public class InitDb {
                 .prayType(PrayType.SHARED)
                 .startDate(LocalDate.of(2023, 12, 24))
                 .originPrayId(pray_1.getId())
+                .originMemberId(member2.getId())
                 .build();
             em.persist(pray1);
 
@@ -216,6 +218,11 @@ public class InitDb {
                 .pray(pray)
                 .build();
             em.persist(history);
+
+            History history1 = History.builder()
+                .pray(pray1)
+                .build();
+            em.persist(history1);
         }
 
     }
