@@ -2,7 +2,6 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '2.7.15'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
-    //querydsl 추가
     id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
 }
 
@@ -17,6 +16,7 @@ configurations {
     compileOnly {
         extendsFrom annotationProcessor
     }
+    querydsl.extendsFrom compileClasspath
 }
 
 repositories {
@@ -45,69 +45,64 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
 
-
-    //JWT
+    // JWT
     implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
     implementation group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
     implementation group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
 
-    //Redis
+    // Redis
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
-    //OAuth 2.0
+    // OAuth 2.0
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 
-    //swagger
+    // Swagger
     implementation 'org.springdoc:springdoc-openapi-ui:1.7.0'
 
-    //sms
+    // SMS
     implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
 
-    //firebase
+    // Firebase
     implementation 'com.google.firebase:firebase-admin:9.2.0'
 
     implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.9.0'
 
-    //querydsl 추가
+    // Querydsl
     implementation "com.querydsl:querydsl-jpa:5.0.0"
     annotationProcessor "com.querydsl:querydsl-apt:5.0.0"
 
-    //apple oauth
+    // Apple OAuth
     implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '9.30.1'
     implementation group: 'org.bouncycastle', name: 'bcpkix-jdk15on', version: '1.70'
 
     implementation "org.springframework.cloud:spring-cloud-starter-openfeign"
-//    // flyway
-//    implementation "org.flywaydb:flyway-core"
-//    implementation "org.springframework.boot:spring-boot-starter"
-
 }
 
 tasks.named('test') {
     useJUnitPlatform()
 }
 
-//querydsl 추가 시작
+// Querydsl 설정 시작
 def querydslDir = "$buildDir/generated/querydsl"
 
 querydsl {
     jpa = true
     querydslSourcesDir = querydslDir
 }
+
 sourceSets {
     main.java.srcDir querydslDir
 }
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
-    querydsl.extendsFrom compileClasspath
-}
+
 compileQuerydsl {
     options.annotationProcessorPath = configurations.querydsl
 }
-//querydsl 추가 끝
+
+tasks.named('compileJava') {
+    dependsOn tasks.named('compileQuerydsl')
+}
+// Querydsl 설정 끝
+
 jar {
     enabled = false
 }
-
