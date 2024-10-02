@@ -209,7 +209,7 @@ public class PrayFacade {
         Integer sharedCount = prayRepository.getSharedCountByOriginPrayId(pray.getId());
         History history = History.builder()
             .pray(pray)
-            .totalCount(pray.getCount() + sharedCount)
+            .totalCount(sharedCount)
             .build();
         historyRepository.save(history);
     }
