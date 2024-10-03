@@ -1,16 +1,15 @@
 package com.uspray.uspray;
 
-import com.uspray.uspray.global.enums.Authority;
-import com.uspray.uspray.global.enums.CategoryType;
-import com.uspray.uspray.global.enums.PrayType;
 import com.uspray.uspray.domain.category.model.Category;
 import com.uspray.uspray.domain.group.model.Group;
 import com.uspray.uspray.domain.group.model.GroupMember;
 import com.uspray.uspray.domain.history.model.History;
 import com.uspray.uspray.domain.member.model.Member;
 import com.uspray.uspray.domain.pray.model.Pray;
+import com.uspray.uspray.global.enums.Authority;
+import com.uspray.uspray.global.enums.CategoryType;
+import com.uspray.uspray.global.enums.PrayType;
 import java.time.LocalDate;
-import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,10 +22,10 @@ public class InitDb {
 
     private final InitService initService;
 
-//     @PostConstruct
-//     public void init() {
-//         initService.dbInit();
-//     }
+//    @PostConstruct
+//    public void init() {
+//        initService.dbInit();
+//    }
 
     @Component
     @Transactional

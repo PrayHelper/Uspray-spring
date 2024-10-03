@@ -1,22 +1,16 @@
 package com.uspray.uspray.domain.history.controller;
 
-import com.uspray.uspray.global.common.dto.ApiResponseDto;
 import com.uspray.uspray.domain.history.dto.request.HistoryRequestDto;
 import com.uspray.uspray.domain.history.dto.request.HistorySearchRequestDto;
 import com.uspray.uspray.domain.history.dto.response.HistoryDetailResponseDto;
 import com.uspray.uspray.domain.history.dto.response.HistoryListResponseDto;
-import com.uspray.uspray.domain.pray.dto.pray.request.PrayRequestDto;
-import com.uspray.uspray.domain.pray.dto.pray.response.PrayResponseDto;
-import com.uspray.uspray.global.exception.SuccessStatus;
 import com.uspray.uspray.domain.history.service.HistoryFacade;
 import com.uspray.uspray.domain.history.service.HistoryService;
-import io.swagger.v3.oas.annotations.Operation;
+import com.uspray.uspray.domain.pray.dto.pray.request.PrayRequestDto;
+import com.uspray.uspray.domain.pray.dto.pray.response.PrayResponseDto;
+import com.uspray.uspray.global.common.dto.ApiResponseDto;
+import com.uspray.uspray.global.exception.SuccessStatus;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -31,17 +25,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/history")
-@Tag(name = "History", description = "기도제목 기록 API")
 @RequiredArgsConstructor
-@SecurityRequirement(name = "JWT Auth")
-public class HistoryController {
+public class HistoryController implements HistoryApi{
 
     private final HistoryService historyService;
     private final HistoryFacade historyFacade;
 
     @GetMapping
     public ApiResponseDto<HistoryListResponseDto> getHistoryList(
-        @Parameter(hidden = true) @AuthenticationPrincipal User user,
+        @AuthenticationPrincipal User user,
         @ModelAttribute HistoryRequestDto historyRequestDto) {
         return ApiResponseDto.success(SuccessStatus.GET_HISTORY_LIST_SUCCESS,
             historyService.getHistoryList(user.getUsername(), historyRequestDto.getType(),
@@ -53,7 +45,7 @@ public class HistoryController {
     // 날짜까지 (옵션)
     @PostMapping("/search")
     public ApiResponseDto<HistoryListResponseDto> searchHistoryList(
-        @Parameter(hidden = true) @AuthenticationPrincipal User user,
+        @AuthenticationPrincipal User user,
         @RequestBody @Valid HistorySearchRequestDto historySearchRequestDto
     ) {
         return ApiResponseDto.success(SuccessStatus.GET_HISTORY_LIST_SUCCESS,
@@ -62,17 +54,12 @@ public class HistoryController {
 
     @GetMapping("/detail/{historyId}")
     public ApiResponseDto<HistoryDetailResponseDto> getHistoryDetail(
-        @Parameter(hidden = true) @AuthenticationPrincipal User user,
+        @AuthenticationPrincipal User user,
         @PathVariable Long historyId) {
         return ApiResponseDto.success(SuccessStatus.GET_HISTORY_DETAIL_SUCCESS,
             historyService.getHistoryDetail(user.getUsername(), historyId));
     }
 
-    @Operation(summary = "히스토리 다시 기도하기")
-    @ApiResponse(
-        responseCode = "200",
-        description = "기도제목 반환",
-        content = @Content(schema = @Schema(implementation = PrayResponseDto.class)))
     @PostMapping("/pray/{historyId}")
     public ApiResponseDto<PrayResponseDto> historyToPray(
         @Parameter(hidden = true) @AuthenticationPrincipal User user,
