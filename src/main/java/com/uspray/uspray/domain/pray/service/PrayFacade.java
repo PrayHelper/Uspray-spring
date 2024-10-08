@@ -1,5 +1,7 @@
 package com.uspray.uspray.domain.pray.service;
 
+import com.uspray.uspray.domain.group.service.ScrapAndHeartService;
+import com.uspray.uspray.domain.history.service.HistoryService;
 import com.uspray.uspray.domain.pray.dto.pray.PrayListResponseDto;
 import com.uspray.uspray.domain.pray.dto.pray.request.PrayRequestDto;
 import com.uspray.uspray.domain.pray.dto.pray.request.PrayUpdateRequestDto;
@@ -10,17 +12,14 @@ import com.uspray.uspray.domain.history.model.History;
 import com.uspray.uspray.domain.member.model.Member;
 import com.uspray.uspray.global.push.model.NotificationLog;
 import com.uspray.uspray.domain.pray.model.Pray;
-import com.uspray.uspray.domain.group.model.ScrapAndHeart;
 import com.uspray.uspray.global.exception.ErrorStatus;
 import com.uspray.uspray.global.exception.model.CustomException;
 import com.uspray.uspray.global.exception.model.NotFoundException;
 import com.uspray.uspray.domain.category.repository.CategoryRepository;
-import com.uspray.uspray.domain.history.repository.HistoryRepository;
 import com.uspray.uspray.domain.member.repository.MemberRepository;
-import com.uspray.uspray.global.push.repository.NotificationLogRepository;
 import com.uspray.uspray.domain.pray.repository.PrayRepository;
-import com.uspray.uspray.domain.group.repository.ScrapAndHeartRepository;
 import com.uspray.uspray.global.push.service.FCMNotificationService;
+import com.uspray.uspray.global.push.service.NotificationLogService;
 import java.time.LocalDate;
 import java.util.List;
 import javax.transaction.Transactional;
@@ -36,10 +35,10 @@ public class PrayFacade {
     private final MemberRepository memberRepository;
     private final PrayRepository prayRepository;
     private final CategoryRepository categoryRepository;
-    private final HistoryRepository historyRepository;
-    private final NotificationLogRepository notificationLogRepository;
+    private final HistoryService historyService;
+    private final NotificationLogService notificationLogService;
     private final FCMNotificationService fcmNotificationService;
-    private final ScrapAndHeartRepository scrapAndHeartRepository;
+    private final ScrapAndHeartService scrapAndHeartService;
     private final ShareService shareService;
 
     @Transactional
@@ -113,7 +112,7 @@ public class PrayFacade {
                 .pray(pray)
                 .totalCount(sharedCount) //sharedCount에 내 count도 포함되어 있음
                 .build();
-            historyRepository.save(history);
+            historyService.saveHistory(history);
             prayRepository.delete(pray);
         }
     }
@@ -124,7 +123,7 @@ public class PrayFacade {
         History history = History.builder()
             .pray(pray)
             .build();
-        historyRepository.save(history);
+        historyService.saveHistory(history);
         prayRepository.delete(pray);
     }
 
@@ -157,7 +156,8 @@ public class PrayFacade {
             .member(memberRepository.getMemberByUserId(member.getUserId()))
             .title("누군가가 당신의 기도제목을 두고 기도했어요")
             .build();
-        notificationLogRepository.save(notificationLog);
+
+        notificationLogService.saveNotificationLog(notificationLog);
     }
 
     private void handlePrayedToday(Pray pray) {
@@ -179,11 +179,8 @@ public class PrayFacade {
     public PrayResponseDto deletePray(Long prayId, String username) {
         Pray pray = prayRepository.getPrayByIdAndMemberId(prayId, username);
         Member member = memberRepository.getMemberByUserId(username);
-        ScrapAndHeart scrapAndHeart = scrapAndHeartRepository.findByMemberAndSharedPray(member,
-            pray);
-        if (scrapAndHeart != null) {
-            scrapAndHeart.deletePrayId();
-        }
+
+        scrapAndHeartService.deleteScrapAndHeart(member, pray);
         shareService.deleteByOriginPray(pray);
         prayRepository.delete(pray);
         return PrayResponseDto.of(pray);
@@ -211,7 +208,7 @@ public class PrayFacade {
             .pray(pray)
             .totalCount(sharedCount)
             .build();
-        historyRepository.save(history);
+        historyService.saveHistory(history);
     }
 
     @Transactional

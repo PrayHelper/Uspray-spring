@@ -81,4 +81,9 @@ public class HistoryService {
         }
         return HistoryDetailResponseDto.of(history);
     }
+
+    @Transactional
+    public void saveHistory(History history) {
+        historyRepository.save(history);
+    }
 }

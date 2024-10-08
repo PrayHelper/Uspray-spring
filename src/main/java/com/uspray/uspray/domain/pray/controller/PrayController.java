@@ -91,7 +91,6 @@ public class PrayController implements PrayApi {
         @PathVariable("prayId") Long prayId,
         @AuthenticationPrincipal User user
     ) {
-        prayFacade.createHistory(user.getUsername(), prayId);
         return ApiResponseDto.success(SuccessStatus.GET_PRAY_LIST_SUCCESS,
             prayFacade.completePray(prayId, user.getUsername()));
     }
