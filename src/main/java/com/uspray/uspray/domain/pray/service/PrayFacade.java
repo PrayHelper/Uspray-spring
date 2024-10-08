@@ -2,6 +2,7 @@ package com.uspray.uspray.domain.pray.service;
 
 import com.uspray.uspray.domain.group.service.ScrapAndHeartService;
 import com.uspray.uspray.domain.history.service.HistoryService;
+import com.uspray.uspray.domain.member.service.MemberService;
 import com.uspray.uspray.domain.pray.dto.pray.PrayListResponseDto;
 import com.uspray.uspray.domain.pray.dto.pray.request.PrayRequestDto;
 import com.uspray.uspray.domain.pray.dto.pray.request.PrayUpdateRequestDto;
@@ -16,7 +17,6 @@ import com.uspray.uspray.global.exception.ErrorStatus;
 import com.uspray.uspray.global.exception.model.CustomException;
 import com.uspray.uspray.global.exception.model.NotFoundException;
 import com.uspray.uspray.domain.category.repository.CategoryRepository;
-import com.uspray.uspray.domain.member.repository.MemberRepository;
 import com.uspray.uspray.domain.pray.repository.PrayRepository;
 import com.uspray.uspray.global.push.service.FCMNotificationService;
 import com.uspray.uspray.global.push.service.NotificationLogService;
@@ -32,7 +32,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class PrayFacade {
 
-    private final MemberRepository memberRepository;
+    private final MemberService memberService;
     private final PrayRepository prayRepository;
     private final CategoryRepository categoryRepository;
     private final HistoryService historyService;
@@ -43,7 +43,7 @@ public class PrayFacade {
 
     @Transactional
     public PrayResponseDto createPray(PrayRequestDto prayRequestDto, String username) {
-        Member member = memberRepository.getMemberByUserId(username);
+        Member member = memberService.findMemberByUserId(username);
         Category category = categoryRepository.getCategoryByIdAndMember(
             prayRequestDto.getCategoryId(),
             member);
@@ -55,7 +55,7 @@ public class PrayFacade {
 
     @Transactional
     public PrayResponseDto createPray(PrayRequestDto prayRequestDto, String username, LocalDate startDate) {
-        Member member = memberRepository.getMemberByUserId(username);
+        Member member = memberService.findMemberByUserId(username);
         Category category = categoryRepository.getCategoryByIdAndMember(
             prayRequestDto.getCategoryId(),
             member);
@@ -146,14 +146,14 @@ public class PrayFacade {
 
         }
         log.error(
-            "send notification to " + memberRepository.getMemberByUserId(member.getUserId())
+            "send notification to " + member
         );
     }
 
     private void saveNotificationLog(Pray pray, Member member) {
         NotificationLog notificationLog = NotificationLog.builder()
             .pray(pray)
-            .member(memberRepository.getMemberByUserId(member.getUserId()))
+            .member(member)
             .title("누군가가 당신의 기도제목을 두고 기도했어요")
             .build();
 
@@ -167,7 +167,7 @@ public class PrayFacade {
         pray.countUp();
 
         if (pray.getPrayType() == PrayType.SHARED) {
-            Member originMember = memberRepository.getMemberById(pray.getOriginMemberId());
+            Member originMember = memberService.findMemberById(pray.getOriginMemberId());
             if (originMember.getSecondNotiAgree()) {
                 sendNotification(originMember);
                 saveNotificationLog(pray, originMember);
@@ -178,7 +178,7 @@ public class PrayFacade {
     @Transactional
     public PrayResponseDto deletePray(Long prayId, String username) {
         Pray pray = prayRepository.getPrayByIdAndMemberId(prayId, username);
-        Member member = memberRepository.getMemberByUserId(username);
+        Member member = memberService.findMemberByUserId(username);
 
         scrapAndHeartService.deleteScrapAndHeart(member, pray);
         shareService.deleteByOriginPray(pray);
