@@ -18,4 +18,8 @@ public class PrayService {
         Pray pray = prayRepository.getPrayByIdAndMemberId(prayId, username);
         return PrayResponseDto.of(pray);
     }
+
+    public PrayResponseDto savePray(Pray pray) {
+        return PrayResponseDto.of(prayRepository.save(pray));
+    }
 }

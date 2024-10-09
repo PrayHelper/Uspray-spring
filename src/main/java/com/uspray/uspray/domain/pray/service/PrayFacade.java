@@ -1,8 +1,9 @@
 package com.uspray.uspray.domain.pray.service;
 
+import com.uspray.uspray.domain.category.service.CategoryService;
+import com.uspray.uspray.domain.member.service.MemberService;
 import com.uspray.uspray.domain.group.service.ScrapAndHeartService;
 import com.uspray.uspray.domain.history.service.HistoryService;
-import com.uspray.uspray.domain.member.service.MemberService;
 import com.uspray.uspray.domain.pray.dto.pray.PrayListResponseDto;
 import com.uspray.uspray.domain.pray.dto.pray.request.PrayRequestDto;
 import com.uspray.uspray.domain.pray.dto.pray.request.PrayUpdateRequestDto;
@@ -32,7 +33,6 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class PrayFacade {
 
-    private final MemberService memberService;
     private final PrayRepository prayRepository;
     private final CategoryRepository categoryRepository;
     private final HistoryService historyService;
@@ -40,28 +40,24 @@ public class PrayFacade {
     private final FCMNotificationService fcmNotificationService;
     private final ScrapAndHeartService scrapAndHeartService;
     private final ShareService shareService;
+    private final PrayService prayService;
+    private final MemberService memberService;
+    private final CategoryService categoryService;
 
     @Transactional
     public PrayResponseDto createPray(PrayRequestDto prayRequestDto, String username) {
         Member member = memberService.findMemberByUserId(username);
-        Category category = categoryRepository.getCategoryByIdAndMember(
-            prayRequestDto.getCategoryId(),
+        Category category = categoryService.getCategoryByIdAndMember(prayRequestDto.getCategoryId(),
             member);
-
-        Pray pray = prayRequestDto.toEntity(member, category);
-        prayRepository.save(pray);
-        return PrayResponseDto.of(pray);
+        return prayService.savePray(prayRequestDto.toEntity(member, category));
     }
 
     @Transactional
     public PrayResponseDto createPray(PrayRequestDto prayRequestDto, String username, LocalDate startDate) {
         Member member = memberService.findMemberByUserId(username);
-        Category category = categoryRepository.getCategoryByIdAndMember(
-            prayRequestDto.getCategoryId(),
+        Category category = categoryRepository.getCategoryByIdAndMember(prayRequestDto.getCategoryId(),
             member);
-        Pray pray = prayRequestDto.toEntity(member, category, startDate);
-        prayRepository.save(pray);
-        return PrayResponseDto.of(pray);
+        return prayService.savePray(prayRequestDto.toEntity(member, category, startDate));
     }
 
     @Transactional

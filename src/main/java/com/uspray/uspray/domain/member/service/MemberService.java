@@ -23,6 +23,10 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
+    public Member getMemberByUserId(String username) {
+        return memberRepository.getMemberByUserId(username);
+    }
+
     @Transactional
     public void changePhone(String userId, String phone) {
         if (memberRepository.existsByPhone(phone)) {
