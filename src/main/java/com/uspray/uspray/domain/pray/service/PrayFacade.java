@@ -45,19 +45,11 @@ public class PrayFacade {
     private final CategoryService categoryService;
 
     @Transactional
-    public PrayResponseDto createPray(PrayRequestDto prayRequestDto, String username) {
+    public PrayResponseDto createPray(PrayRequestDto prayRequestDto, String username, LocalDate startDateOrNull) {
         Member member = memberService.findMemberByUserId(username);
         Category category = categoryService.getCategoryByIdAndMember(prayRequestDto.getCategoryId(),
             member);
-        return prayService.savePray(prayRequestDto.toEntity(member, category));
-    }
-
-    @Transactional
-    public PrayResponseDto createPray(PrayRequestDto prayRequestDto, String username, LocalDate startDate) {
-        Member member = memberService.findMemberByUserId(username);
-        Category category = categoryRepository.getCategoryByIdAndMember(prayRequestDto.getCategoryId(),
-            member);
-        return prayService.savePray(prayRequestDto.toEntity(member, category, startDate));
+        return prayService.savePray(prayRequestDto.toEntity(member, category, startDateOrNull));
     }
 
     @Transactional
