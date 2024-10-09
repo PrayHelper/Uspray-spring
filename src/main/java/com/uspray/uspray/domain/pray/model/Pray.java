@@ -1,11 +1,11 @@
 package com.uspray.uspray.domain.pray.model;
 
-import com.uspray.uspray.domain.pray.dto.pray.request.PrayUpdateRequestDto;
-import com.uspray.uspray.global.enums.PrayType;
-import com.uspray.uspray.global.common.model.AuditingTimeEntity;
 import com.uspray.uspray.domain.category.model.Category;
-import com.uspray.uspray.domain.member.model.Member;
 import com.uspray.uspray.domain.group.model.GroupPray;
+import com.uspray.uspray.domain.member.model.Member;
+import com.uspray.uspray.domain.pray.dto.pray.request.PrayUpdateRequestDto;
+import com.uspray.uspray.global.common.model.AuditingTimeEntity;
+import com.uspray.uspray.global.enums.PrayType;
 import com.uspray.uspray.global.exception.ErrorStatus;
 import com.uspray.uspray.global.exception.model.NotFoundException;
 import java.time.LocalDate;
@@ -72,7 +72,8 @@ public class Pray extends AuditingTimeEntity {
 
     @Builder
     public Pray(Member member, String content, LocalDate deadline, Long originPrayId,
-        Long originMemberId, Category category, PrayType prayType, GroupPray groupPray, LocalDate startDate) {
+        Long originMemberId, Category category, PrayType prayType, GroupPray groupPray,
+        LocalDate startDate) {
         this.member = member;
         this.content = new String(Base64.getEncoder().encode(content.getBytes()));
         this.count = 0;
@@ -101,9 +102,8 @@ public class Pray extends AuditingTimeEntity {
                 Base64.getEncoder().encode(prayUpdateRequestDto.getContent().getBytes()));
         }
         this.deadline = prayUpdateRequestDto.getDeadline();
-        if (category != null) {
-            this.category = category;
-        }
+        this.category = category;
+
     }
 
     private void handleUpdateContentSharedPray(boolean isShared, String content) {
