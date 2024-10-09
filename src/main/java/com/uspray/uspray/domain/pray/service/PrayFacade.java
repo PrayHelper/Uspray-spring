@@ -61,7 +61,7 @@ public class PrayFacade {
         // 이 기도 제목을 공유한 적 없거나, 공유 받은 사람이 없으면 전부 수정 가능
         // 이 기도 제목을 공유한 적 있고, 누구라도 공유 받은 사람이 있으면 기도제목 내용 수정 불가능
         Pray sharedPray = prayRepository.getPrayByOriginPrayId(prayId);
-        Category category = categoryRepository.getCategoryByIdAndMember(
+        Category category = categoryService.getCategoryByIdAndMember(
             prayUpdateRequestDto.getCategoryId(),
             pray.getMember());
         // 기도 제목 타입과 카테고리 타입 일치하는 지 확인
@@ -69,13 +69,12 @@ public class PrayFacade {
             throw new CustomException(ErrorStatus.PRAY_CATEGORY_TYPE_MISMATCH);
         }
 
-        pray.update(prayUpdateRequestDto, checkIsShared(sharedPray, pray), category);
+        // 공유 됐을 때 content가 있는 경우
+        if ((sharedPray != null || pray.getPrayType() == PrayType.SHARED) && prayUpdateRequestDto.getContent() != null) {
+            throw new CustomException(ErrorStatus.ALREADY_SHARED_EXCEPTION);
+        }
 
-        return PrayResponseDto.of(pray);
-    }
-
-    public boolean checkIsShared(Pray sharedPray, Pray pray) {
-        return sharedPray != null || pray.getPrayType() == PrayType.SHARED;
+        return PrayResponseDto.of(pray.update(prayUpdateRequestDto, category));
     }
 
     @Transactional

@@ -6,8 +6,6 @@ import com.uspray.uspray.domain.member.model.Member;
 import com.uspray.uspray.domain.pray.dto.pray.request.PrayUpdateRequestDto;
 import com.uspray.uspray.global.common.model.AuditingTimeEntity;
 import com.uspray.uspray.global.enums.PrayType;
-import com.uspray.uspray.global.exception.ErrorStatus;
-import com.uspray.uspray.global.exception.model.NotFoundException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -94,22 +92,14 @@ public class Pray extends AuditingTimeEntity {
         }
     }
 
-    public void update(PrayUpdateRequestDto prayUpdateRequestDto,
-        boolean isShared, Category category) {
-        handleUpdateContentSharedPray(isShared, prayUpdateRequestDto.getContent());
+    public Pray update(PrayUpdateRequestDto prayUpdateRequestDto, Category category) {
         if (prayUpdateRequestDto.getContent() != null) {
             this.content = new String(
                 Base64.getEncoder().encode(prayUpdateRequestDto.getContent().getBytes()));
         }
         this.deadline = prayUpdateRequestDto.getDeadline();
         this.category = category;
-
-    }
-
-    private void handleUpdateContentSharedPray(boolean isShared, String content) {
-        if (isShared && content != null) {
-            throw new NotFoundException(ErrorStatus.ALREADY_SHARED_EXCEPTION);
-        }
+        return this;
     }
 
     public void countUp() {
