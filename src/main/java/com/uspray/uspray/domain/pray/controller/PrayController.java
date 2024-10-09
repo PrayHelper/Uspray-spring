@@ -55,7 +55,7 @@ public class PrayController implements PrayApi {
         @AuthenticationPrincipal User user
     ) {
         return ApiResponseDto.success(SuccessStatus.CREATE_PRAY_SUCCESS,
-            prayFacade.createPray(prayRequestDto, user.getUsername()));
+            prayFacade.createPray(prayRequestDto, user.getUsername(), null));
     }
 
     @DeleteMapping("/{prayId}")
@@ -91,7 +91,6 @@ public class PrayController implements PrayApi {
         @PathVariable("prayId") Long prayId,
         @AuthenticationPrincipal User user
     ) {
-        prayFacade.createHistory(user.getUsername(), prayId);
         return ApiResponseDto.success(SuccessStatus.GET_PRAY_LIST_SUCCESS,
             prayFacade.completePray(prayId, user.getUsername()));
     }

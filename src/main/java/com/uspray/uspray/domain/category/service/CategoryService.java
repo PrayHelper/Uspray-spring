@@ -26,6 +26,10 @@ public class CategoryService {
     private final PrayRepository prayRepository;
     private final PrayFacade prayFacade;
 
+    public Category getCategoryByIdAndMember(Long categoryId, Member member) {
+        return categoryRepository.getCategoryByIdAndMember(categoryId, member);
+    }
+
     private static int getNewOrder(int index, List<Category> categories, Category category) {
         Category targetPosition = categories.get(index - 1);
 
