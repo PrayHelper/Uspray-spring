@@ -86,4 +86,14 @@ public class HistoryService {
     public void saveHistory(History history) {
         historyRepository.save(history);
     }
+
+    @Transactional
+    public void deleteHistory(History history) {
+        historyRepository.delete(history);
+    }
+
+    @Transactional
+    public History getHistoryByIdAndMember(Long historyId, Member member) {
+        return historyRepository.getHistoryByIdAndMember(historyId, member);
+    }
 }
