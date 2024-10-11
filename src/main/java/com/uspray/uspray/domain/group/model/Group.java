@@ -45,6 +45,13 @@ public class Group extends AuditingTimeEntity {
     @JoinColumn(name = "leader_id", referencedColumnName = "member_id")
     private Member leader;
 
+    public static Group of(String name, Member leader) {
+        return Group.builder()
+            .name(name)
+            .leader(leader)
+            .build();
+    }
+
     @Builder
     public Group(String name, Member leader) {
         this.name = name;
