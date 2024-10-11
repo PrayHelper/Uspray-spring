@@ -36,7 +36,6 @@ public class GroupFacade {
         Member member = memberService.findMemberByUserId(username);
         Group group = groupService.getGroupById(groupId);
 
-        group.validateGroupName(groupRequestDto.getName());
         group.checkLeaderAuthorization(member);
         group.changeName(groupRequestDto.getName());
     }
