@@ -58,7 +58,8 @@ public class Group extends AuditingTimeEntity {
         this.leader = leader;
     }
 
-    public void changeName(String name) {
+    public void changeName(Member leader, String name) {
+        checkLeaderAuthorization(leader);
         this.name = name;
     }
 
