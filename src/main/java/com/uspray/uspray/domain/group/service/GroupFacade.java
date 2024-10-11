@@ -43,12 +43,11 @@ public class GroupFacade {
 
     @Transactional
     public void changeGroupLeader(String username, Long groupId, Long newLeaderId) {
-        Member member = memberService.findMemberByUserId(username);
+        Member leader = memberService.findMemberByUserId(username);
         Member newLeader = memberService.findMemberById(newLeaderId);
         Group group = groupService.getGroupById(groupId);
 
-        group.checkLeaderAuthorization(member);
-        group.changeLeader(newLeader);
+        group.changeLeader(leader, newLeader);
     }
 
     @Transactional
