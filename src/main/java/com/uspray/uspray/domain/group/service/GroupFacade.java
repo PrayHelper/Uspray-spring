@@ -93,6 +93,7 @@ public class GroupFacade {
         Group group = groupService.getGroupByIdAndLeaderId(groupId, leader.getId());
 
         groupPrayService.deleteAllByGroup(group);
+        groupMemberService.deleteAllByGroup(group);
         groupService.delete(group);
     }
 

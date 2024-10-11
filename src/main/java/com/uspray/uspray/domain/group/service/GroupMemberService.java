@@ -32,4 +32,9 @@ public class GroupMemberService {
         groupMemberRepository.delete(groupMember);
     }
 
+    @Transactional
+    public void deleteAllByGroup(Group group) {
+        groupMemberRepository.deleteAllByGroup(group);
+    }
+
 }

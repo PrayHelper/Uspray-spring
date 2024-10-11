@@ -20,6 +20,8 @@ public interface GroupMemberRepository extends JpaRepository<GroupMember, Long> 
 
     List<GroupMember> findByGroupId(Long groupId);
 
+    void deleteAllByGroup(Group group);
+
     default GroupMember getGroupMemberByGroupAndMember(Group group, Member member) {
         return this.findByGroupAndMember(group, member).orElseThrow(
             () -> new NotFoundException(ErrorStatus.NOT_FOUND_GROUP_MEMBER_EXCEPTION));
