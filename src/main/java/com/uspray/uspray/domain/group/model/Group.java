@@ -68,11 +68,6 @@ public class Group extends AuditingTimeEntity {
         this.leader = newLeader;
     }
 
-    public void kickMember(GroupMember groupMember) {
-        this.groupMemberList.remove(groupMember);
-
-    }
-
     public void checkLeaderAuthorization(Member member) {
         if (!member.equals(this.leader)) {
             throw new CustomException(ErrorStatus.GROUP_UNAUTHORIZED_EXCEPTION);

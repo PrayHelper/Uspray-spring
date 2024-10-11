@@ -5,6 +5,8 @@ import com.uspray.uspray.domain.group.dto.group.response.GroupMemberResponseDto;
 import com.uspray.uspray.domain.group.dto.group.response.GroupResponseDto;
 import com.uspray.uspray.domain.group.model.Group;
 import com.uspray.uspray.domain.group.repository.GroupRepository;
+import com.uspray.uspray.global.exception.ErrorStatus;
+import com.uspray.uspray.global.exception.model.CustomException;
 import com.uspray.uspray.global.util.MaskingUtil;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +26,11 @@ public class GroupService {
 
     public Group getGroupById(Long groupId) {
         return groupRepository.getGroupById(groupId);
+    }
+
+    public Group getGroupByIdAndLeaderId(Long groupId, Long leaderId) {
+        return groupRepository.findByIdAndLeaderId(groupId, leaderId).orElseThrow(() -> new CustomException(
+            ErrorStatus.GROUP_UNAUTHORIZED_EXCEPTION));
     }
 
     @Transactional

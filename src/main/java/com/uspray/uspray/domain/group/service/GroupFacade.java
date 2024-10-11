@@ -51,15 +51,14 @@ public class GroupFacade {
     @Transactional
     public void kickGroupMember(String username, Long groupId, Long kickedMemberId) {
         Member leader = memberService.findMemberByUserId(username);
-        Group group = groupService.getGroupById(groupId);
-        GroupMember kickedgroupMember = groupMemberService.getGroupMemberByGroupIdAndMemberId(
-            groupId, kickedMemberId);
-
-        group.checkLeaderAuthorization(leader);
-        if (group.getLeader().getId().equals(kickedMemberId)) {
+        if (leader.getId().equals(kickedMemberId)) {
             throw new CustomException(ErrorStatus.LEADER_CANNOT_LEAVE_GROUP_EXCEPTION);
         }
-        group.kickMember(kickedgroupMember);
+
+        Group group = groupService.getGroupByIdAndLeaderId(groupId, leader.getId());
+        GroupMember kickedgroupMember = groupMemberService.getGroupMemberByGroupIdAndMemberId(
+            group.getId(), kickedMemberId);
+
         groupMemberService.delete(kickedgroupMember);
     }
 
@@ -85,7 +84,6 @@ public class GroupFacade {
         if (group.getLeader().equals(member)) {
             throw new CustomException(ErrorStatus.LEADER_CANNOT_LEAVE_GROUP_EXCEPTION);
         }
-        group.kickMember(groupMember);
         groupMemberService.delete(groupMember);
     }
 
