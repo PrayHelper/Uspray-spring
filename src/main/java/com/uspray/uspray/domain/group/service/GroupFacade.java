@@ -77,12 +77,13 @@ public class GroupFacade {
     public void leaveGroup(String username, Long groupId) {
         Member member = memberService.findMemberByUserId(username);
         Group group = groupService.getGroupById(groupId);
-        GroupMember groupMember = groupMemberService.getGroupMemberByGroupIdAndMemberId(group.getId(),
-            member.getId());
 
         if (group.getLeader().equals(member)) {
             throw new CustomException(ErrorStatus.LEADER_CANNOT_LEAVE_GROUP_EXCEPTION);
         }
+
+        GroupMember groupMember = groupMemberService.getGroupMemberByGroupIdAndMemberId(group.getId(),
+            member.getId());
         groupMemberService.delete(groupMember);
     }
 
