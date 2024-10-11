@@ -34,18 +34,17 @@ public class GroupFacade {
     @Transactional
     public void changeGroupName(String username, Long groupId, GroupRequestDto groupRequestDto) {
         Member leader = memberService.findMemberByUserId(username);
-        Group group = groupService.getGroupById(groupId);
+        Group group = groupService.getGroupByIdAndLeaderId(groupId, leader.getId());
 
-        group.changeName(leader, groupRequestDto.getName());
+        group.changeName(groupRequestDto.getName());
     }
 
     @Transactional
     public void changeGroupLeader(String username, Long groupId, Long newLeaderId) {
         Member leader = memberService.findMemberByUserId(username);
-        Member newLeader = memberService.findMemberById(newLeaderId);
-        Group group = groupService.getGroupById(groupId);
+        Group group = groupService.getGroupByIdAndLeaderId(groupId, leader.getId());
 
-        group.changeLeader(leader, newLeader);
+        group.changeLeader(memberService.findMemberById(newLeaderId));
     }
 
     @Transactional
@@ -90,9 +89,8 @@ public class GroupFacade {
     @Transactional
     public void deleteGroup(String username, Long groupId) {
         Member leader = memberService.findMemberByUserId(username);
-        Group group = groupService.getGroupById(groupId);
+        Group group = groupService.getGroupByIdAndLeaderId(groupId, leader.getId());
 
-        group.checkLeaderAuthorization(leader);
         groupPrayService.deleteAllByGroup(group);
         groupService.delete(group);
     }

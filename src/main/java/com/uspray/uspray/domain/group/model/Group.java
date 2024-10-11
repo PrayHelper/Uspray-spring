@@ -1,9 +1,7 @@
 package com.uspray.uspray.domain.group.model;
 
-import com.uspray.uspray.global.common.model.AuditingTimeEntity;
 import com.uspray.uspray.domain.member.model.Member;
-import com.uspray.uspray.global.exception.ErrorStatus;
-import com.uspray.uspray.global.exception.model.CustomException;
+import com.uspray.uspray.global.common.model.AuditingTimeEntity;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -58,19 +56,11 @@ public class Group extends AuditingTimeEntity {
         this.leader = leader;
     }
 
-    public void changeName(Member leader, String name) {
-        checkLeaderAuthorization(leader);
+    public void changeName(String name) {
         this.name = name;
     }
 
-    public void changeLeader(Member leader, Member newLeader) {
-        checkLeaderAuthorization(leader);
+    public void changeLeader(Member newLeader) {
         this.leader = newLeader;
-    }
-
-    public void checkLeaderAuthorization(Member member) {
-        if (!member.equals(this.leader)) {
-            throw new CustomException(ErrorStatus.GROUP_UNAUTHORIZED_EXCEPTION);
-        }
     }
 }
