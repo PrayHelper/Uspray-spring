@@ -9,7 +9,6 @@ import com.uspray.uspray.domain.history.model.History;
 import com.uspray.uspray.domain.member.model.Member;
 import com.uspray.uspray.domain.pray.model.Pray;
 import com.uspray.uspray.global.exception.ErrorStatus;
-import com.uspray.uspray.global.exception.model.CustomException;
 import com.uspray.uspray.global.exception.model.NotFoundException;
 import com.uspray.uspray.domain.history.repository.HistoryRepository;
 import com.uspray.uspray.domain.member.repository.MemberRepository;
@@ -40,20 +39,16 @@ public class HistoryService {
 
         if (PrayType.PERSONAL.name().equalsIgnoreCase(type)) {
             historyList = historyRepository.findByMemberAndOriginPrayIdIsNull(member, pageable)
-                .map(HistoryResponseDto::of);
-            return new HistoryListResponseDto(historyList.getContent(),
-                historyList.getTotalPages());
+                    .map(HistoryResponseDto::of);
         }
-        if (PrayType.SHARED.name().equalsIgnoreCase(type)) {
+        else {
             historyList = historyRepository.findByMemberAndOriginPrayIdIsNotNull(
                 member, pageable).map(history -> {
                 Member originMember = memberRepository.getMemberById(history.getOriginMemberId());
                 return HistoryResponseDto.shared(history, originMember);
             });
-            return new HistoryListResponseDto(historyList.getContent(),
-                historyList.getTotalPages());
         }
-        throw new CustomException(ErrorStatus.INVALID_TYPE_EXCEPTION);
+        return new HistoryListResponseDto(historyList.getContent(), historyList.getTotalPages());
     }
 
     @Transactional(readOnly = true)
