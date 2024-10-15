@@ -13,7 +13,6 @@ import com.uspray.uspray.domain.pray.dto.pray.request.PrayRequestDto;
 import com.uspray.uspray.domain.pray.dto.pray.request.PrayUpdateRequestDto;
 import com.uspray.uspray.domain.pray.dto.pray.response.PrayResponseDto;
 import com.uspray.uspray.domain.pray.model.Pray;
-import com.uspray.uspray.domain.pray.repository.PrayRepository;
 import com.uspray.uspray.global.enums.CategoryType;
 import com.uspray.uspray.global.enums.PrayType;
 import com.uspray.uspray.global.exception.ErrorStatus;
@@ -35,8 +34,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Slf4j
 public class PrayFacade {
-
-    private final PrayRepository prayRepository;
     private final HistoryService historyService;
     private final NotificationLogService notificationLogService;
     private final FCMNotificationService fcmNotificationService;
@@ -58,11 +55,11 @@ public class PrayFacade {
     @Transactional
     public PrayResponseDto updatePray(Long prayId, String username,
         PrayUpdateRequestDto prayUpdateRequestDto) {
-        Pray pray = prayRepository.getPrayByIdAndMemberId(prayId, username);
+        Pray pray = prayService.getPrayByIdAndMemberId(prayId, username);
 
         // 이 기도 제목을 공유한 적 없거나, 공유 받은 사람이 없으면 전부 수정 가능
         // 이 기도 제목을 공유한 적 있고, 누구라도 공유 받은 사람이 있으면 기도제목 내용 수정 불가능
-        Pray sharedPray = prayRepository.getPrayByOriginPrayId(prayId);
+        Pray sharedPray = prayService.getSharedPray(prayId);
         Category category = categoryService.getCategoryByIdAndMember(
             prayUpdateRequestDto.getCategoryId(),
             pray.getMember());
@@ -81,17 +78,17 @@ public class PrayFacade {
 
     @Transactional
     public void convertPrayToHistory() {
-        List<Pray> prayList = prayRepository.findAllByDeadlineBefore(LocalDate.now());
+        List<Pray> prayList = prayService.getPrayListDeadlineBefore(LocalDate.now());
         for (Pray pray : prayList) {
             pray.complete();
-            Integer sharedCount = prayRepository.getSharedCountByOriginPrayId(
+            Integer sharedCount = prayService.getSharedCountByOriginPrayId(
                 pray.getOriginPrayId());
             History history = History.builder()
                 .pray(pray)
                 .totalCount(sharedCount) //sharedCount에 내 count도 포함되어 있음
                 .build();
             historyService.saveHistory(history);
-            prayRepository.delete(pray);
+            prayService.deletePray(pray);
         }
     }
 
@@ -101,7 +98,7 @@ public class PrayFacade {
             .pray(pray)
             .build();
         historyService.saveHistory(history);
-        prayRepository.delete(pray);
+        prayService.deletePray(pray);
     }
 
     @Transactional
@@ -117,7 +114,7 @@ public class PrayFacade {
 
     @Transactional
     public List<PrayListResponseDto> todayPray(Long prayId, String username) {
-        Pray pray = prayRepository.getPrayByIdAndMemberId(prayId, username);
+        Pray pray = prayService.getPrayByIdAndMemberId(prayId, username);
         handlePrayedToday(pray);
         return getPrayList(username, pray.getPrayType().stringValue());
     }
@@ -164,12 +161,12 @@ public class PrayFacade {
 
     @Transactional
     public PrayResponseDto deletePray(Long prayId, String username) {
-        Pray pray = prayRepository.getPrayByIdAndMemberId(prayId, username);
+        Pray pray = prayService.getPrayByIdAndMemberId(prayId, username);
         Member member = memberService.findMemberByUserId(username);
 
         scrapAndHeartService.deleteScrapAndHeart(member, pray);
         shareService.deleteByOriginPray(pray);
-        prayRepository.delete(pray);
+        prayService.deletePray(pray);
         return PrayResponseDto.of(pray);
     }
 
@@ -214,17 +211,17 @@ public class PrayFacade {
 
     @Transactional
     public List<PrayListResponseDto> completePray(Long prayId, String username) {
-        Pray pray = prayRepository.getPrayByIdAndMemberId(prayId, username);
+        Pray pray = prayService.getPrayByIdAndMemberId(prayId, username);
         pray.complete();
 
         createHistory(pray);
-        prayRepository.delete(pray);
+        prayService.deletePray(pray);
 
         return getPrayList(username, pray.getPrayType().stringValue());
     }
 
     private void createHistory(Pray pray) {
-        Integer sharedCount = prayRepository.getSharedCountByOriginPrayId(pray.getId());
+        Integer sharedCount = prayService.getSharedCountByOriginPrayId(pray.getId());
         History history = History.builder()
             .pray(pray)
             .totalCount(sharedCount)
@@ -235,6 +232,6 @@ public class PrayFacade {
     @Transactional
     public List<PrayListResponseDto> cancelPray(Long prayId, String username) {
         return getPrayList(username,
-            prayRepository.cancelPray(prayId, username).getPrayType().stringValue());
+            prayService.cancelPray(prayId, username).getPrayType().stringValue());
     }
 }
