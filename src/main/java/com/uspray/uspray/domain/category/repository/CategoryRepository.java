@@ -22,6 +22,8 @@ public interface CategoryRepository extends JpaRepository<Category, Long>,
     List<Category> getCategoriesByMemberAndCategoryTypeOrderByOrder(Member member,
         CategoryType categoryType);
 
+    List<Category> findAllByMemberAndCategoryTypeOrderByOrderAsc(Member member, CategoryType categoryType);
+
     default Category getCategoryByIdAndMember(Long categoryId, Member member) {
         Category category = findById(categoryId)
             .filter(c ->  c.getMember().equals(member))
