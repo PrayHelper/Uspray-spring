@@ -1,13 +1,11 @@
 package com.uspray.uspray.domain.pray.model;
 
-import com.uspray.uspray.domain.pray.dto.pray.request.PrayUpdateRequestDto;
-import com.uspray.uspray.global.enums.PrayType;
-import com.uspray.uspray.global.common.model.AuditingTimeEntity;
 import com.uspray.uspray.domain.category.model.Category;
-import com.uspray.uspray.domain.member.model.Member;
 import com.uspray.uspray.domain.group.model.GroupPray;
-import com.uspray.uspray.global.exception.ErrorStatus;
-import com.uspray.uspray.global.exception.model.NotFoundException;
+import com.uspray.uspray.domain.member.model.Member;
+import com.uspray.uspray.domain.pray.dto.pray.request.PrayUpdateRequestDto;
+import com.uspray.uspray.global.common.model.AuditingTimeEntity;
+import com.uspray.uspray.global.enums.PrayType;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -72,7 +70,8 @@ public class Pray extends AuditingTimeEntity {
 
     @Builder
     public Pray(Member member, String content, LocalDate deadline, Long originPrayId,
-        Long originMemberId, Category category, PrayType prayType, GroupPray groupPray, LocalDate startDate) {
+        Long originMemberId, Category category, PrayType prayType, GroupPray groupPray,
+        LocalDate startDate) {
         this.member = member;
         this.content = new String(Base64.getEncoder().encode(content.getBytes()));
         this.count = 0;
@@ -93,23 +92,14 @@ public class Pray extends AuditingTimeEntity {
         }
     }
 
-    public void update(PrayUpdateRequestDto prayUpdateRequestDto,
-        boolean isShared, Category category) {
-        handleUpdateContentSharedPray(isShared, prayUpdateRequestDto.getContent());
+    public Pray update(PrayUpdateRequestDto prayUpdateRequestDto, Category category) {
         if (prayUpdateRequestDto.getContent() != null) {
             this.content = new String(
                 Base64.getEncoder().encode(prayUpdateRequestDto.getContent().getBytes()));
         }
         this.deadline = prayUpdateRequestDto.getDeadline();
-        if (category != null) {
-            this.category = category;
-        }
-    }
-
-    private void handleUpdateContentSharedPray(boolean isShared, String content) {
-        if (isShared && content != null) {
-            throw new NotFoundException(ErrorStatus.ALREADY_SHARED_EXCEPTION);
-        }
+        this.category = category;
+        return this;
     }
 
     public void countUp() {

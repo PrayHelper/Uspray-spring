@@ -24,7 +24,15 @@ public class CategoryService {
     private final MemberRepository memberRepository;
     private final CategoryRepository categoryRepository;
     private final PrayRepository prayRepository;
-    private final PrayFacade prayFacade;
+//    private final PrayFacade prayFacade;
+
+    public Category getCategoryByIdAndMember(Long categoryId, Member member) {
+        return categoryRepository.getCategoryByIdAndMember(categoryId, member);
+    }
+
+    public List<Category> getCategoryListByMemberAndCategoryType(Member member, CategoryType categoryType) {
+        return categoryRepository.findAllByMemberAndCategoryTypeOrderByOrderAsc(member, categoryType);
+    }
 
     private static int getNewOrder(int index, List<Category> categories, Category category) {
         Category targetPosition = categories.get(index - 1);
@@ -76,10 +84,7 @@ public class CategoryService {
         return CategoryResponseDto.of(category);
     }
 
-    public CategoryResponseDto deleteCategory(String username, Long categoryId) {
-        Category category = categoryRepository.getCategoryByIdAndMember(categoryId,
-            memberRepository.getMemberByUserId(username));
-        prayRepository.findByCategoryId(category.getId()).forEach(prayFacade::convertPrayToHistory);
+    public CategoryResponseDto deleteCategory(Category category) {
         categoryRepository.delete(category);
         return CategoryResponseDto.of(category);
     }

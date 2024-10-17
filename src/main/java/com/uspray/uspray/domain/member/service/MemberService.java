@@ -69,4 +69,12 @@ public class MemberService {
     public void updateFcmToken(String username, FcmTokenDto fcmTokenDto) {
         memberRepository.getMemberByUserId(username).updateFcmToken(fcmTokenDto.getFcmToken());
     }
+
+    public Member findMemberByUserId(String userId) {
+        return memberRepository.getMemberByUserId(userId);
+    }
+
+    public Member findMemberById(Long id) {
+        return memberRepository.getMemberById(id);
+    }
 }
