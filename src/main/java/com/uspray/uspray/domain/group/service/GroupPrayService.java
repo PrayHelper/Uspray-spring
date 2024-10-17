@@ -1,5 +1,6 @@
 package com.uspray.uspray.domain.group.service;
 
+import com.uspray.uspray.domain.group.model.Group;
 import com.uspray.uspray.domain.group.repository.GroupPrayRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,11 @@ public class GroupPrayService {
     @Transactional
     public void deleteGroupPray(Long groupPrayId) {
         groupPrayRepository.delete(groupPrayRepository.getGroupPrayById(groupPrayId));
+    }
+
+    @Transactional
+    public void deleteAllByGroup(Group group) {
+        groupPrayRepository.deleteAllByGroup(group);
     }
 
 }

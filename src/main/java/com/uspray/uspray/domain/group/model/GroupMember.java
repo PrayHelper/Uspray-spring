@@ -34,11 +34,17 @@ public class GroupMember extends AuditingTimeEntity {
 
     private Boolean notificationAgree = true;
 
+    public static GroupMember of(Group group, Member member) {
+        return GroupMember.builder()
+            .group(group)
+            .member(member)
+            .build();
+    }
+
     @Builder
     public GroupMember(Group group, Member member) {
         setGroup(group);
         setMember(member);
-
     }
 
     public void setNotificationAgree(Boolean notificationAgree) {

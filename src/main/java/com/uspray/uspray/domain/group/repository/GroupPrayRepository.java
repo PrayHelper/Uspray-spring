@@ -23,7 +23,5 @@ public interface GroupPrayRepository extends JpaRepository<GroupPray, Long> {
             () -> new NotFoundException(ErrorStatus.NOT_FOUND_GROUP_PRAY_EXCEPTION));
     }
 
-    default void deleteAllByGroup(Group group) {
-        this.deleteAll(findGroupPraysByGroup(group));
-    }
+    void deleteAllByGroup(Group group);
 }

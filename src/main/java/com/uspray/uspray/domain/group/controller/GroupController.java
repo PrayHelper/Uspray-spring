@@ -8,7 +8,6 @@ import com.uspray.uspray.domain.group.service.GroupFacade;
 import com.uspray.uspray.domain.group.service.GroupService;
 import com.uspray.uspray.global.common.dto.ApiResponseDto;
 import com.uspray.uspray.global.exception.SuccessStatus;
-import io.swagger.v3.oas.annotations.Parameter;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +33,7 @@ public class GroupController implements GroupApi {
 
     @GetMapping
     public ApiResponseDto<GroupListResponseDto> getGroupList(
-        @Parameter(hidden = true) @AuthenticationPrincipal User user) {
+        @AuthenticationPrincipal User user) {
         return ApiResponseDto.success(SuccessStatus.GET_GROUP_LIST_SUCCESS,
             groupService.getGroupList(user.getUsername()));
     }
@@ -44,8 +43,7 @@ public class GroupController implements GroupApi {
         @AuthenticationPrincipal User user,
         @Valid @RequestBody GroupRequestDto groupRequestDto) {
         groupFacade.createGroup(user.getUsername(), groupRequestDto);
-        return ApiResponseDto.success(SuccessStatus.CREATE_GROUP_SUCCESS,
-            SuccessStatus.CREATE_GROUP_SUCCESS.getMessage());
+        return ApiResponseDto.success(SuccessStatus.CREATE_GROUP_SUCCESS);
     }
 
     @PutMapping("/{groupId}/change-name")
@@ -54,8 +52,7 @@ public class GroupController implements GroupApi {
         @PathVariable Long groupId,
         @Valid @RequestBody GroupRequestDto groupRequestDto) {
         groupFacade.changeGroupName(user.getUsername(), groupId, groupRequestDto);
-        return ApiResponseDto.success(SuccessStatus.CHANGE_GROUP_NAME_SUCCESS,
-            SuccessStatus.CHANGE_GROUP_NAME_SUCCESS.getMessage());
+        return ApiResponseDto.success(SuccessStatus.CHANGE_GROUP_NAME_SUCCESS);
     }
 
     @PutMapping("/{groupId}/change-leader")
@@ -65,8 +62,7 @@ public class GroupController implements GroupApi {
         @Valid @RequestBody GroupMemberRequestDto groupLeaderRequestDto) {
         groupFacade.changeGroupLeader(user.getUsername(), groupId,
             groupLeaderRequestDto.getMemberId());
-        return ApiResponseDto.success(SuccessStatus.CHANGE_GROUP_LEADER_SUCCESS,
-            SuccessStatus.CHANGE_GROUP_LEADER_SUCCESS.getMessage());
+        return ApiResponseDto.success(SuccessStatus.CHANGE_GROUP_LEADER_SUCCESS);
     }
 
     @DeleteMapping("/{groupId}/kick")
@@ -76,8 +72,7 @@ public class GroupController implements GroupApi {
         @Valid @RequestBody GroupMemberRequestDto groupMemberRequestDto) {
         groupFacade.kickGroupMember(user.getUsername(), groupId,
             groupMemberRequestDto.getMemberId());
-        return ApiResponseDto.success(SuccessStatus.KICK_GROUP_MEMBER_SUCCESS,
-            SuccessStatus.KICK_GROUP_MEMBER_SUCCESS.getMessage());
+        return ApiResponseDto.success(SuccessStatus.KICK_GROUP_MEMBER_SUCCESS);
     }
 
     @PostMapping("/{groupId}/join")
@@ -85,8 +80,7 @@ public class GroupController implements GroupApi {
         @AuthenticationPrincipal User user,
         @PathVariable Long groupId) {
         groupFacade.addGroupMember(user.getUsername(), groupId);
-        return ApiResponseDto.success(SuccessStatus.ADD_GROUP_MEMBER_SUCCESS,
-            SuccessStatus.ADD_GROUP_MEMBER_SUCCESS.getMessage());
+        return ApiResponseDto.success(SuccessStatus.ADD_GROUP_MEMBER_SUCCESS);
     }
 
     @DeleteMapping("/{groupId}/leave")
@@ -94,17 +88,15 @@ public class GroupController implements GroupApi {
         @AuthenticationPrincipal User user,
         @PathVariable Long groupId) {
         groupFacade.leaveGroup(user.getUsername(), groupId);
-        return ApiResponseDto.success(SuccessStatus.LEAVE_GROUP_SUCCESS,
-            SuccessStatus.LEAVE_GROUP_SUCCESS.getMessage());
+        return ApiResponseDto.success(SuccessStatus.LEAVE_GROUP_SUCCESS);
     }
 
     @DeleteMapping("/{groupId}")
     public ApiResponseDto<?> deleteGroup(
-        @Parameter(hidden = true) @AuthenticationPrincipal User user,
+        @AuthenticationPrincipal User user,
         @PathVariable Long groupId) {
         groupFacade.deleteGroup(user.getUsername(), groupId);
-        return ApiResponseDto.success(SuccessStatus.DELETE_GROUP_SUCCESS,
-            SuccessStatus.DELETE_GROUP_SUCCESS.getMessage());
+        return ApiResponseDto.success(SuccessStatus.DELETE_GROUP_SUCCESS);
     }
 
     @GetMapping("/{groupId}/member/search")
@@ -121,7 +113,6 @@ public class GroupController implements GroupApi {
         @AuthenticationPrincipal User user,
         @PathVariable Long groupId) {
         groupFacade.changeGroupNotification(user.getUsername(), groupId);
-        return ApiResponseDto.success(SuccessStatus.CHANGE_GROUP_NOTIFICATION_SUCCESS,
-            SuccessStatus.CHANGE_GROUP_NOTIFICATION_SUCCESS.getMessage());
+        return ApiResponseDto.success(SuccessStatus.CHANGE_GROUP_NOTIFICATION_SUCCESS);
     }
 }
