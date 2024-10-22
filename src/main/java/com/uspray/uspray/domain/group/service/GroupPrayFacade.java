@@ -262,12 +262,9 @@ public class GroupPrayFacade {
             log.error(
                 "send notification to " + memberRepository.getMemberByUserId(receiver.getUserId())
             );
-            NotificationLog notificationLog = NotificationLog.builder()
-                .pray(groupPray.getOriginPray())
-                .member(memberRepository.getMemberByUserId(receiver.getUserId()))
-                .title(name + "님이 당신의 기도제목을 두고 기도했어요")
-                .build();
-            notificationLogRepository.save(notificationLog);
+            fcmNotificationService.saveNotificationLog(
+                NotificationLog.of(memberService.findMemberByUserId(receiver.getUserId()),
+                    groupPray.getOriginPray(), name + "님이 당신의 기도제목을 두고 기도했어요"));
             return;
         }
         try {
@@ -281,12 +278,10 @@ public class GroupPrayFacade {
         log.error(
             "send notification to " + memberRepository.getMemberByUserId(receiver.getUserId())
         );
-        NotificationLog notificationLog = NotificationLog.builder()
-            .pray(groupPray.getOriginPray())
-            .member(memberRepository.getMemberByUserId(receiver.getUserId()))
-            .title(name + "님이 당신의 기도제목을 저장했어요")
-            .build();
-        notificationLogRepository.save(notificationLog);
+
+        fcmNotificationService.saveNotificationLog(
+            NotificationLog.of(memberService.findMemberByUserId(receiver.getUserId()),
+                groupPray.getOriginPray(), name + "님이 당신의 기도제목을 저장했어요"));
 
     }
 }
