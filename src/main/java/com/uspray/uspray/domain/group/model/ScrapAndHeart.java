@@ -49,6 +49,13 @@ public class ScrapAndHeart {
         setSharedPray(sharedPray);
     }
 
+    public static ScrapAndHeart createdByGroupPrayOf(GroupPray groupPray, Member author) {
+        return ScrapAndHeart.builder()
+            .groupPray(groupPray)
+            .member(author)
+            .build();
+    }
+
     private void setGroupPray(GroupPray groupPray) {
         this.groupPray = groupPray;
         groupPray.getScrapAndHeart().add(this);

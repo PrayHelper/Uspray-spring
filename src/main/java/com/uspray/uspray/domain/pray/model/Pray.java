@@ -71,7 +71,7 @@ public class Pray extends AuditingTimeEntity {
     @Builder
     public Pray(Member member, String content, LocalDate deadline, Long originPrayId,
         Long originMemberId, Category category, PrayType prayType, GroupPray groupPray,
-        LocalDate startDate) {
+        LocalDate startDate, Boolean isShared) {
         this.member = member;
         this.content = new String(Base64.getEncoder().encode(content.getBytes()));
         this.count = 0;
@@ -83,6 +83,22 @@ public class Pray extends AuditingTimeEntity {
         setGroupPray(groupPray);
         this.startDate = startDate;
         this.lastPrayedAt = LocalDate.of(2002, 2, 24);
+        this.isShared = isShared;
+    }
+
+    public static Pray createdByGroupPrayOf(Member author, String content, LocalDate deadline,
+        Category category, PrayType prayType, GroupPray groupPray,
+        Boolean isShared) {
+        return Pray.builder()
+            .member(author)
+            .content(content)
+            .deadline(deadline)
+            .category(category)
+            .startDate(LocalDate.now())
+            .prayType(prayType)
+            .groupPray(groupPray)
+            .isShared(isShared)
+            .build();
     }
 
     public void setGroupPray(GroupPray groupPray) {

@@ -109,35 +109,18 @@ public class GroupPrayFacade {
     public void createGroupPray(GroupPrayRequestDto groupPrayRequestDto, String userId) {
         Member author = memberRepository.getMemberByUserId(userId);
         Group group = groupRepository.getGroupById(groupPrayRequestDto.getGroupId());
+        GroupPray groupPray = GroupPray.of(group, author, groupPrayRequestDto.getDeadline(),
+            groupPrayRequestDto.getContent());
+
+        groupPrayRepository.save(groupPray);
+        scrapAndHeartRepository.save(ScrapAndHeart.createdByGroupPrayOf(groupPray, author));
+
         Category category = categoryRepository.getCategoryByIdAndMember(
             groupPrayRequestDto.getCategoryId(),
             author);
 
-        GroupPray groupPray = GroupPray.builder()
-            .group(group)
-            .author(author)
-            .deadline(groupPrayRequestDto.getDeadline())
-            .content(groupPrayRequestDto.getContent())
-            .build();
-        groupPrayRepository.save(groupPray);
-
-        ScrapAndHeart scrapAndHeart = ScrapAndHeart.builder()
-            .groupPray(groupPray)
-            .member(author)
-            .build();
-        scrapAndHeartRepository.save(scrapAndHeart);
-
-        Pray pray = Pray.builder()
-            .content(groupPrayRequestDto.getContent())
-            .deadline(groupPrayRequestDto.getDeadline())
-            .member(author)
-            .category(category)
-            .startDate(LocalDate.now())
-            .prayType(PrayType.PERSONAL)
-            .groupPray(groupPray)
-            .build();
-        pray.setIsShared();
-        prayRepository.save(pray);
+        prayRepository.save(Pray.createdByGroupPrayOf(author, groupPrayRequestDto.getContent(),
+            groupPrayRequestDto.getDeadline(), category, PrayType.PERSONAL, groupPray, true));
     }
 
     @Transactional(readOnly = true)
