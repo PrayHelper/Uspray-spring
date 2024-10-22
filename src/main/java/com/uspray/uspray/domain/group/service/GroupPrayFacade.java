@@ -251,25 +251,14 @@ public class GroupPrayFacade {
         Member receiver, boolean isHeart) throws IOException {
         String groupName = groupPray.getGroup().getName();
         String name = scrapAndHeart.getMember().getName();
-        if (isHeart) {
-            fcmNotificationService.sendMessageTo(
-                receiver.getFirebaseToken(),
-                groupName + " 💘",
-                name + "님이 당신의 기도제목을 두고 기도했어요");
 
-            fcmNotificationService.saveNotificationLog(
-                NotificationLog.of(memberService.findMemberByUserId(receiver.getUserId()),
-                    groupPray.getOriginPray(), name + "님이 당신의 기도제목을 두고 기도했어요"));
-            return;
-        }
-        fcmNotificationService.sendMessageTo(
-            receiver.getFirebaseToken(),
-            groupName + " 💌 ",
-            name + "님이 당신의 기도제목을 저장했어요");
+        String title = isHeart ? groupName + " 💘" : groupName + " 💌 ";
+        String body = isHeart ? name + "님이 당신의 기도제목을 두고 기도했어요" : name + "님이 당신의 기도제목을 저장했어요";
 
+        fcmNotificationService.sendMessageTo(receiver.getFirebaseToken(), title, body);
         fcmNotificationService.saveNotificationLog(
             NotificationLog.of(memberService.findMemberByUserId(receiver.getUserId()),
-                groupPray.getOriginPray(), name + "님이 당신의 기도제목을 저장했어요"));
+                groupPray.getOriginPray(), body));
 
     }
 }
