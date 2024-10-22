@@ -37,4 +37,8 @@ public class GroupMemberService {
         groupMemberRepository.deleteAllByGroup(group);
     }
 
+    public GroupMember getGroupMemberByGroupAndMember(Group group, Member member) {
+        return groupMemberRepository.getGroupMemberByGroupAndMember(group, member);
+    }
+
 }

@@ -2,6 +2,7 @@ package com.uspray.uspray.domain.category.service;
 
 import com.uspray.uspray.domain.category.dto.CategoryRequestDto;
 import com.uspray.uspray.domain.category.dto.CategoryResponseDto;
+import com.uspray.uspray.domain.pray.dto.pray.PrayListResponseDto;
 import com.uspray.uspray.global.enums.CategoryType;
 import com.uspray.uspray.domain.category.model.Category;
 import com.uspray.uspray.domain.member.model.Member;
@@ -28,6 +29,14 @@ public class CategoryService {
 
     public Category getCategoryByIdAndMember(Long categoryId, Member member) {
         return categoryRepository.getCategoryByIdAndMember(categoryId, member);
+    }
+
+    public Category getCategoryById(Long categoryId) {
+        return categoryRepository.getCategoryById(categoryId);
+    }
+
+    public List<PrayListResponseDto> findAllWithOrderAndType(String username, String prayType, List<Long> prayIds) {
+        return categoryRepository.findAllWithOrderAndType(username, prayType, prayIds);
     }
 
     private static int getNewOrder(int index, List<Category> categories, Category category) {

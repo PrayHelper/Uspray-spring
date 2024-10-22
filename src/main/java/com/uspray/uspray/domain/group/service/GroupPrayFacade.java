@@ -1,7 +1,7 @@
 package com.uspray.uspray.domain.group.service;
 
 import com.uspray.uspray.domain.category.model.Category;
-import com.uspray.uspray.domain.category.repository.CategoryRepository;
+import com.uspray.uspray.domain.category.service.CategoryService;
 import com.uspray.uspray.domain.group.dto.grouppray.GroupPrayRappingDto;
 import com.uspray.uspray.domain.group.dto.grouppray.GroupPrayRequestDto;
 import com.uspray.uspray.domain.group.dto.grouppray.GroupPrayResponseDto;
@@ -10,21 +10,16 @@ import com.uspray.uspray.domain.group.model.Group;
 import com.uspray.uspray.domain.group.model.GroupMember;
 import com.uspray.uspray.domain.group.model.GroupPray;
 import com.uspray.uspray.domain.group.model.ScrapAndHeart;
-import com.uspray.uspray.domain.group.repository.GroupMemberRepository;
-import com.uspray.uspray.domain.group.repository.GroupPrayRepository;
-import com.uspray.uspray.domain.group.repository.GroupRepository;
-import com.uspray.uspray.domain.group.repository.ScrapAndHeartRepository;
 import com.uspray.uspray.domain.member.model.Member;
 import com.uspray.uspray.domain.member.service.MemberService;
 import com.uspray.uspray.domain.pray.dto.pray.PrayListResponseDto;
 import com.uspray.uspray.domain.pray.dto.pray.request.PrayToGroupPrayDto;
 import com.uspray.uspray.domain.pray.model.Pray;
-import com.uspray.uspray.domain.pray.repository.PrayRepository;
+import com.uspray.uspray.domain.pray.service.PrayService;
 import com.uspray.uspray.global.enums.PrayType;
 import com.uspray.uspray.global.exception.ErrorStatus;
 import com.uspray.uspray.global.exception.model.CustomException;
 import com.uspray.uspray.global.push.model.NotificationLog;
-import com.uspray.uspray.global.push.repository.NotificationLogRepository;
 import com.uspray.uspray.global.push.service.FCMNotificationService;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -46,20 +41,19 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class GroupPrayFacade {
 
-    private final GroupPrayRepository groupPrayRepository;
-    private final GroupMemberRepository groupMemberRepository;
-    private final ScrapAndHeartRepository scrapAndHeartRepository;
-    private final CategoryRepository categoryRepository;
-    private final PrayRepository prayRepository;
-    private final GroupRepository groupRepository;
-    private final NotificationLogRepository notificationLogRepository;
     private final FCMNotificationService fcmNotificationService;
     private final MemberService memberService;
+    private final PrayService prayService;
+    private final GroupPrayService groupPrayService;
+    private final GroupMemberService groupMemberService;
+    private final GroupService groupService;
+    private final CategoryService categoryService;
+    private final ScrapAndHeartService scrapAndHeartService;
 
     @Transactional
     public void prayToGroupPray(PrayToGroupPrayDto prayToGroupPrayDto, String userId) {
         Member member = memberService.findMemberByUserId(userId);
-        Group group = groupRepository.getGroupById(prayToGroupPrayDto.getGroupId());
+        Group group = groupService.getGroupById(prayToGroupPrayDto.getGroupId());
 
         List<Long> existIds = group.getGroupPrayList().stream()
             .map(gp -> gp.getOriginPray().getId())
@@ -68,8 +62,8 @@ public class GroupPrayFacade {
             throw new CustomException(ErrorStatus.ALREADY_EXIST_GROUP_PRAY_EXCEPTION);
         }
 
-        List<Pray> mainPray = prayRepository.findAllByIdIn(prayToGroupPrayDto.getPrayId());
-        List<Pray> targetPray = prayRepository.findAllByOriginPrayIdIn(
+        List<Pray> mainPray = prayService.findAllByIdIn(prayToGroupPrayDto.getPrayId());
+        List<Pray> targetPray = prayService.findAllByOriginPrayIdIn(
             prayToGroupPrayDto.getPrayId());
 
         for (Pray p : mainPray) {
@@ -80,14 +74,14 @@ public class GroupPrayFacade {
                 .deadline(p.getDeadline())
                 .build();
             p.setGroupPray(groupPray);
-            groupPrayRepository.save(groupPray);
+            groupPrayService.saveGroupPray(groupPray);
             p.setIsShared();
 
             ScrapAndHeart scrapAndHeart = ScrapAndHeart.builder()
                 .groupPray(groupPray)
                 .member(member)
                 .build();
-            scrapAndHeartRepository.save(scrapAndHeart);
+            scrapAndHeartService.save(scrapAndHeart);
 
             for (Pray TP : targetPray) {
                 ScrapAndHeart targetScrapAndHeart = ScrapAndHeart.builder()
@@ -95,32 +89,32 @@ public class GroupPrayFacade {
                     .member(TP.getMember())
                     .build();
                 targetScrapAndHeart.scrapPray(TP);
-                scrapAndHeartRepository.save(targetScrapAndHeart);
+                scrapAndHeartService.save(targetScrapAndHeart);
             }
         }
     }
 
     public List<PrayListResponseDto> getPrayList(String username, String prayType, Long groupId) {
-        List<Long> prayIds = groupPrayRepository.getOriginPrayIdByGroupId(groupId);
-        return categoryRepository.findAllWithOrderAndType(username, prayType, prayIds);
+        List<Long> prayIds = groupPrayService.getOriginPrayIdsByGroupId(groupId);
+        return categoryService.findAllWithOrderAndType(username, prayType, prayIds);
     }
 
 
     @Transactional
     public void createGroupPray(GroupPrayRequestDto groupPrayRequestDto, String userId) {
         Member author = memberService.findMemberByUserId(userId);
-        Group group = groupRepository.getGroupById(groupPrayRequestDto.getGroupId());
+        Group group = groupService.getGroupById(groupPrayRequestDto.getGroupId());
         GroupPray groupPray = GroupPray.of(group, author, groupPrayRequestDto.getDeadline(),
             groupPrayRequestDto.getContent());
 
-        groupPrayRepository.save(groupPray);
-        scrapAndHeartRepository.save(ScrapAndHeart.createdByGroupPrayOf(groupPray, author));
+        groupPrayService.saveGroupPray(groupPray);
+        scrapAndHeartService.save(ScrapAndHeart.createdByGroupPrayOf(groupPray, author));
 
-        Category category = categoryRepository.getCategoryByIdAndMember(
+        Category category = categoryService.getCategoryByIdAndMember(
             groupPrayRequestDto.getCategoryId(),
             author);
 
-        prayRepository.save(Pray.createdByGroupPrayOf(author, groupPrayRequestDto.getContent(),
+        prayService.savePray(Pray.createdByGroupPrayOf(author, groupPrayRequestDto.getContent(),
             groupPrayRequestDto.getDeadline(), category, PrayType.PERSONAL, groupPray, true));
     }
 
@@ -128,17 +122,17 @@ public class GroupPrayFacade {
     public GroupPrayRappingDto getGroupPray(Long groupId, String userId) {
 
         Member member = memberService.findMemberByUserId(userId);
-        Group group = groupRepository.getGroupById(groupId);
-        GroupMember groupMember = groupMemberRepository.getGroupMemberByGroupAndMember(group,
+        Group group = groupService.getGroupById(groupId);
+        GroupMember groupMember = groupMemberService.getGroupMemberByGroupAndMember(group,
             member);
-        List<GroupPray> groupPrays = groupPrayRepository.findGroupPraysByGroup(group);
+        List<GroupPray> groupPrays = groupPrayService.findGroupPraysByGroup(group);
 
-        Long count = scrapAndHeartRepository.countHeart(groupPrays, true);
+        Long count = scrapAndHeartService.countHeart(groupPrays);
 
         List<GroupPrayResponseDto> groupPrayList = new ArrayList<>();
 
         for (GroupPray groupPray : groupPrays) {
-            Optional<ScrapAndHeart> SH = scrapAndHeartRepository.findScrapAndHeartByGroupPrayAndMember(
+            Optional<ScrapAndHeart> SH = scrapAndHeartService.findScrapAndHeartByGroupPrayAndMember(
                 groupPray, member);
             if (SH.isPresent()) {
                 ScrapAndHeart scrapAndHeart = SH.get();
@@ -173,11 +167,11 @@ public class GroupPrayFacade {
     }
 
     @Transactional
-    public void heartGroupPray(Long groupPrayId, String userId) {
-        GroupPray groupPray = groupPrayRepository.getGroupPrayById(groupPrayId);
+    public void heartGroupPray(Long groupPrayId, String userId) throws IOException {
+        GroupPray groupPray = groupPrayService.getGroupPrayById(groupPrayId);
         Member member = memberService.findMemberByUserId(userId);
 
-        Optional<ScrapAndHeart> scrapAndHeartByGroupPrayAndMember = scrapAndHeartRepository.findScrapAndHeartByGroupPrayAndMember(
+        Optional<ScrapAndHeart> scrapAndHeartByGroupPrayAndMember = scrapAndHeartService.findScrapAndHeartByGroupPrayAndMember(
             groupPray, member);
 
         if (scrapAndHeartByGroupPrayAndMember.isEmpty()) {
@@ -186,7 +180,7 @@ public class GroupPrayFacade {
                 .member(member)
                 .build();
             scrapAndHeart.heartPray();
-            scrapAndHeartRepository.save(scrapAndHeart);
+            scrapAndHeartService.save(scrapAndHeart);
             sendNotificationAndSaveLog(scrapAndHeart, groupPray, groupPray.getAuthor(), true);
             return;
         }
@@ -197,7 +191,7 @@ public class GroupPrayFacade {
 
     @Transactional
     public void scrapGroupPray(ScrapRequestDto scrapRequestDto, String userId) throws IOException {
-        Category category = categoryRepository.getCategoryById(scrapRequestDto.getCategoryId());
+        Category category = categoryService.getCategoryById(scrapRequestDto.getCategoryId());
         if (!category.getCategoryType().toString().equals(PrayType.SHARED.toString())) {
             throw new CustomException(ErrorStatus.PRAY_CATEGORY_TYPE_MISMATCH);
         }
@@ -205,13 +199,13 @@ public class GroupPrayFacade {
             scrapRequestDto.getGroupPrayId());
         Member member = memberService.findMemberByUserId(userId);
 
-        Pray originPray = prayRepository.getPrayById(groupPray.getOriginPray().getId());
+        Pray originPray = prayService.findPrayById(groupPray.getOriginPray().getId());
         originPray.setIsShared();
 
         Pray pray = makePray(scrapRequestDto, groupPray, member);
         prayService.savePray(pray);
 
-        Optional<ScrapAndHeart> scrapAndHeartByGroupPrayAndMember = scrapAndHeartRepository.findScrapAndHeartByGroupPrayAndMember(
+        Optional<ScrapAndHeart> scrapAndHeartByGroupPrayAndMember = scrapAndHeartService.findScrapAndHeartByGroupPrayAndMember(
             groupPray, member);
 
         ScrapAndHeart scrapAndHeart = checkScrapAndHeartExist(scrapAndHeartByGroupPrayAndMember,
@@ -224,7 +218,7 @@ public class GroupPrayFacade {
         if (scrapAndHeartByGroupPrayAndMember.isEmpty()) {
 
             ScrapAndHeart scrapAndHeart = ScrapAndHeart.createdByScrapOf(groupPray, member, pray);
-            scrapAndHeartRepository.save(scrapAndHeart);
+            scrapAndHeartService.save(scrapAndHeart);
             return scrapAndHeart;
         }
         ScrapAndHeart scrapAndHeart = scrapAndHeartByGroupPrayAndMember.get();
@@ -233,7 +227,7 @@ public class GroupPrayFacade {
     }
 
     private Pray makePray(ScrapRequestDto scrapRequestDto, GroupPray groupPray, Member member) {
-        Category category = categoryRepository.getCategoryByIdAndMember(
+        Category category = categoryService.getCategoryByIdAndMember(
             scrapRequestDto.getCategoryId(),
             member);
 
