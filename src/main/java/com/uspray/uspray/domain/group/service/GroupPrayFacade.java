@@ -1,31 +1,32 @@
 package com.uspray.uspray.domain.group.service;
 
+import com.uspray.uspray.domain.category.model.Category;
+import com.uspray.uspray.domain.category.repository.CategoryRepository;
 import com.uspray.uspray.domain.group.dto.grouppray.GroupPrayRappingDto;
 import com.uspray.uspray.domain.group.dto.grouppray.GroupPrayRequestDto;
 import com.uspray.uspray.domain.group.dto.grouppray.GroupPrayResponseDto;
 import com.uspray.uspray.domain.group.dto.grouppray.ScrapRequestDto;
-import com.uspray.uspray.domain.pray.dto.pray.PrayListResponseDto;
-import com.uspray.uspray.domain.pray.dto.pray.request.PrayToGroupPrayDto;
-import com.uspray.uspray.global.enums.PrayType;
-import com.uspray.uspray.domain.category.model.Category;
 import com.uspray.uspray.domain.group.model.Group;
 import com.uspray.uspray.domain.group.model.GroupMember;
 import com.uspray.uspray.domain.group.model.GroupPray;
-import com.uspray.uspray.domain.member.model.Member;
-import com.uspray.uspray.global.push.model.NotificationLog;
-import com.uspray.uspray.domain.pray.model.Pray;
 import com.uspray.uspray.domain.group.model.ScrapAndHeart;
-import com.uspray.uspray.global.exception.ErrorStatus;
-import com.uspray.uspray.global.exception.model.CustomException;
-import com.uspray.uspray.domain.category.repository.CategoryRepository;
 import com.uspray.uspray.domain.group.repository.GroupMemberRepository;
 import com.uspray.uspray.domain.group.repository.GroupPrayRepository;
 import com.uspray.uspray.domain.group.repository.GroupRepository;
-import com.uspray.uspray.domain.member.repository.MemberRepository;
-import com.uspray.uspray.global.push.repository.NotificationLogRepository;
-import com.uspray.uspray.domain.pray.repository.PrayRepository;
 import com.uspray.uspray.domain.group.repository.ScrapAndHeartRepository;
+import com.uspray.uspray.domain.member.model.Member;
+import com.uspray.uspray.domain.member.service.MemberService;
+import com.uspray.uspray.domain.pray.dto.pray.PrayListResponseDto;
+import com.uspray.uspray.domain.pray.dto.pray.request.PrayToGroupPrayDto;
+import com.uspray.uspray.domain.pray.model.Pray;
+import com.uspray.uspray.domain.pray.repository.PrayRepository;
+import com.uspray.uspray.global.enums.PrayType;
+import com.uspray.uspray.global.exception.ErrorStatus;
+import com.uspray.uspray.global.exception.model.CustomException;
+import com.uspray.uspray.global.push.model.NotificationLog;
+import com.uspray.uspray.global.push.repository.NotificationLogRepository;
 import com.uspray.uspray.global.push.service.FCMNotificationService;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -47,17 +48,17 @@ public class GroupPrayFacade {
 
     private final GroupPrayRepository groupPrayRepository;
     private final GroupMemberRepository groupMemberRepository;
-    private final MemberRepository memberRepository;
     private final ScrapAndHeartRepository scrapAndHeartRepository;
     private final CategoryRepository categoryRepository;
     private final PrayRepository prayRepository;
     private final GroupRepository groupRepository;
     private final NotificationLogRepository notificationLogRepository;
     private final FCMNotificationService fcmNotificationService;
+    private final MemberService memberService;
 
     @Transactional
     public void prayToGroupPray(PrayToGroupPrayDto prayToGroupPrayDto, String userId) {
-        Member member = memberRepository.getMemberByUserId(userId);
+        Member member = memberService.findMemberByUserId(userId);
         Group group = groupRepository.getGroupById(prayToGroupPrayDto.getGroupId());
 
         List<Long> existIds = group.getGroupPrayList().stream()
@@ -107,7 +108,7 @@ public class GroupPrayFacade {
 
     @Transactional
     public void createGroupPray(GroupPrayRequestDto groupPrayRequestDto, String userId) {
-        Member author = memberRepository.getMemberByUserId(userId);
+        Member author = memberService.findMemberByUserId(userId);
         Group group = groupRepository.getGroupById(groupPrayRequestDto.getGroupId());
         GroupPray groupPray = GroupPray.of(group, author, groupPrayRequestDto.getDeadline(),
             groupPrayRequestDto.getContent());
@@ -126,7 +127,7 @@ public class GroupPrayFacade {
     @Transactional(readOnly = true)
     public GroupPrayRappingDto getGroupPray(Long groupId, String userId) {
 
-        Member member = memberRepository.getMemberByUserId(userId);
+        Member member = memberService.findMemberByUserId(userId);
         Group group = groupRepository.getGroupById(groupId);
         GroupMember groupMember = groupMemberRepository.getGroupMemberByGroupAndMember(group,
             member);
@@ -174,7 +175,7 @@ public class GroupPrayFacade {
     @Transactional
     public void heartGroupPray(Long groupPrayId, String userId) {
         GroupPray groupPray = groupPrayRepository.getGroupPrayById(groupPrayId);
-        Member member = memberRepository.getMemberByUserId(userId);
+        Member member = memberService.findMemberByUserId(userId);
 
         Optional<ScrapAndHeart> scrapAndHeartByGroupPrayAndMember = scrapAndHeartRepository.findScrapAndHeartByGroupPrayAndMember(
             groupPray, member);
@@ -202,7 +203,7 @@ public class GroupPrayFacade {
         }
         GroupPray groupPray = groupPrayRepository.getGroupPrayById(
             scrapRequestDto.getGroupPrayId());
-        Member member = memberRepository.getMemberByUserId(userId);
+        Member member = memberService.findMemberByUserId(userId);
 
         Optional<ScrapAndHeart> scrapAndHeartByGroupPrayAndMember = scrapAndHeartRepository.findScrapAndHeartByGroupPrayAndMember(
             groupPray, member);
@@ -247,37 +248,24 @@ public class GroupPrayFacade {
     }
 
     private void sendNotificationAndSaveLog(ScrapAndHeart scrapAndHeart, GroupPray groupPray,
-        Member receiver, boolean isHeart) {
+        Member receiver, boolean isHeart) throws IOException {
         String groupName = groupPray.getGroup().getName();
         String name = scrapAndHeart.getMember().getName();
         if (isHeart) {
-            try {
-                fcmNotificationService.sendMessageTo(
-                    receiver.getFirebaseToken(),
-                    groupName + " 💘",
-                    name + "님이 당신의 기도제목을 두고 기도했어요");
-            } catch (Exception e) {
-                log.error(e.getMessage());
-            }
-            log.error(
-                "send notification to " + memberRepository.getMemberByUserId(receiver.getUserId())
-            );
+            fcmNotificationService.sendMessageTo(
+                receiver.getFirebaseToken(),
+                groupName + " 💘",
+                name + "님이 당신의 기도제목을 두고 기도했어요");
+
             fcmNotificationService.saveNotificationLog(
                 NotificationLog.of(memberService.findMemberByUserId(receiver.getUserId()),
                     groupPray.getOriginPray(), name + "님이 당신의 기도제목을 두고 기도했어요"));
             return;
         }
-        try {
-            fcmNotificationService.sendMessageTo(
-                receiver.getFirebaseToken(),
-                groupName + " 💌 ",
-                name + "님이 당신의 기도제목을 저장했어요");
-        } catch (Exception e) {
-            log.error(e.getMessage());
-        }
-        log.error(
-            "send notification to " + memberRepository.getMemberByUserId(receiver.getUserId())
-        );
+        fcmNotificationService.sendMessageTo(
+            receiver.getFirebaseToken(),
+            groupName + " 💌 ",
+            name + "님이 당신의 기도제목을 저장했어요");
 
         fcmNotificationService.saveNotificationLog(
             NotificationLog.of(memberService.findMemberByUserId(receiver.getUserId()),
