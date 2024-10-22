@@ -87,8 +87,7 @@ public class Pray extends AuditingTimeEntity {
     }
 
     public static Pray createdByGroupPrayOf(Member author, String content, LocalDate deadline,
-        Category category, PrayType prayType, GroupPray groupPray,
-        Boolean isShared) {
+        Category category, PrayType prayType, GroupPray groupPray, Boolean isShared) {
         return Pray.builder()
             .member(author)
             .content(content)
@@ -98,6 +97,19 @@ public class Pray extends AuditingTimeEntity {
             .prayType(prayType)
             .groupPray(groupPray)
             .isShared(isShared)
+            .build();
+    }
+
+    public static Pray createdByScrapOf(Member member, String content, LocalDate deadline,
+        Long originMemberId, Long originPrayId, Category category, PrayType prayType) {
+        return Pray.builder()
+            .member(member)
+            .content(content)
+            .deadline(deadline)
+            .originMemberId(originMemberId)
+            .originPrayId(originPrayId)
+            .category(category)
+            .prayType(prayType)
             .build();
     }
 

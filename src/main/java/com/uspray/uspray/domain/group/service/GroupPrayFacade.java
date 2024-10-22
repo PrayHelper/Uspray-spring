@@ -196,39 +196,40 @@ public class GroupPrayFacade {
     }
 
     @Transactional
-    public void scrapGroupPray(ScrapRequestDto scrapRequestDto, String userId) {
+    public void scrapGroupPray(ScrapRequestDto scrapRequestDto, String userId) throws IOException {
         Category category = categoryRepository.getCategoryById(scrapRequestDto.getCategoryId());
         if (!category.getCategoryType().toString().equals(PrayType.SHARED.toString())) {
             throw new CustomException(ErrorStatus.PRAY_CATEGORY_TYPE_MISMATCH);
         }
-        GroupPray groupPray = groupPrayRepository.getGroupPrayById(
+        GroupPray groupPray = groupPrayService.getGroupPrayById(
             scrapRequestDto.getGroupPrayId());
         Member member = memberService.findMemberByUserId(userId);
 
-        Optional<ScrapAndHeart> scrapAndHeartByGroupPrayAndMember = scrapAndHeartRepository.findScrapAndHeartByGroupPrayAndMember(
-            groupPray, member);
         Pray originPray = prayRepository.getPrayById(groupPray.getOriginPray().getId());
         originPray.setIsShared();
 
-        if (scrapAndHeartByGroupPrayAndMember.isEmpty()) {
-            Pray pray = makePray(scrapRequestDto, groupPray, member);
-
-            ScrapAndHeart scrapAndHeart = ScrapAndHeart.builder()
-                .groupPray(groupPray)
-                .member(member)
-                .sharedPray(pray)
-                .build();
-            prayRepository.save(pray);
-            scrapAndHeart.scrapPray(pray);
-            scrapAndHeartRepository.save(scrapAndHeart);
-            sendNotificationAndSaveLog(scrapAndHeart, groupPray, groupPray.getAuthor(), false);
-            return;
-        }
         Pray pray = makePray(scrapRequestDto, groupPray, member);
-        prayRepository.save(pray);
-        scrapAndHeartByGroupPrayAndMember.get().scrapPray(pray);
-        sendNotificationAndSaveLog(scrapAndHeartByGroupPrayAndMember.get(), groupPray,
+        prayService.savePray(pray);
+
+        Optional<ScrapAndHeart> scrapAndHeartByGroupPrayAndMember = scrapAndHeartRepository.findScrapAndHeartByGroupPrayAndMember(
+            groupPray, member);
+
+        ScrapAndHeart scrapAndHeart = checkScrapAndHeartExist(scrapAndHeartByGroupPrayAndMember,
+            groupPray, member, pray);
+        sendNotificationAndSaveLog(scrapAndHeart, groupPray,
             groupPray.getAuthor(), false);
+    }
+
+    private ScrapAndHeart checkScrapAndHeartExist(Optional<ScrapAndHeart> scrapAndHeartByGroupPrayAndMember, GroupPray groupPray, Member member, Pray pray) {
+        if (scrapAndHeartByGroupPrayAndMember.isEmpty()) {
+
+            ScrapAndHeart scrapAndHeart = ScrapAndHeart.createdByScrapOf(groupPray, member, pray);
+            scrapAndHeartRepository.save(scrapAndHeart);
+            return scrapAndHeart;
+        }
+        ScrapAndHeart scrapAndHeart = scrapAndHeartByGroupPrayAndMember.get();
+        scrapAndHeart.scrapPray(pray);
+        return scrapAndHeart;
     }
 
     private Pray makePray(ScrapRequestDto scrapRequestDto, GroupPray groupPray, Member member) {
@@ -236,15 +237,8 @@ public class GroupPrayFacade {
             scrapRequestDto.getCategoryId(),
             member);
 
-        return Pray.builder()
-            .content(groupPray.getContent())
-            .deadline(scrapRequestDto.getDeadline())
-            .member(member)
-            .originMemberId(groupPray.getAuthor().getId())
-            .originPrayId(groupPray.getOriginPray().getId())
-            .category(category)
-            .prayType(PrayType.SHARED)
-            .build();
+        return Pray.createdByScrapOf(member, groupPray.getContent(), scrapRequestDto.getDeadline(),
+            groupPray.getAuthor().getId(), groupPray.getOriginPray().getId(), category, PrayType.SHARED);
     }
 
     private void sendNotificationAndSaveLog(ScrapAndHeart scrapAndHeart, GroupPray groupPray,

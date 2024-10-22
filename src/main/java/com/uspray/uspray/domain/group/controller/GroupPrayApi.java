@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.io.IOException;
 import java.util.List;
 import org.springframework.security.core.userdetails.User;
 
@@ -70,12 +71,12 @@ public interface GroupPrayApi {
         responseCode = "200",
         description = "모임 기도제목 좋아요")
     ApiResponseDto<?> likeGroupPray(Long id,
-        @Parameter(hidden = true) User user);
+        @Parameter(hidden = true) User user) throws IOException;
 
     @Operation(summary = "모임 기도제목 스크랩")
     @ApiResponse(
         responseCode = "200",
         description = "모임 기도제목 스크랩")
     ApiResponseDto<?> scarpGroupPray(ScrapRequestDto scrapRequestDto,
-        @Parameter(hidden = true) User user);
+        @Parameter(hidden = true) User user) throws IOException;
 }

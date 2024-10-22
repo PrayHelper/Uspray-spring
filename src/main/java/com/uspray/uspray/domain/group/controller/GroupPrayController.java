@@ -9,6 +9,7 @@ import com.uspray.uspray.domain.pray.dto.pray.PrayListResponseDto;
 import com.uspray.uspray.domain.pray.dto.pray.request.PrayToGroupPrayDto;
 import com.uspray.uspray.global.common.dto.ApiResponseDto;
 import com.uspray.uspray.global.exception.SuccessStatus;
+import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -71,14 +72,14 @@ public class GroupPrayController implements GroupPrayApi{
 
     @PostMapping("/{groupPrayId}/like")
     public ApiResponseDto<?> likeGroupPray(@PathVariable(name = "groupPrayId") Long id,
-        @AuthenticationPrincipal User user) {
+        @AuthenticationPrincipal User user) throws IOException {
         groupPrayFacade.heartGroupPray(id, user.getUsername());
         return ApiResponseDto.success(SuccessStatus.LIKE_GROUP_PRAY_SUCCESS);
     }
 
     @PostMapping("/scrap")
     public ApiResponseDto<?> scarpGroupPray(@RequestBody ScrapRequestDto scrapRequestDto,
-        @AuthenticationPrincipal User user) {
+        @AuthenticationPrincipal User user) throws IOException {
         groupPrayFacade.scrapGroupPray(scrapRequestDto, user.getUsername());
         return ApiResponseDto.success(SuccessStatus.SCARP_GROUP_PRAY_SUCCESS);
     }

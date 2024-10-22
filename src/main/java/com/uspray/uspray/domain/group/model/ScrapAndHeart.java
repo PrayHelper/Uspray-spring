@@ -27,8 +27,8 @@ public class ScrapAndHeart {
     @Column(name = "scrap_heart_id")
     private Long id;
 
-    private boolean heart = false;
-    private boolean scrap = false;
+    private Boolean heart = false;
+    private Boolean scrap = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "grouppray_id")
@@ -43,16 +43,27 @@ public class ScrapAndHeart {
     private Pray sharedPray;
 
     @Builder
-    public ScrapAndHeart(GroupPray groupPray, Member member, Pray sharedPray) {
+    public ScrapAndHeart(GroupPray groupPray, Member member, Pray sharedPray, Boolean heart, Boolean scrap) {
         setGroupPray(groupPray);
         setMember(member);
         setSharedPray(sharedPray);
+        this.heart = heart;
+        this.scrap = scrap;
     }
 
-    public static ScrapAndHeart createdByGroupPrayOf(GroupPray groupPray, Member author) {
+    public static ScrapAndHeart createdByGroupPrayOf(GroupPray groupPray, Member member) {
         return ScrapAndHeart.builder()
             .groupPray(groupPray)
-            .member(author)
+            .member(member)
+            .build();
+    }
+
+    public static ScrapAndHeart createdByScrapOf(GroupPray groupPray, Member member, Pray sharedPray) {
+        return ScrapAndHeart.builder()
+            .groupPray(groupPray)
+            .member(member)
+            .sharedPray(sharedPray)
+            .heart(true)
             .build();
     }
 
