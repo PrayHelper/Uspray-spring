@@ -4,7 +4,6 @@ import com.uspray.uspray.domain.category.dto.CategoryResponseDto;
 import com.uspray.uspray.domain.category.model.Category;
 import com.uspray.uspray.domain.category.service.CategoryService;
 import com.uspray.uspray.domain.group.service.ScrapAndHeartService;
-import com.uspray.uspray.domain.history.model.History;
 import com.uspray.uspray.domain.history.service.HistoryService;
 import com.uspray.uspray.domain.member.model.Member;
 import com.uspray.uspray.domain.member.service.MemberService;
@@ -51,6 +50,10 @@ public class PrayFacade {
 		}
 	}
 
+	private static boolean isSameCategory(Pray pray, Category category) {
+		return pray.getPrayType().toString().equals(category.getCategoryType().toString());
+	}
+
 	private boolean isSharedPray(Pray pray) {
 		return prayService.isSharedPray(pray) || pray.getPrayType() == PrayType.SHARED;
 	}
@@ -90,34 +93,25 @@ public class PrayFacade {
 			prayUpdateRequestDto.getCategoryId(),
 			pray.getMember());
 		// 기도 제목 타입과 카테고리 타입 일치하는 지 확인
-		if (!pray.getPrayType().toString().equals(category.getCategoryType().toString())) {
+		if (!isSameCategory(pray, category)) {
 			throw new CustomException(ErrorStatus.PRAY_CATEGORY_TYPE_MISMATCH);
 		}
 		return category;
 	}
 
 	@Transactional
-	public void convertPrayToHistory() {
+	public void moveExpiredPrayersToHistory() {
 		List<Pray> prayList = prayService.getPrayListDeadlineBefore(LocalDate.now());
 		for (Pray pray : prayList) {
-			pray.complete();
-			Integer sharedCount = prayService.getSharedCountByOriginPrayId(
-				pray.getOriginPrayId());
-			History history = History.builder()
-				.pray(pray)
-				.totalCount(sharedCount) //sharedCount에 내 count도 포함되어 있음
-				.build();
-			historyService.saveHistory(history);
-			prayService.deletePray(pray);
+			convertPrayToHistory(pray);
 		}
 	}
 
-	public void convertPrayToHistory(Pray pray) {
+	private void convertPrayToHistory(Pray pray) {
 		pray.complete();
-		History history = History.builder()
-			.pray(pray)
-			.build();
-		historyService.saveHistory(history);
+		Integer sharedCount = prayService.getSharedCountByOriginPrayId(
+			pray.getOriginPrayId());
+		historyService.createHistory(pray, sharedCount);
 		prayService.deletePray(pray);
 	}
 
@@ -232,22 +226,11 @@ public class PrayFacade {
 	@Transactional
 	public List<PrayListResponseDto> completePray(Long prayId, String username) {
 		Pray pray = prayService.getPrayByIdAndMemberId(prayId, username);
-		pray.complete();
-
-		createHistory(pray);
-		prayService.deletePray(pray);
+		convertPrayToHistory(pray);
 
 		return getPrayList(username, pray.getPrayType().stringValue());
 	}
 
-	private void createHistory(Pray pray) {
-		Integer sharedCount = prayService.getSharedCountByOriginPrayId(pray.getId());
-		History history = History.builder()
-			.pray(pray)
-			.totalCount(sharedCount)
-			.build();
-		historyService.saveHistory(history);
-	}
 
 	@Transactional
 	public List<PrayListResponseDto> cancelPray(Long prayId, String username) {
