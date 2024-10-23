@@ -15,47 +15,51 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class PrayService {
 
-    private final PrayRepository prayRepository;
+	private final PrayRepository prayRepository;
 
-    @Transactional
-    public PrayResponseDto getPrayDetail(Long prayId, String username) {
-        Pray pray = prayRepository.getPrayByIdAndMemberId(prayId, username);
-        return PrayResponseDto.of(pray);
-    }
+	@Transactional
+	public PrayResponseDto getPrayDetail(Long prayId, String username) {
+		Pray pray = prayRepository.getPrayByIdAndMemberId(prayId, username);
+		return PrayResponseDto.of(pray);
+	}
 
-    public PrayResponseDto savePray(Pray pray) {
-        return PrayResponseDto.of(prayRepository.save(pray));
-    }
+	public PrayResponseDto savePray(Pray pray) {
+		return PrayResponseDto.of(prayRepository.save(pray));
+	}
 
-    public List<Pray> getPrayListByCategory(Category category) {
-        return prayRepository.findAllByCategory(category);
-    }
+	public List<Pray> getPrayListByCategory(Category category) {
+		return prayRepository.findAllByCategory(category);
+	}
 
-    public List<Pray> getPrayListByMemberAndCategory(Member member, Category category) {
-        return prayRepository.findAllByMemberAndCategoryOrderByCreatedAtAsc(member, category);
-    }
+	public List<Pray> getPrayListByMemberAndCategory(Member member, Category category) {
+		return prayRepository.findAllByMemberAndCategoryOrderByCreatedAtAsc(member, category);
+	}
 
-    public Pray getPrayByIdAndMemberId(Long prayId, String username) {
-        return prayRepository.getPrayByIdAndMemberId(prayId, username);
-    }
+	public Pray getPrayByIdAndMemberId(Long prayId, String username) {
+		return prayRepository.getPrayByIdAndMemberId(prayId, username);
+	}
 
-    public Pray getSharedPray(Long prayId) {
-        return prayRepository.getPrayByOriginPrayId(prayId);
-    }
+	private Pray getSharedPray(Long prayId) {
+		return prayRepository.getPrayByOriginPrayId(prayId);
+	}
 
-    public List<Pray> getPrayListDeadlineBefore(LocalDate currentDate) {
-        return prayRepository.findAllByDeadlineBefore(currentDate);
-    }
+	public List<Pray> getPrayListDeadlineBefore(LocalDate currentDate) {
+		return prayRepository.findAllByDeadlineBefore(currentDate);
+	}
 
-    public Integer getSharedCountByOriginPrayId(Long originPrayId) {
-        return prayRepository.getSharedCountByOriginPrayId(originPrayId);
-    }
+	public Integer getSharedCountByOriginPrayId(Long originPrayId) {
+		return prayRepository.getSharedCountByOriginPrayId(originPrayId);
+	}
 
-    public void deletePray(Pray pray) {
-        prayRepository.delete(pray);
-    }
+	public void deletePray(Pray pray) {
+		prayRepository.delete(pray);
+	}
 
-    public Pray cancelPray(Long prayId, String username) {
-        return prayRepository.cancelPray(prayId, username);
-    }
+	public Pray cancelPray(Long prayId, String username) {
+		return prayRepository.cancelPray(prayId, username);
+	}
+
+	public Boolean isSharedPray(Pray pray) {
+		return getSharedPray(pray.getId()) == null;
+	}
 }

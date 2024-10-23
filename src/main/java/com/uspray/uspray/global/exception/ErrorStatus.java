@@ -23,6 +23,7 @@ public enum ErrorStatus {
     ALREADY_EXIST_GROUP_MEMBER_EXCEPTION(HttpStatus.BAD_REQUEST, "이미 존재하는 모임 회원입니다."),
     LEADER_CANNOT_LEAVE_GROUP_EXCEPTION(HttpStatus.BAD_REQUEST, "모임장은 모임을 떠날 수 없습니다."),
     ALREADY_SHARED_EXCEPTION(HttpStatus.BAD_REQUEST, "이미 공유된 기도제목입니다."),
+    SHARED_PRAY_UPDATE_EXCEPTION(HttpStatus.BAD_REQUEST, "공유되어진 기도제목이나 공유해온 기도제목의 내용을 수정할 수 없습니다."),
     ALREADY_EXIST_GROUP_NAME_EXCEPTION(HttpStatus.BAD_REQUEST, "이미 존재하는 모임 이름입니다."),
     ALREADY_CANCEL_EXCEPTION(HttpStatus.BAD_REQUEST, "이미 취소된 기도제목입니다."),
     WRONG_LOGIN_INFO_EXCEPTION(HttpStatus.BAD_REQUEST, "아이디 또는 비밀번호가 틀렸습니다."),

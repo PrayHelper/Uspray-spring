@@ -39,6 +39,6 @@ public class SchedulerService {
 
     @Scheduled(cron = "0 0 0 * * ?")
     public void convertPrayToHistory() {
-        prayFacadeService.convertPrayToHistory();
+        prayFacadeService.moveExpiredPrayersToHistory();
     }
 }
