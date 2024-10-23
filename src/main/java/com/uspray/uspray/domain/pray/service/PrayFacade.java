@@ -4,7 +4,6 @@ import com.uspray.uspray.domain.category.dto.CategoryResponseDto;
 import com.uspray.uspray.domain.category.model.Category;
 import com.uspray.uspray.domain.category.service.CategoryService;
 import com.uspray.uspray.domain.group.service.ScrapAndHeartService;
-import com.uspray.uspray.domain.history.model.History;
 import com.uspray.uspray.domain.history.service.HistoryService;
 import com.uspray.uspray.domain.member.model.Member;
 import com.uspray.uspray.domain.member.service.MemberService;
@@ -50,69 +49,61 @@ public class PrayFacade {
 		}
 	}
 
-    @Transactional
-    public PrayResponseDto createPray(PrayRequestDto prayRequestDto, String username,
-        LocalDate startDateOrNull) {
-        Member member = memberService.findMemberByUserId(username);
-        Category category = categoryService.getCategoryByIdAndMemberAndType(prayRequestDto.getCategoryId(),
-            member, CategoryType.PERSONAL);
-        return prayService.savePray(prayRequestDto.toEntity(member, category, startDateOrNull));
-    }
+	@Transactional
+	public PrayResponseDto createPray(PrayRequestDto prayRequestDto, String username,
+		LocalDate startDateOrNull) {
+		Member member = memberService.findMemberByUserId(username);
+		Category category = categoryService.getCategoryByIdAndMemberAndType(
+			prayRequestDto.getCategoryId(),
+			member, CategoryType.PERSONAL);
+		return prayService.savePray(prayRequestDto.toEntity(member, category, startDateOrNull));
+	}
 
 	@Transactional
 	public PrayResponseDto updatePray(Long prayId, String username,
 		PrayUpdateRequestDto prayUpdateRequestDto) {
 		Pray pray = prayService.getPrayByIdAndMemberId(prayId, username);
 
-        // 이 기도 제목을 공유한 적 없거나, 공유 받은 사람이 없으면 전부 수정 가능
-        // 이 기도 제목을 공유한 적 있고, 누구라도 공유 받은 사람이 있으면 기도제목 내용 수정 불가능
-        Pray sharedPray = prayService.getSharedPray(prayId);
-        Category category = categoryService.getCategoryByIdAndMemberAndType(
-            prayUpdateRequestDto.getCategoryId(),
-            pray.getMember(),
-            CategoryType.PERSONAL);
-        // 기도 제목 타입과 카테고리 타입 일치하는 지 확인
-        if (!pray.getPrayType().toString().equals(category.getCategoryType().toString())) {
-            throw new CustomException(ErrorStatus.PRAY_CATEGORY_TYPE_MISMATCH);
-        }
+		// 이 기도 제목을 공유한 적 없거나, 공유 받은 사람이 없으면 전부 수정 가능
+		// 이 기도 제목을 공유한 적 있고, 누구라도 공유 받은 사람이 있으면 기도제목 내용 수정 불가능
+		Pray sharedPray = prayService.getSharedPray(prayId);
+		Category category = categoryService.getCategoryByIdAndMemberAndType(
+			prayUpdateRequestDto.getCategoryId(),
+			pray.getMember(),
+			CategoryType.PERSONAL);
+		// 기도 제목 타입과 카테고리 타입 일치하는 지 확인
+		if (!pray.getPrayType().toString().equals(category.getCategoryType().toString())) {
+			throw new CustomException(ErrorStatus.PRAY_CATEGORY_TYPE_MISMATCH);
+		}
 
-        // 공유 됐을 때 content가 있는 경우
-        if ((sharedPray != null || pray.getPrayType() == PrayType.SHARED) && prayUpdateRequestDto.getContent() != null) {
-            throw new CustomException(ErrorStatus.ALREADY_SHARED_EXCEPTION);
-        }
+		// 공유 됐을 때 content가 있는 경우
+		if ((sharedPray != null || pray.getPrayType() == PrayType.SHARED)
+			&& prayUpdateRequestDto.getContent() != null) {
+			throw new CustomException(ErrorStatus.ALREADY_SHARED_EXCEPTION);
+		}
 
-        return PrayResponseDto.of(pray.update(prayUpdateRequestDto, category));
-    }
+		return PrayResponseDto.of(pray.update(prayUpdateRequestDto, category));
+	}
 
 	@Transactional
-	public void convertPrayToHistory() {
+	public void moveExpiredPrayersToHistory() {
 		List<Pray> prayList = prayService.getPrayListDeadlineBefore(LocalDate.now());
 		for (Pray pray : prayList) {
-			pray.complete();
-			Integer sharedCount = prayService.getSharedCountByOriginPrayId(
-				pray.getOriginPrayId());
-			History history = History.builder()
-				.pray(pray)
-				.totalCount(sharedCount) //sharedCount에 내 count도 포함되어 있음
-				.build();
-			historyService.saveHistory(history);
-			prayService.deletePray(pray);
+			convertPrayToHistory(pray);
 		}
 	}
 
-    @Transactional
-    public void convertPrayToHistory(Pray pray) {
-        pray.complete();
-        History history = History.builder()
-            .pray(pray)
-            .build();
-        historyService.saveHistory(history);
-        prayService.deletePray(pray);
-    }
+	private void convertPrayToHistory(Pray pray) {
+		pray.complete();
+		Integer sharedCount = prayService.getSharedCountByOriginPrayId(
+			pray.getOriginPrayId());
+		historyService.createHistory(pray, sharedCount);
+		prayService.deletePray(pray);
+	}
 
-    @Transactional
-    public CategoryResponseDto deleteCategory(Long categoryId) {
-        Category category = categoryService.getCategoryById(categoryId);
+	@Transactional
+	public CategoryResponseDto deleteCategory(Long categoryId) {
+		Category category = categoryService.getCategoryById(categoryId);
 
 		prayService.getPrayListByCategory(category).forEach(this::convertPrayToHistory);
 
@@ -220,22 +211,11 @@ public class PrayFacade {
 	@Transactional
 	public List<PrayListResponseDto> completePray(Long prayId, String username) {
 		Pray pray = prayService.getPrayByIdAndMemberId(prayId, username);
-		pray.complete();
-
-		createHistory(pray);
-		prayService.deletePray(pray);
+		convertPrayToHistory(pray);
 
 		return getPrayList(username, pray.getPrayType().stringValue());
 	}
 
-	private void createHistory(Pray pray) {
-		Integer sharedCount = prayService.getSharedCountByOriginPrayId(pray.getId());
-		History history = History.builder()
-			.pray(pray)
-			.totalCount(sharedCount)
-			.build();
-		historyService.saveHistory(history);
-	}
 
 	@Transactional
 	public List<PrayListResponseDto> cancelPray(Long prayId, String username) {
