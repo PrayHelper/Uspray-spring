@@ -17,8 +17,6 @@ import com.uspray.uspray.global.enums.PrayType;
 import com.uspray.uspray.global.exception.ErrorStatus;
 import com.uspray.uspray.global.exception.model.CustomException;
 import com.uspray.uspray.global.exception.model.NotFoundException;
-import com.uspray.uspray.global.push.model.NotificationLog;
-import com.uspray.uspray.global.push.service.FCMNotificationService;
 import com.uspray.uspray.global.push.service.NotificationLogService;
 import java.time.LocalDate;
 import java.util.Collections;
@@ -26,27 +24,44 @@ import java.util.List;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class PrayFacade {
 
 	private final HistoryService historyService;
 	private final NotificationLogService notificationLogService;
-	private final FCMNotificationService fcmNotificationService;
 	private final ScrapAndHeartService scrapAndHeartService;
 	private final ShareService shareService;
 	private final PrayService prayService;
 	private final MemberService memberService;
 	private final CategoryService categoryService;
 
-	private static void checkIsAlreadyPrayed(Pray pray) {
+	private void checkIsAlreadyPrayed(Pray pray) {
 		if (pray.getLastPrayedAt().equals(LocalDate.now())) {
 			throw new NotFoundException(ErrorStatus.ALREADY_PRAYED_TODAY);
 		}
+	}
+
+	private boolean isSameCategory(Pray pray, Category category) {
+		return pray.getPrayType().toString().equals(category.getCategoryType().toString());
+	}
+
+	private boolean isSharedPray(Pray pray) {
+		return prayService.isSharedPray(pray) || pray.getPrayType() == PrayType.SHARED;
+	}
+
+	private void checkSharedPrayValidation(PrayUpdateRequestDto prayUpdateRequestDto,
+		Pray pray) {
+		if (isPrayUpdatable(pray, prayUpdateRequestDto.getContent())) {
+			throw new CustomException(ErrorStatus.SHARED_PRAY_UPDATE_EXCEPTION);
+		}
+	}
+
+	private Boolean isPrayUpdatable(Pray pray, String content) {
+		return isSharedPray(pray) && content != null;
 	}
 
 	@Transactional
@@ -64,25 +79,24 @@ public class PrayFacade {
 		PrayUpdateRequestDto prayUpdateRequestDto) {
 		Pray pray = prayService.getPrayByIdAndMemberId(prayId, username);
 
-		// 이 기도 제목을 공유한 적 없거나, 공유 받은 사람이 없으면 전부 수정 가능
-		// 이 기도 제목을 공유한 적 있고, 누구라도 공유 받은 사람이 있으면 기도제목 내용 수정 불가능
-		Pray sharedPray = prayService.getSharedPray(prayId);
+		checkSharedPrayValidation(prayUpdateRequestDto, pray);
+
+		Category category = getCategory(prayUpdateRequestDto, pray);
+
+		return PrayResponseDto.of(pray.update(prayUpdateRequestDto, category));
+	}
+
+	@NotNull
+	private Category getCategory(PrayUpdateRequestDto prayUpdateRequestDto, Pray pray) {
 		Category category = categoryService.getCategoryByIdAndMemberAndType(
 			prayUpdateRequestDto.getCategoryId(),
 			pray.getMember(),
 			CategoryType.PERSONAL);
 		// 기도 제목 타입과 카테고리 타입 일치하는 지 확인
-		if (!pray.getPrayType().toString().equals(category.getCategoryType().toString())) {
+		if (!isSameCategory(pray, category)) {
 			throw new CustomException(ErrorStatus.PRAY_CATEGORY_TYPE_MISMATCH);
 		}
-
-		// 공유 됐을 때 content가 있는 경우
-		if ((sharedPray != null || pray.getPrayType() == PrayType.SHARED)
-			&& prayUpdateRequestDto.getContent() != null) {
-			throw new CustomException(ErrorStatus.ALREADY_SHARED_EXCEPTION);
-		}
-
-		return PrayResponseDto.of(pray.update(prayUpdateRequestDto, category));
+		return category;
 	}
 
 	@Transactional
@@ -117,30 +131,6 @@ public class PrayFacade {
 		return getPrayList(username, pray.getPrayType().stringValue());
 	}
 
-	private void sendNotification(Member member) {
-		try {
-			fcmNotificationService.sendMessageTo(
-				member.getFirebaseToken(),
-				"💘",
-				"누군가가 당신의 기도제목을 두고 기도했어요");
-		} catch (Exception e) {
-			log.error(e.getMessage());
-
-		}
-		log.error(
-			"send notification to " + member
-		);
-	}
-
-	private void saveNotificationLog(Pray pray, Member member) {
-		NotificationLog notificationLog = NotificationLog.builder()
-			.pray(pray)
-			.member(member)
-			.title("누군가가 당신의 기도제목을 두고 기도했어요")
-			.build();
-
-		notificationLogService.saveNotificationLog(notificationLog);
-	}
 
 	private void handlePrayedToday(Pray pray) {
 		checkIsAlreadyPrayed(pray);
@@ -149,8 +139,8 @@ public class PrayFacade {
 		if (pray.getPrayType() == PrayType.SHARED) {
 			Member originMember = memberService.findMemberById(pray.getOriginMemberId());
 			if (originMember.getSecondNotiAgree()) {
-				sendNotification(originMember);
-				saveNotificationLog(pray, originMember);
+				notificationLogService.sendNotification(originMember);
+				notificationLogService.saveNotificationLog(pray, originMember);
 			}
 		}
 	}
@@ -168,21 +158,29 @@ public class PrayFacade {
 
 	@Transactional
 	public List<PrayListResponseDto> getPrayList(String username, String prayType) {
-		// 사용자 정보와 카테고리 타입을 가져옴
 		Member member = memberService.findMemberByUserId(username);
-		CategoryType categoryType = CategoryType.valueOf(prayType);
-		List<Category> categoryList = categoryService.getCategoryListByMemberAndCategoryType(member,
-			categoryType);
+		List<Category> categoryList = getCategories(
+			prayType, member);
 
-		// 카테고리 리스트가 비어있을 경우 빈 리스트 반환
 		if (categoryList.isEmpty()) {
 			return Collections.emptyList();
 		}
 
-		// PrayListResponseDto 생성 및 반환
+		return convertPrayListResponseDtoListByCategory(categoryList, member);
+	}
+
+	@NotNull
+	private List<PrayListResponseDto> convertPrayListResponseDtoListByCategory(
+		List<Category> categoryList, Member member) {
 		return categoryList.stream()
 			.map(category -> createPrayListResponseDto(member, category))
 			.collect(Collectors.toList());
+	}
+
+	private List<Category> getCategories(String prayType, Member member) {
+		CategoryType categoryType = CategoryType.valueOf(prayType);
+		return categoryService.getCategoryListByMemberAndCategoryType(member,
+			categoryType);
 	}
 
 	private PrayListResponseDto createPrayListResponseDto(Member member, Category category) {
