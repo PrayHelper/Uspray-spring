@@ -66,7 +66,7 @@ public class HistoryService {
     @Transactional(readOnly = true)
     public HistoryDetailResponseDto getHistoryDetail(String username, Long historyId) {
         Member member = memberRepository.getMemberByUserId(username);
-        History history = historyRepository.getHistoryById(historyId);
+        History history = getHistoryById(historyId);
         if (history.getPrayType().equals(PrayType.SHARED)) {
             Pray originPray = prayRepository.getPrayById(history.getOriginPrayId());
             return HistoryDetailResponseDto.shared(history, originPray);
@@ -84,8 +84,19 @@ public class HistoryService {
         historyRepository.delete(history);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public History getHistoryByIdAndMember(Long historyId, Member member) {
-        return historyRepository.getHistoryByIdAndMember(historyId, member);
+        return historyRepository.findByIdAndMember(historyId, member)
+            .orElseThrow(() -> new NotFoundException(
+                ErrorStatus.HISTORY_NOT_FOUND_EXCEPTION
+            ));
+    }
+
+    @Transactional(readOnly = true)
+    public History getHistoryById(Long historyId) {
+        return historyRepository.findById(historyId)
+            .orElseThrow(() -> new NotFoundException(
+                ErrorStatus.HISTORY_NOT_FOUND_EXCEPTION
+            ));
     }
 }
