@@ -9,7 +9,6 @@ import com.uspray.uspray.domain.history.model.History;
 import com.uspray.uspray.domain.member.model.Member;
 import com.uspray.uspray.domain.pray.model.Pray;
 import com.uspray.uspray.global.exception.ErrorStatus;
-import com.uspray.uspray.global.exception.model.CustomException;
 import com.uspray.uspray.global.exception.model.NotFoundException;
 import com.uspray.uspray.domain.history.repository.HistoryRepository;
 import com.uspray.uspray.domain.member.repository.MemberRepository;
@@ -40,20 +39,16 @@ public class HistoryService {
 
         if (PrayType.PERSONAL.name().equalsIgnoreCase(type)) {
             historyList = historyRepository.findByMemberAndOriginPrayIdIsNull(member, pageable)
-                .map(HistoryResponseDto::of);
-            return new HistoryListResponseDto(historyList.getContent(),
-                historyList.getTotalPages());
+                    .map(HistoryResponseDto::of);
         }
-        if (PrayType.SHARED.name().equalsIgnoreCase(type)) {
+        else {
             historyList = historyRepository.findByMemberAndOriginPrayIdIsNotNull(
                 member, pageable).map(history -> {
                 Member originMember = memberRepository.getMemberById(history.getOriginMemberId());
                 return HistoryResponseDto.shared(history, originMember);
             });
-            return new HistoryListResponseDto(historyList.getContent(),
-                historyList.getTotalPages());
         }
-        throw new CustomException(ErrorStatus.INVALID_TYPE_EXCEPTION);
+        return new HistoryListResponseDto(historyList.getContent(), historyList.getTotalPages());
     }
 
     @Transactional(readOnly = true)
@@ -71,10 +66,7 @@ public class HistoryService {
     @Transactional(readOnly = true)
     public HistoryDetailResponseDto getHistoryDetail(String username, Long historyId) {
         Member member = memberRepository.getMemberByUserId(username);
-        History history = historyRepository.getHistoryById(historyId);
-        if (!history.getMember().getId().equals(member.getId())) {
-            throw new NotFoundException(ErrorStatus.HISTORY_NOT_FOUND_EXCEPTION);
-        }
+        History history = getHistoryById(historyId);
         if (history.getPrayType().equals(PrayType.SHARED)) {
             Pray originPray = prayRepository.getPrayById(history.getOriginPrayId());
             return HistoryDetailResponseDto.shared(history, originPray);
@@ -85,5 +77,26 @@ public class HistoryService {
     @Transactional
     public void saveHistory(History history) {
         historyRepository.save(history);
+    }
+
+    @Transactional
+    public void deleteHistory(History history) {
+        historyRepository.delete(history);
+    }
+
+    @Transactional(readOnly = true)
+    public History getHistoryByIdAndMember(Long historyId, Member member) {
+        return historyRepository.findByIdAndMember(historyId, member)
+            .orElseThrow(() -> new NotFoundException(
+                ErrorStatus.HISTORY_NOT_FOUND_EXCEPTION
+            ));
+    }
+
+    @Transactional(readOnly = true)
+    public History getHistoryById(Long historyId) {
+        return historyRepository.findById(historyId)
+            .orElseThrow(() -> new NotFoundException(
+                ErrorStatus.HISTORY_NOT_FOUND_EXCEPTION
+            ));
     }
 }
