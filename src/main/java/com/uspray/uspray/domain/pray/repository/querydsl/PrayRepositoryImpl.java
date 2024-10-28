@@ -42,7 +42,7 @@ public class PrayRepositoryImpl implements PrayRepositoryCustom {
             .from(pray)
             .where(pray.id.eq(prayId))
             .fetchOne();
-        return result != null ? result + result_for_owner : result_for_owner;
+        return result + result_for_owner;
     }
 }
 
