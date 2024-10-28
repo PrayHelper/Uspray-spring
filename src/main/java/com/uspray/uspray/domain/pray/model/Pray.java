@@ -48,6 +48,8 @@ public class Pray extends AuditingTimeEntity {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
     private String content;
+
+    @Column(name = "count")
     private Integer count;
     private LocalDate deadline;
     private Boolean isShared = false;

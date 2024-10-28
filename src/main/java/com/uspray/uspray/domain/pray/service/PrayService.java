@@ -62,4 +62,8 @@ public class PrayService {
 	public Boolean isSharedPray(Pray pray) {
 		return getSharedPray(pray.getId()) == null;
 	}
+
+	public Integer getCountById(Long prayId) {
+		return prayRepository.getCountById(prayId);
+	}
 }
