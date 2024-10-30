@@ -14,6 +14,7 @@ import com.uspray.uspray.domain.pray.dto.pray.request.PrayUpdateRequestDto;
 import com.uspray.uspray.domain.pray.dto.pray.response.PrayResponseDto;
 import com.uspray.uspray.domain.pray.model.Pray;
 import com.uspray.uspray.domain.pray.repository.PrayRepository;
+import com.uspray.uspray.global.enums.CategoryType;
 import com.uspray.uspray.global.enums.PrayType;
 import com.uspray.uspray.global.exception.ErrorStatus;
 import com.uspray.uspray.global.exception.model.CustomException;
@@ -48,8 +49,8 @@ public class PrayFacade {
     public PrayResponseDto createPray(PrayRequestDto prayRequestDto, String username,
         LocalDate startDateOrNull) {
         Member member = memberService.findMemberByUserId(username);
-        Category category = categoryService.getCategoryByIdAndMember(prayRequestDto.getCategoryId(),
-            member);
+        Category category = categoryService.getCategoryByIdAndMemberAndType(prayRequestDto.getCategoryId(),
+            member, CategoryType.PERSONAL);
         return prayService.savePray(prayRequestDto.toEntity(member, category, startDateOrNull));
     }
 
@@ -61,9 +62,10 @@ public class PrayFacade {
         // 이 기도 제목을 공유한 적 없거나, 공유 받은 사람이 없으면 전부 수정 가능
         // 이 기도 제목을 공유한 적 있고, 누구라도 공유 받은 사람이 있으면 기도제목 내용 수정 불가능
         Pray sharedPray = prayRepository.getPrayByOriginPrayId(prayId);
-        Category category = categoryService.getCategoryByIdAndMember(
+        Category category = categoryService.getCategoryByIdAndMemberAndType(
             prayUpdateRequestDto.getCategoryId(),
-            pray.getMember());
+            pray.getMember(),
+            CategoryType.PERSONAL);
         // 기도 제목 타입과 카테고리 타입 일치하는 지 확인
         if (!pray.getPrayType().toString().equals(category.getCategoryType().toString())) {
             throw new CustomException(ErrorStatus.PRAY_CATEGORY_TYPE_MISMATCH);
