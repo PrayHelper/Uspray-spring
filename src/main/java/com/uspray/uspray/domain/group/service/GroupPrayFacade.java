@@ -132,20 +132,12 @@ public class GroupPrayFacade {
         List<GroupPrayResponseDto> groupPrayList = new ArrayList<>();
 
         for (GroupPray groupPray : groupPrays) {
-            Optional<ScrapAndHeart> SH = scrapAndHeartService.findScrapAndHeartByGroupPrayAndMember(
-                groupPray, member);
-            if (SH.isPresent()) {
-                ScrapAndHeart scrapAndHeart = SH.get();
-                groupPrayList.add(GroupPrayResponseDto.builder()
-                    .groupPray(groupPray)
-                    .member(member)
-                    .scrapAndHeart(scrapAndHeart)
-                    .build());
-                continue;
-            }
+            ScrapAndHeart scrapAndHeart = scrapAndHeartService.findScrapAndHeartByGroupPrayAndMember(
+                groupPray, member).orElse(null);
             groupPrayList.add(GroupPrayResponseDto.builder()
                 .groupPray(groupPray)
                 .member(member)
+                .scrapAndHeart(scrapAndHeart)
                 .build());
         }
 
@@ -214,7 +206,9 @@ public class GroupPrayFacade {
             groupPray.getAuthor(), false);
     }
 
-    private ScrapAndHeart checkScrapAndHeartExist(Optional<ScrapAndHeart> scrapAndHeartByGroupPrayAndMember, GroupPray groupPray, Member member, Pray pray) {
+    private ScrapAndHeart checkScrapAndHeartExist(
+        Optional<ScrapAndHeart> scrapAndHeartByGroupPrayAndMember, GroupPray groupPray,
+        Member member, Pray pray) {
         if (scrapAndHeartByGroupPrayAndMember.isEmpty()) {
 
             ScrapAndHeart scrapAndHeart = ScrapAndHeart.createdByScrapOf(groupPray, member, pray);
@@ -232,7 +226,8 @@ public class GroupPrayFacade {
             member);
 
         return Pray.createdByScrapOf(member, groupPray.getContent(), scrapRequestDto.getDeadline(),
-            groupPray.getAuthor().getId(), groupPray.getOriginPray().getId(), category, PrayType.SHARED);
+            groupPray.getAuthor().getId(), groupPray.getOriginPray().getId(), category,
+            PrayType.SHARED);
     }
 
     private void sendNotificationAndSaveLog(ScrapAndHeart scrapAndHeart, GroupPray groupPray,
