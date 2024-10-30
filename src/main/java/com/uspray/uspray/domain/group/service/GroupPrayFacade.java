@@ -123,14 +123,11 @@ public class GroupPrayFacade {
 
         Member member = memberService.findMemberByUserId(userId);
         Group group = groupService.getGroupById(groupId);
-        GroupMember groupMember = groupMemberService.getGroupMemberByGroupAndMember(group,
-            member);
-        List<GroupPray> groupPrays = groupPrayService.findGroupPraysByGroup(group);
 
+        List<GroupPray> groupPrays = groupPrayService.findGroupPraysByGroup(group);
         Long count = scrapAndHeartService.countHeart(groupPrays);
 
         List<GroupPrayResponseDto> groupPrayList = new ArrayList<>();
-
         for (GroupPray groupPray : groupPrays) {
             ScrapAndHeart scrapAndHeart = scrapAndHeartService.findScrapAndHeartByGroupPrayAndMember(
                 groupPray, member).orElse(null);
@@ -141,6 +138,14 @@ public class GroupPrayFacade {
                 .build());
         }
 
+        GroupMember groupMember = groupMemberService.getGroupMemberByGroupAndMember(group,
+            member);
+
+        return new GroupPrayRappingDto(count, groupMember.getNotificationAgree(), makeSortedTreeMap(groupPrayList));
+    }
+
+    private Map<LocalDate, List<GroupPrayResponseDto>> makeSortedTreeMap(
+        List<GroupPrayResponseDto> groupPrayList) {
         // 역순으로 정렬하는 트리맵 정의
         Map<LocalDate, List<GroupPrayResponseDto>> sortedMap = new TreeMap<>(
             Comparator.reverseOrder());
@@ -154,8 +159,7 @@ public class GroupPrayFacade {
             List<GroupPrayResponseDto> value = entry.getValue();
             value.sort(Comparator.comparing(GroupPrayResponseDto::getGroupPrayId).reversed());
         }
-
-        return new GroupPrayRappingDto(count, groupMember.getNotificationAgree(), sortedMap);
+        return sortedMap;
     }
 
     @Transactional
