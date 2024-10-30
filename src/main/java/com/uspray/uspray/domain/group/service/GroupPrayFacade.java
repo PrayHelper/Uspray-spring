@@ -29,7 +29,6 @@ import java.util.Base64;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -167,7 +166,8 @@ public class GroupPrayFacade {
         GroupPray groupPray = groupPrayService.getGroupPrayById(groupPrayId);
         Member member = memberService.findMemberByUserId(userId);
 
-        ScrapAndHeart scrapAndHeart = scrapAndHeartService.findScrapAndHeartByGroupPrayAndMember(groupPray, member)
+        ScrapAndHeart scrapAndHeart = scrapAndHeartService.findScrapAndHeartByGroupPrayAndMember(
+                groupPray, member)
             .orElse(ScrapAndHeart.builder()
                 .groupPray(groupPray)
                 .member(member)
@@ -181,37 +181,24 @@ public class GroupPrayFacade {
     @Transactional
     public void scrapGroupPray(ScrapRequestDto scrapRequestDto, String userId) throws IOException {
         Member member = memberService.findMemberByUserId(userId);
-        Category category = categoryService.getCategoryByIdAndMemberAndType(scrapRequestDto.getCategoryId(), member, CategoryType.SHARED);
+        Category category = categoryService.getCategoryByIdAndMemberAndType(
+            scrapRequestDto.getCategoryId(), member, CategoryType.SHARED);
         GroupPray groupPray = groupPrayService.getGroupPrayById(
             scrapRequestDto.getGroupPrayId());
 
         Pray pray = makePray(scrapRequestDto, groupPray, member, category);
         prayService.savePray(pray);
 
-        Optional<ScrapAndHeart> scrapAndHeartByGroupPrayAndMember = scrapAndHeartService.findScrapAndHeartByGroupPrayAndMember(
-            groupPray, member);
+        ScrapAndHeart scrapAndHeart = scrapAndHeartService.findScrapAndHeartByGroupPrayAndMember(
+            groupPray, member).orElse(ScrapAndHeart.createdByScrapOf(groupPray, member, pray));
 
-        ScrapAndHeart scrapAndHeart = checkScrapAndHeartExist(scrapAndHeartByGroupPrayAndMember,
-            groupPray, member, pray);
-        sendNotificationAndSaveLog(scrapAndHeart, groupPray,
-            groupPray.getAuthor(), false);
-    }
-
-    private ScrapAndHeart checkScrapAndHeartExist(
-        Optional<ScrapAndHeart> scrapAndHeartByGroupPrayAndMember, GroupPray groupPray,
-        Member member, Pray pray) {
-        if (scrapAndHeartByGroupPrayAndMember.isEmpty()) {
-
-            ScrapAndHeart scrapAndHeart = ScrapAndHeart.createdByScrapOf(groupPray, member, pray);
-            scrapAndHeartService.save(scrapAndHeart);
-            return scrapAndHeart;
-        }
-        ScrapAndHeart scrapAndHeart = scrapAndHeartByGroupPrayAndMember.get();
         scrapAndHeart.scrapPray(pray);
-        return scrapAndHeart;
+        scrapAndHeartService.save(scrapAndHeart);
+        sendNotificationAndSaveLog(scrapAndHeart, groupPray, groupPray.getAuthor(), false);
     }
 
-    private Pray makePray(ScrapRequestDto scrapRequestDto, GroupPray groupPray, Member member, Category category) {
+    private Pray makePray(ScrapRequestDto scrapRequestDto, GroupPray groupPray, Member member,
+        Category category) {
         groupPray.getOriginPray().setIsShared();
 
         return Pray.createdByScrapOf(member, groupPray.getContent(), scrapRequestDto.getDeadline(),
