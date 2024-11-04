@@ -104,9 +104,8 @@ public class PrayFacade {
     }
 
     @Transactional
-    public CategoryResponseDto deleteCategory(String username, Long categoryId) {
-        Member member = memberService.findMemberByUserId(username);
-        Category category = categoryService.getCategoryByIdAndMember(categoryId, member);
+    public CategoryResponseDto deleteCategory(Long categoryId) {
+        Category category = categoryService.getCategoryById(categoryId);
 
         prayService.getPrayListByCategory(category).forEach(this::convertPrayToHistory);
 

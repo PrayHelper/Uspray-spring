@@ -17,7 +17,7 @@ public interface CategoryRepository extends JpaRepository<Category, Long>,
 
     Category getCategoryById(Long categoryId);
 
-    List<Category> getCategoriesByMemberAndCategoryTypeOrderByOrder(Member member,
+    List<Category> findAllByMemberAndCategoryTypeOrderByOrderAsc(Member member,
         CategoryType categoryType);
 
     Optional<Category> findByIdAndMemberAndCategoryType(Long categoryId, Member member, CategoryType categoryType);
@@ -31,7 +31,7 @@ public interface CategoryRepository extends JpaRepository<Category, Long>,
 
     default int checkDuplicateAndReturnMaxOrder(String name, Member member, CategoryType type) {
         checkDuplicate(name, member, type);
-        if (getCategoriesByMemberAndCategoryTypeOrderByOrder(member, type).isEmpty()) {
+        if (findAllByMemberAndCategoryTypeOrderByOrderAsc(member, type).isEmpty()) {
             return 0;
         }
         return getMaxCategoryOrder(member, type);
@@ -40,7 +40,7 @@ public interface CategoryRepository extends JpaRepository<Category, Long>,
     boolean existsByNameAndMemberAndCategoryType(String name, Member member, CategoryType type);
 
     default int getMaxCategoryOrder(Member member, CategoryType type) {
-        Category category = getCategoriesByMemberAndCategoryTypeOrderByOrder(member, type).stream()
+        Category category = findAllByMemberAndCategoryTypeOrderByOrderAsc(member, type).stream()
             .reduce((first, second) -> second)
             .orElseThrow(() -> new NotFoundException(ErrorStatus.CATEGORY_NOT_FOUND_EXCEPTION));
         return category.getOrder();

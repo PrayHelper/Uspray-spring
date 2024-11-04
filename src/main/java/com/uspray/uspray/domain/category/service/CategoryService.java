@@ -8,7 +8,6 @@ import com.uspray.uspray.domain.member.model.Member;
 import com.uspray.uspray.domain.member.repository.MemberRepository;
 import com.uspray.uspray.domain.pray.dto.pray.PrayListResponseDto;
 import com.uspray.uspray.domain.pray.repository.PrayRepository;
-import com.uspray.uspray.domain.pray.service.PrayFacade;
 import com.uspray.uspray.global.enums.CategoryType;
 import com.uspray.uspray.global.exception.ErrorStatus;
 import com.uspray.uspray.global.exception.model.CustomException;
@@ -71,6 +70,10 @@ public class CategoryService {
         return (targetCategory.getOrder() + categories.get(prevIndex).getOrder()) / 2;
     }
 
+    public Category getCategoryById(Long categoryId) {
+        return categoryRepository.findById(categoryId).orElseThrow(() -> new CustomException(ErrorStatus.CATEGORY_NOT_FOUND_EXCEPTION));
+    }
+
     public Category getCategoryByIdAndMemberAndType(Long categoryId, Member member,
         CategoryType categoryType) {
         return categoryRepository.findByIdAndMemberAndCategoryType(categoryId, member, categoryType)
@@ -93,11 +96,7 @@ public class CategoryService {
         return CategoryResponseDto.of(category);
     }
 
-    public CategoryResponseDto deleteCategory(String username, Long categoryId) {
-        Category category = categoryRepository.findByIdAndMemberAndCategoryType(categoryId,
-                memberRepository.getMemberByUserId(username), CategoryType.PERSONAL)
-            .orElseThrow(() -> new CustomException(ErrorStatus.PRAY_CATEGORY_TYPE_MISMATCH));
-        prayRepository.findByCategoryId(category.getId()).forEach(prayFacade::convertPrayToHistory);
+    public CategoryResponseDto deleteCategory(Category category) {
         categoryRepository.delete(category);
         return CategoryResponseDto.of(category);
     }
@@ -130,7 +129,7 @@ public class CategoryService {
         Category category = categoryRepository.findByIdAndMemberAndCategoryType(categoryId, member,
                 CategoryType.PERSONAL)
             .orElseThrow(() -> new CustomException(ErrorStatus.PRAY_CATEGORY_TYPE_MISMATCH));
-        List<Category> categories = categoryRepository.getCategoriesByMemberAndCategoryTypeOrderByOrder(
+        List<Category> categories = categoryRepository.findAllByMemberAndCategoryTypeOrderByOrderAsc(
             member, category.getCategoryType());
 
         validateIndex(index, categories.size());
@@ -146,7 +145,7 @@ public class CategoryService {
     public List<CategoryResponseDto> getCategoryList(String username, String categoryType) {
         Member member = memberRepository.getMemberByUserId(username);
         CategoryType convertCategoryType = CategoryType.valueOf(categoryType.toUpperCase());
-        List<Category> categories = categoryRepository.getCategoriesByMemberAndCategoryTypeOrderByOrder(
+        List<Category> categories = categoryRepository.findAllByMemberAndCategoryTypeOrderByOrderAsc(
             member, convertCategoryType);
         return categories.stream()
             .map(CategoryResponseDto::of)
