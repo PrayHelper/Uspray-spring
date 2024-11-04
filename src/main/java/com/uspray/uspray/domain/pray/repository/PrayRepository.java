@@ -1,5 +1,6 @@
 package com.uspray.uspray.domain.pray.repository;
 
+import com.uspray.uspray.domain.category.model.Category;
 import com.uspray.uspray.domain.member.model.Member;
 import com.uspray.uspray.domain.pray.model.Pray;
 import com.uspray.uspray.global.exception.ErrorStatus;
@@ -41,7 +42,9 @@ public interface PrayRepository extends JpaRepository<Pray, Long>, PrayRepositor
 
     Pray getPrayByOriginPrayId(Long prayId);
 
-    List<Pray> findByCategoryId(Long categoryId);
+    List<Pray> findAllByCategory(Category category);
+
+    List<Pray> findAllByMemberAndCategoryOrderByCreatedAtAsc(Member member, Category category);
 
     boolean existsByMemberAndOriginPrayId(Member member, Long originPrayId);
 

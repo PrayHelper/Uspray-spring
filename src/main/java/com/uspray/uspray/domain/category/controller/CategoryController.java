@@ -3,6 +3,7 @@ package com.uspray.uspray.domain.category.controller;
 import com.uspray.uspray.domain.category.dto.CategoryRequestDto;
 import com.uspray.uspray.domain.category.dto.CategoryResponseDto;
 import com.uspray.uspray.domain.category.service.CategoryService;
+import com.uspray.uspray.domain.pray.service.PrayFacade;
 import com.uspray.uspray.global.common.dto.ApiResponseDto;
 import com.uspray.uspray.global.exception.SuccessStatus;
 import java.util.List;
@@ -23,8 +24,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/category")
 @RequiredArgsConstructor
 public class CategoryController implements CategoryApi {
-
     private final CategoryService categoryService;
+    private final PrayFacade prayFacade;
 
 
     @GetMapping("/{categoryId}")
@@ -58,7 +59,7 @@ public class CategoryController implements CategoryApi {
         @PathVariable("categoryId") Long categoryId
     ) {
         return ApiResponseDto.success(SuccessStatus.DELETE_CATEGORY_SUCCESS,
-            categoryService.deleteCategory(user.getUsername(), categoryId));
+            prayFacade.deleteCategory(user.getUsername(), categoryId));
     }
 
     @PutMapping("/{categoryId}")
