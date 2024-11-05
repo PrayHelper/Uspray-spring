@@ -63,7 +63,7 @@ public class ScrapAndHeart {
             .groupPray(groupPray)
             .member(member)
             .sharedPray(sharedPray)
-            .heart(true)
+            .scrap(true)
             .build();
     }
 
