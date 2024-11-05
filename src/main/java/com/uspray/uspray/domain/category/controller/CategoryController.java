@@ -59,7 +59,7 @@ public class CategoryController implements CategoryApi {
         @PathVariable("categoryId") Long categoryId
     ) {
         return ApiResponseDto.success(SuccessStatus.DELETE_CATEGORY_SUCCESS,
-            prayFacade.deleteCategory(user.getUsername(), categoryId));
+            prayFacade.deleteCategory(categoryId));
     }
 
     @PutMapping("/{categoryId}")

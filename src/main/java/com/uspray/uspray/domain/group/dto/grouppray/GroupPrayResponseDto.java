@@ -39,8 +39,8 @@ public class GroupPrayResponseDto {
 
     private void setSC(ScrapAndHeart scrapAndHeart) {
         if (scrapAndHeart != null) {
-            this.heart = scrapAndHeart.isHeart();
-            this.scrap = scrapAndHeart.isScrap();
+            this.heart = scrapAndHeart.getHeart();
+            this.scrap = scrapAndHeart.getScrap();
         }
     }
 

@@ -44,5 +44,13 @@ public class NotificationLog extends AuditingTimeEntity {
         this.title = title;
     }
 
+    public static NotificationLog of(Member member, Pray pray, String title) {
+        return NotificationLog.builder()
+            .pray(pray)
+            .member(member)
+            .title(title)
+            .build();
+    }
+
 }
 
