@@ -64,6 +64,6 @@ public class PrayService {
 	}
 
 	public Integer getCountById(Long prayId) {
-		return prayRepository.getCountById(prayId);
+		return prayRepository.getPrayById(prayId).getCount();
 	}
 }

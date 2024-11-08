@@ -59,7 +59,4 @@ public interface PrayRepository extends JpaRepository<Pray, Long>, PrayRepositor
 
     @Query(value = "SELECT * FROM Pray p where (p.pray_id = :id)", nativeQuery = true)
     Pray getPrayByIdIgnoreDelete(@Param("id") Long id);
-
-    @Query("SELECT p.count FROM Pray p WHERE p.id = :id")
-    Integer getCountById(@Param("id") Long id);
 }
