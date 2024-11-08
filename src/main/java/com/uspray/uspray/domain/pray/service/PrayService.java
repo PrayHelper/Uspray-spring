@@ -47,8 +47,8 @@ public class PrayService {
 		return prayRepository.findAllByDeadlineBefore(currentDate);
 	}
 
-	public Integer getSharedCountByOriginPrayId(Long originPrayId) {
-		return prayRepository.getSharedCountByOriginPrayId(originPrayId);
+	public Integer getSharedCountByIdAndOriginPrayId(Long prayId, Long originPrayId) {
+		return prayRepository.getSharedCountByIdAndOriginPrayId(prayId, originPrayId);
 	}
 
 	public void deletePray(Pray pray) {
@@ -61,9 +61,5 @@ public class PrayService {
 
 	public Boolean isSharedPray(Pray pray) {
 		return getSharedPray(pray.getId()) == null;
-	}
-
-	public Integer getCountById(Long prayId) {
-		return prayRepository.getPrayById(prayId).getCount();
 	}
 }

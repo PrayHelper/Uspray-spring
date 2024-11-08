@@ -106,13 +106,7 @@ public class PrayFacade {
 	}
 
 	private void convertPrayToHistory(Pray pray) {
-		Integer sharedCount;
-		if (pray.getOriginPrayId() != null) {
-			sharedCount = prayService.getSharedCountByOriginPrayId(
-				pray.getOriginPrayId());
-		} else {
-			sharedCount = prayService.getCountById(pray.getId());
-		}
+		Integer sharedCount = prayService.getSharedCountByIdAndOriginPrayId(pray.getId(), pray.getOriginPrayId());
 
 		historyService.createHistory(pray, sharedCount);
 		prayService.deletePray(pray);
