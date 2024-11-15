@@ -10,7 +10,7 @@ import com.uspray.uspray.domain.member.model.Member;
 import com.uspray.uspray.domain.member.repository.MemberRepository;
 import com.uspray.uspray.domain.pray.model.Pray;
 import com.uspray.uspray.domain.pray.repository.PrayRepository;
-import com.uspray.uspray.global.enums.PrayType;
+import com.uspray.uspray.global.enums.CategoryType;
 import com.uspray.uspray.global.exception.ErrorStatus;
 import com.uspray.uspray.global.exception.model.CustomException;
 import com.uspray.uspray.global.exception.model.NotFoundException;
@@ -37,13 +37,13 @@ public class HistoryService {
 		Member member = memberRepository.getMemberByUserId(username);
 		Page<HistoryResponseDto> historyList;
 
-		if (PrayType.PERSONAL.name().equalsIgnoreCase(type)) {
+		if (CategoryType.PERSONAL.name().equalsIgnoreCase(type)) {
 			historyList = historyRepository.findByMemberAndOriginPrayIdIsNull(member, pageable)
 				.map(HistoryResponseDto::of);
 			return new HistoryListResponseDto(historyList.getContent(),
 				historyList.getTotalPages());
 		}
-		if (PrayType.SHARED.name().equalsIgnoreCase(type)) {
+		if (CategoryType.SHARED.name().equalsIgnoreCase(type)) {
 			historyList = historyRepository.findByMemberAndOriginPrayIdIsNotNull(
 				member, pageable).map(history -> {
 				Member originMember = memberRepository.getMemberById(history.getOriginMemberId());
@@ -74,7 +74,7 @@ public class HistoryService {
 		if (!history.getMember().getId().equals(member.getId())) {
 			throw new NotFoundException(ErrorStatus.HISTORY_NOT_FOUND_EXCEPTION);
 		}
-		if (history.getPrayType().equals(PrayType.SHARED)) {
+		if (history.getCategoryType() == CategoryType.SHARED) {
 			Pray originPray = prayRepository.getPrayById(history.getOriginPrayId());
 			return HistoryDetailResponseDto.shared(history, originPray);
 		}
