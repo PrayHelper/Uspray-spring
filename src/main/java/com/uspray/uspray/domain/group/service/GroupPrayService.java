@@ -1,5 +1,6 @@
 package com.uspray.uspray.domain.group.service;
 
+import com.uspray.uspray.domain.group.dto.grouppray.GroupPrayResponseDto;
 import com.uspray.uspray.domain.group.model.Group;
 import com.uspray.uspray.domain.group.model.GroupPray;
 import com.uspray.uspray.domain.group.repository.GroupPrayRepository;
@@ -38,8 +39,12 @@ public class GroupPrayService {
         return groupPrayRepository.getOriginPrayIdByGroupId(groupId);
     }
 
-    public List<GroupPray> findGroupPraysByGroup(Group group) {
-        return groupPrayRepository.findGroupPraysByGroup(group);
+    public List<GroupPray> findGroupPraysByGroup(Long groupId) {
+        return groupPrayRepository.findByGroup_GroupId(groupId);
+    }
+
+    public List<GroupPrayResponseDto> getGroupPrayDto(Long groupId, Long memberId) {
+        return groupPrayRepository.findGroupPray(groupId, memberId);
     }
 
 }

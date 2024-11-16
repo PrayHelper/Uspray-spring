@@ -24,7 +24,6 @@ import com.uspray.uspray.global.push.model.NotificationLog;
 import com.uspray.uspray.global.push.service.FCMNotificationService;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Comparator;
 import java.util.List;
@@ -121,23 +120,14 @@ public class GroupPrayFacade {
     public GroupPrayRappingDto getGroupPray(Long groupId, String userId) {
 
         Member member = memberService.findMemberByUserId(userId);
-        Group group = groupService.getGroupById(groupId);
 
-        List<GroupPray> groupPrays = groupPrayService.findGroupPraysByGroup(group);
+        List<GroupPray> groupPrays = groupPrayService.findGroupPraysByGroup(groupId);
         Long count = scrapAndHeartService.countHeart(groupPrays);
 
-        List<GroupPrayResponseDto> groupPrayList = new ArrayList<>();
-        for (GroupPray groupPray : groupPrays) {
-            ScrapAndHeart scrapAndHeart = scrapAndHeartService.findScrapAndHeartByGroupPrayAndMember(
-                groupPray, member).orElse(null);
-            groupPrayList.add(GroupPrayResponseDto.builder()
-                .groupPray(groupPray)
-                .member(member)
-                .scrapAndHeart(scrapAndHeart)
-                .build());
-        }
+        List<GroupPrayResponseDto> groupPrayList = groupPrayService.getGroupPrayDto(groupId,
+            member.getId());
 
-        GroupMember groupMember = groupMemberService.getGroupMemberByGroupAndMember(group, member);
+        GroupMember groupMember = groupMemberService.getGroupMemberByGroupAndMember(groupId, member);
 
         return new GroupPrayRappingDto(count, groupMember.getNotificationAgree(),
             makeSortedTreeMap(groupPrayList));

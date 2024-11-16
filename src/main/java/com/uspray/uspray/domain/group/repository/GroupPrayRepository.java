@@ -2,6 +2,7 @@ package com.uspray.uspray.domain.group.repository;
 
 import com.uspray.uspray.domain.group.model.Group;
 import com.uspray.uspray.domain.group.model.GroupPray;
+import com.uspray.uspray.domain.group.repository.querydsl.GroupPrayRepositoryCustom;
 import com.uspray.uspray.global.exception.ErrorStatus;
 import com.uspray.uspray.global.exception.model.NotFoundException;
 import java.util.List;
@@ -10,10 +11,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface GroupPrayRepository extends JpaRepository<GroupPray, Long> {
+public interface GroupPrayRepository extends JpaRepository<GroupPray, Long>,
+    GroupPrayRepositoryCustom {
 
     @EntityGraph(attributePaths = {"author"})
-    List<GroupPray> findGroupPraysByGroup(Group group);
+    List<GroupPray> findByGroup_GroupId(Long groupid);
 
     @Query("select g.originPray.id from GroupPray g left join g.originPray left join g.group where g.group.id = :groupId")
     List<Long> getOriginPrayIdByGroupId(@Param("groupId") Long groupId);
