@@ -1,7 +1,7 @@
 package com.uspray.uspray.domain.group.dto.grouppray;
 
+import com.querydsl.core.annotations.QueryProjection;
 import com.uspray.uspray.domain.group.model.GroupPray;
-import com.uspray.uspray.domain.member.model.Member;
 import com.uspray.uspray.domain.group.model.ScrapAndHeart;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
@@ -28,11 +28,12 @@ public class GroupPrayResponseDto {
     private LocalDate createdAt;
 
     @Builder
-    public GroupPrayResponseDto(GroupPray groupPray, Member member, ScrapAndHeart scrapAndHeart) {
+    @QueryProjection
+    public GroupPrayResponseDto(GroupPray groupPray, Long memberId, ScrapAndHeart scrapAndHeart) {
         this.groupPrayId = groupPray.getId();
         this.content = groupPray.getContent();
         this.authorName = groupPray.getAuthor().getName();
-        setIsOwner(groupPray.getAuthor().getId(), member.getId());
+        setIsOwner(groupPray.getAuthor().getId(), memberId);
         setSC(scrapAndHeart);
         this.createdAt = LocalDate.from(groupPray.getCreatedAt());
     }
