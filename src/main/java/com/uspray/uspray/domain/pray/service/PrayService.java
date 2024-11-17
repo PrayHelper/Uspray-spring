@@ -27,6 +27,18 @@ public class PrayService {
 		return PrayResponseDto.of(prayRepository.save(pray));
 	}
 
+	public Pray findPrayById(Long prayId) {
+		return prayRepository.getPrayById(prayId);
+	}
+
+	public List<Pray> findAllByIdIn(List<Long> prayIds) {
+		return prayRepository.findAllByIdIn(prayIds);
+	}
+
+	public List<Pray> findAllByOriginPrayIdIn(List<Long> prayIds) {
+		return prayRepository.findAllByOriginPrayIdIn(prayIds);
+	}
+
 	public List<Pray> getPrayListByCategory(Category category) {
 		return prayRepository.findAllByCategory(category);
 	}

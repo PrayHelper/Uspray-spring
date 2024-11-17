@@ -58,6 +58,15 @@ public class GroupPray extends AuditingTimeEntity {
         this.deadline = deadline;
     }
 
+    public static GroupPray of(Group group, Member author, LocalDate deadline, String content) {
+        return GroupPray.builder()
+            .group(group)
+            .author(author)
+            .deadline(deadline)
+            .content(content)
+            .build();
+    }
+
     public String getContent() {
         return new String(Base64.getDecoder().decode(content));
     }

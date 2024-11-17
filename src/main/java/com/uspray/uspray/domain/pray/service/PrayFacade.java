@@ -13,7 +13,6 @@ import com.uspray.uspray.domain.pray.dto.pray.request.PrayUpdateRequestDto;
 import com.uspray.uspray.domain.pray.dto.pray.response.PrayResponseDto;
 import com.uspray.uspray.domain.pray.model.Pray;
 import com.uspray.uspray.global.enums.CategoryType;
-import com.uspray.uspray.global.enums.PrayType;
 import com.uspray.uspray.global.exception.ErrorStatus;
 import com.uspray.uspray.global.exception.model.CustomException;
 import com.uspray.uspray.global.exception.model.NotFoundException;
@@ -46,11 +45,11 @@ public class PrayFacade {
 	}
 
 	private boolean isSameCategory(Pray pray, Category category) {
-		return pray.getPrayType().toString().equals(category.getCategoryType().toString());
+		return pray.getCategoryType() == category.getCategoryType();
 	}
 
 	private boolean isSharedPray(Pray pray) {
-		return prayService.isSharedPray(pray) || pray.getPrayType() == PrayType.SHARED;
+		return prayService.isSharedPray(pray) || pray.getCategoryType() == CategoryType.SHARED;
 	}
 
 	private void checkSharedPrayValidation(PrayUpdateRequestDto prayUpdateRequestDto,
@@ -68,8 +67,10 @@ public class PrayFacade {
 	public PrayResponseDto createPray(PrayRequestDto prayRequestDto, String username,
 		LocalDate startDateOrNull) {
 		Member member = memberService.findMemberByUserId(username);
-		Category category = categoryService.getCategoryByIdAndMember(prayRequestDto.getCategoryId(),
-			member);
+		Category category = categoryService.getCategoryByIdAndMemberAndType(
+			prayRequestDto.getCategoryId(),
+			member, CategoryType.PERSONAL);
+    
 		return prayService.savePray(prayRequestDto.toEntity(member, category, startDateOrNull));
 	}
 
@@ -87,9 +88,11 @@ public class PrayFacade {
 
 	@NotNull
 	private Category getCategory(PrayUpdateRequestDto prayUpdateRequestDto, Pray pray) {
-		Category category = categoryService.getCategoryByIdAndMember(
+		Category category = categoryService.getCategoryByIdAndMemberAndType(
 			prayUpdateRequestDto.getCategoryId(),
-			pray.getMember());
+			pray.getMember(),
+			CategoryType.PERSONAL);
+
 		// 기도 제목 타입과 카테고리 타입 일치하는 지 확인
 		if (!isSameCategory(pray, category)) {
 			throw new CustomException(ErrorStatus.PRAY_CATEGORY_TYPE_MISMATCH);
@@ -113,9 +116,9 @@ public class PrayFacade {
 	}
 
 	@Transactional
-	public CategoryResponseDto deleteCategory(String username, Long categoryId) {
-		Member member = memberService.findMemberByUserId(username);
-		Category category = categoryService.getCategoryByIdAndMember(categoryId, member);
+
+	public CategoryResponseDto deleteCategory(Long categoryId) {
+		Category category = categoryService.getCategoryById(categoryId);
 
 		prayService.getPrayListByCategory(category).forEach(this::convertPrayToHistory);
 
@@ -126,7 +129,8 @@ public class PrayFacade {
 	public List<PrayListResponseDto> todayPray(Long prayId, String username) {
 		Pray pray = prayService.getPrayByIdAndMemberId(prayId, username);
 		handlePrayedToday(pray);
-		return getPrayList(username, pray.getPrayType().stringValue());
+
+		return getPrayList(username, pray.getCategoryType().stringValue());
 	}
 
 
@@ -134,7 +138,7 @@ public class PrayFacade {
 		checkIsAlreadyPrayed(pray);
 		pray.countUp();
 
-		if (pray.getPrayType() == PrayType.SHARED) {
+		if (pray.getCategoryType() == CategoryType.SHARED) {
 			Member originMember = memberService.findMemberById(pray.getOriginMemberId());
 			if (originMember.getSecondNotiAgree()) {
 				notificationLogService.sendNotification(originMember);
@@ -195,7 +199,8 @@ public class PrayFacade {
 
 	private PrayResponseDto convertToPrayResponseDto(Pray pray) {
 		// 기도의 타입에 따라 적절한 PrayResponseDto 생성
-		if (pray.getPrayType().equals(PrayType.SHARED)) {
+
+		if (pray.getCategoryType() == CategoryType.SHARED) {
 			Member originMember = memberService.findMemberById(pray.getOriginMemberId());
 			return PrayResponseDto.shared(pray, originMember);
 		} else {
@@ -209,13 +214,13 @@ public class PrayFacade {
 		Pray pray = prayService.getPrayByIdAndMemberId(prayId, username);
 		convertPrayToHistory(pray);
 
-		return getPrayList(username, pray.getPrayType().stringValue());
+		return getPrayList(username, pray.getCategoryType().stringValue());
 	}
 
 
 	@Transactional
 	public List<PrayListResponseDto> cancelPray(Long prayId, String username) {
 		return getPrayList(username,
-			prayService.cancelPray(prayId, username).getPrayType().stringValue());
+			prayService.cancelPray(prayId, username).getCategoryType().stringValue());
 	}
 }
