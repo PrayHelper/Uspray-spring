@@ -70,6 +70,7 @@ public class PrayFacade {
 		Category category = categoryService.getCategoryByIdAndMemberAndType(
 			prayRequestDto.getCategoryId(),
 			member, CategoryType.PERSONAL);
+    
 		return prayService.savePray(prayRequestDto.toEntity(member, category, startDateOrNull));
 	}
 
@@ -91,6 +92,7 @@ public class PrayFacade {
 			prayUpdateRequestDto.getCategoryId(),
 			pray.getMember(),
 			CategoryType.PERSONAL);
+
 		// 기도 제목 타입과 카테고리 타입 일치하는 지 확인
 		if (!isSameCategory(pray, category)) {
 			throw new CustomException(ErrorStatus.PRAY_CATEGORY_TYPE_MISMATCH);
@@ -107,14 +109,14 @@ public class PrayFacade {
 	}
 
 	private void convertPrayToHistory(Pray pray) {
-		pray.complete();
-		Integer sharedCount = prayService.getSharedCountByOriginPrayId(
-			pray.getOriginPrayId());
+		Integer sharedCount = prayService.getSharedCountByIdAndOriginPrayId(pray.getId(), pray.getOriginPrayId());
+
 		historyService.createHistory(pray, sharedCount);
 		prayService.deletePray(pray);
 	}
 
 	@Transactional
+
 	public CategoryResponseDto deleteCategory(Long categoryId) {
 		Category category = categoryService.getCategoryById(categoryId);
 
@@ -127,6 +129,7 @@ public class PrayFacade {
 	public List<PrayListResponseDto> todayPray(Long prayId, String username) {
 		Pray pray = prayService.getPrayByIdAndMemberId(prayId, username);
 		handlePrayedToday(pray);
+
 		return getPrayList(username, pray.getCategoryType().stringValue());
 	}
 
@@ -196,6 +199,7 @@ public class PrayFacade {
 
 	private PrayResponseDto convertToPrayResponseDto(Pray pray) {
 		// 기도의 타입에 따라 적절한 PrayResponseDto 생성
+
 		if (pray.getCategoryType() == CategoryType.SHARED) {
 			Member originMember = memberService.findMemberById(pray.getOriginMemberId());
 			return PrayResponseDto.shared(pray, originMember);

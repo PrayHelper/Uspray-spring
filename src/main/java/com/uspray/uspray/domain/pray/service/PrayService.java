@@ -59,8 +59,8 @@ public class PrayService {
 		return prayRepository.findAllByDeadlineBefore(currentDate);
 	}
 
-	public Integer getSharedCountByOriginPrayId(Long originPrayId) {
-		return prayRepository.getSharedCountByOriginPrayId(originPrayId);
+	public Integer getSharedCountByIdAndOriginPrayId(Long prayId, Long originPrayId) {
+		return prayRepository.getSharedCountByIdAndOriginPrayId(prayId, originPrayId);
 	}
 
 	public void deletePray(Pray pray) {

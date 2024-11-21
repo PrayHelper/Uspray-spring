@@ -69,6 +69,7 @@ public class CategoryService {
 			categoryType);
 	}
 
+
 	public Category getCategoryById(Long categoryId) {
 		return categoryRepository.findById(categoryId)
 			.orElseThrow(() -> new CustomException(ErrorStatus.CATEGORY_NOT_FOUND_EXCEPTION));

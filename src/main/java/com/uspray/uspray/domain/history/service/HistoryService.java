@@ -37,6 +37,7 @@ public class HistoryService {
 		Member member = memberRepository.getMemberByUserId(username);
 		Page<HistoryResponseDto> historyList;
 
+
 		if (CategoryType.PERSONAL.name().equalsIgnoreCase(type)) {
 			historyList = historyRepository.findByMemberAndOriginPrayIdIsNull(member, pageable)
 				.map(HistoryResponseDto::of);
@@ -74,6 +75,7 @@ public class HistoryService {
 		if (!history.getMember().getId().equals(member.getId())) {
 			throw new NotFoundException(ErrorStatus.HISTORY_NOT_FOUND_EXCEPTION);
 		}
+    
 		if (history.getCategoryType() == CategoryType.SHARED) {
 			Pray originPray = prayRepository.getPrayById(history.getOriginPrayId());
 			return HistoryDetailResponseDto.shared(history, originPray);
