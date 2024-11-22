@@ -5,7 +5,7 @@ import com.uspray.uspray.domain.group.model.GroupPray;
 import com.uspray.uspray.domain.member.model.Member;
 import com.uspray.uspray.domain.pray.dto.pray.request.PrayUpdateRequestDto;
 import com.uspray.uspray.global.common.model.AuditingTimeEntity;
-import com.uspray.uspray.global.enums.PrayType;
+import com.uspray.uspray.global.enums.CategoryType;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -37,40 +37,40 @@ import org.hibernate.annotations.Where;
 @Where(clause = "deleted=false")
 public class Pray extends AuditingTimeEntity {
 
-    private final Boolean deleted = false;
-    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private final List<GroupPray> groupPray = new ArrayList<>();
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "pray_id")
-    private Long id;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", nullable = false)
-    private Member member;
-    private String content;
-    private Integer count;
-    private LocalDate deadline;
-    private Boolean isShared = false;
-    @Column(name = "origin_pray_id")
-    private Long originPrayId;
-    @Column(name = "origin_member_id")
-    private Long originMemberId;
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    private PrayType prayType;
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
-    private Category category;
+	private final Boolean deleted = false;
+	@OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
+	private final List<GroupPray> groupPray = new ArrayList<>();
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "pray_id")
+	private Long id;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "member_id", nullable = false)
+	private Member member;
+	private String content;
+	private Integer count;
+	private LocalDate deadline;
+	private Boolean isShared = false;
+	@Column(name = "origin_pray_id")
+	private Long originPrayId;
+	@Column(name = "origin_member_id")
+	private Long originMemberId;
+	@NotNull
+	@Enumerated(EnumType.STRING)
+	private CategoryType categoryType;
+	@NotNull
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "category_id")
+	private Category category;
 
-    @NotNull
-    private LocalDate startDate;
+	@NotNull
+	private LocalDate startDate;
 
-    private LocalDate lastPrayedAt;
+	private LocalDate lastPrayedAt;
 
     @Builder
     public Pray(Member member, String content, LocalDate deadline, Long originPrayId,
-        Long originMemberId, Category category, PrayType prayType, GroupPray groupPray,
+        Long originMemberId, Category category, CategoryType categoryType, GroupPray groupPray,
         LocalDate startDate, Boolean isShared) {
         this.member = member;
         this.content = new String(Base64.getEncoder().encode(content.getBytes()));
@@ -79,7 +79,7 @@ public class Pray extends AuditingTimeEntity {
         this.originPrayId = originPrayId;
         this.originMemberId = originMemberId;
         this.category = category;
-        this.prayType = prayType;
+        this.categoryType = categoryType;
         setGroupPray(groupPray);
         this.startDate = startDate;
         this.lastPrayedAt = LocalDate.of(2002, 2, 24);
@@ -87,21 +87,21 @@ public class Pray extends AuditingTimeEntity {
     }
 
     public static Pray createdByGroupPrayOf(Member author, String content, LocalDate deadline,
-        Category category, PrayType prayType, GroupPray groupPray, Boolean isShared) {
+        Category category, CategoryType categoryType, GroupPray groupPray, Boolean isShared) {
         return Pray.builder()
             .member(author)
             .content(content)
             .deadline(deadline)
             .category(category)
             .startDate(LocalDate.now())
-            .prayType(prayType)
+            .categoryType(categoryType)
             .groupPray(groupPray)
             .isShared(isShared)
             .build();
     }
 
     public static Pray createdByScrapOf(Member member, String content, LocalDate deadline,
-        Long originMemberId, Long originPrayId, Category category, PrayType prayType) {
+        Long originMemberId, Long originPrayId, Category category, CategoryType categoryType) {
         return Pray.builder()
             .member(member)
             .content(content)
@@ -109,42 +109,42 @@ public class Pray extends AuditingTimeEntity {
             .originMemberId(originMemberId)
             .originPrayId(originPrayId)
             .category(category)
-            .prayType(prayType)
+            .categoryType(categoryType)
             .build();
     }
 
-    public void setGroupPray(GroupPray groupPray) {
-        if (groupPray != null) {
-            this.groupPray.add(groupPray);
-            groupPray.setOriginPray(this);
-        }
-    }
+	public void setGroupPray(GroupPray groupPray) {
+		if (groupPray != null) {
+			this.groupPray.add(groupPray);
+			groupPray.setOriginPray(this);
+		}
+	}
 
-    public Pray update(PrayUpdateRequestDto prayUpdateRequestDto, Category category) {
-        if (prayUpdateRequestDto.getContent() != null) {
-            this.content = new String(
-                Base64.getEncoder().encode(prayUpdateRequestDto.getContent().getBytes()));
-        }
-        this.deadline = prayUpdateRequestDto.getDeadline();
-        this.category = category;
-        return this;
-    }
+	public Pray update(PrayUpdateRequestDto prayUpdateRequestDto, Category category) {
+		if (prayUpdateRequestDto.getContent() != null) {
+			this.content = new String(
+				Base64.getEncoder().encode(prayUpdateRequestDto.getContent().getBytes()));
+		}
+		this.deadline = prayUpdateRequestDto.getDeadline();
+		this.category = category;
+		return this;
+	}
 
-    public void countUp() {
-        this.count++;
-        this.lastPrayedAt = LocalDate.now();
-    }
+	public void countUp() {
+		this.count++;
+		this.lastPrayedAt = LocalDate.now();
+	}
 
-    public void complete() {
-        this.deadline = LocalDate.now();
-    }
+	public void complete() {
+		this.deadline = LocalDate.now();
+	}
 
-    public void deleteLastPrayedAt() {
-        this.lastPrayedAt = LocalDate.now().minusDays(1);
-        this.count--;
-    }
+	public void deleteLastPrayedAt() {
+		this.lastPrayedAt = LocalDate.now().minusDays(1);
+		this.count--;
+	}
 
-    public void setIsShared() {
-        this.isShared = true;
-    }
+	public void setIsShared() {
+		this.isShared = true;
+	}
 }
