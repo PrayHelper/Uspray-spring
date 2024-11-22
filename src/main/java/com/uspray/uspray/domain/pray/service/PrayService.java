@@ -5,6 +5,8 @@ import com.uspray.uspray.domain.member.model.Member;
 import com.uspray.uspray.domain.pray.dto.pray.response.PrayResponseDto;
 import com.uspray.uspray.domain.pray.model.Pray;
 import com.uspray.uspray.domain.pray.repository.PrayRepository;
+import com.uspray.uspray.global.exception.ErrorStatus;
+import com.uspray.uspray.global.exception.model.NotFoundException;
 import java.time.LocalDate;
 import java.util.List;
 import javax.transaction.Transactional;
@@ -73,5 +75,11 @@ public class PrayService {
 
 	public Boolean isSharedPray(Pray pray) {
 		return getSharedPray(pray.getId()) == null;
+	}
+
+	public void checkIsAlreadyPrayed(Pray pray) {
+		if (pray.getLastPrayedAt().equals(LocalDate.now())) {
+			throw new NotFoundException(ErrorStatus.ALREADY_PRAYED_TODAY);
+		}
 	}
 }

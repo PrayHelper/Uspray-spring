@@ -15,7 +15,6 @@ import com.uspray.uspray.domain.pray.model.Pray;
 import com.uspray.uspray.global.enums.CategoryType;
 import com.uspray.uspray.global.exception.ErrorStatus;
 import com.uspray.uspray.global.exception.model.CustomException;
-import com.uspray.uspray.global.exception.model.NotFoundException;
 import com.uspray.uspray.global.push.service.NotificationLogService;
 import java.time.LocalDate;
 import java.util.Collections;
@@ -38,11 +37,6 @@ public class PrayFacade {
 	private final MemberService memberService;
 	private final CategoryService categoryService;
 
-	private void checkIsAlreadyPrayed(Pray pray) {
-		if (pray.getLastPrayedAt().equals(LocalDate.now())) {
-			throw new NotFoundException(ErrorStatus.ALREADY_PRAYED_TODAY);
-		}
-	}
 
 	private boolean isSameCategory(Pray pray, Category category) {
 		return pray.getCategoryType() == category.getCategoryType();
@@ -70,7 +64,7 @@ public class PrayFacade {
 		Category category = categoryService.getCategoryByIdAndMemberAndType(
 			prayRequestDto.getCategoryId(),
 			member, CategoryType.PERSONAL);
-    
+
 		return prayService.savePray(prayRequestDto.toEntity(member, category, startDateOrNull));
 	}
 
@@ -109,7 +103,8 @@ public class PrayFacade {
 	}
 
 	private void convertPrayToHistory(Pray pray) {
-		Integer sharedCount = prayService.getSharedCountByIdAndOriginPrayId(pray.getId(), pray.getOriginPrayId());
+		Integer sharedCount = prayService.getSharedCountByIdAndOriginPrayId(pray.getId(),
+			pray.getOriginPrayId());
 
 		historyService.createHistory(pray, sharedCount);
 		prayService.deletePray(pray);
@@ -135,7 +130,7 @@ public class PrayFacade {
 
 
 	private void handlePrayedToday(Pray pray) {
-		checkIsAlreadyPrayed(pray);
+		prayService.checkIsAlreadyPrayed(pray);
 		pray.countUp();
 
 		if (pray.getCategoryType() == CategoryType.SHARED) {
