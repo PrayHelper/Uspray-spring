@@ -9,6 +9,7 @@ import com.uspray.uspray.domain.pray.dto.pray.PrayListResponseDto;
 import com.uspray.uspray.domain.pray.dto.pray.request.PrayToGroupPrayDto;
 import com.uspray.uspray.global.common.dto.ApiResponseDto;
 import com.uspray.uspray.global.exception.SuccessStatus;
+import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -52,8 +53,7 @@ public class GroupPrayController implements GroupPrayApi{
     public ApiResponseDto<?> createGroupPray(@RequestBody GroupPrayRequestDto groupPrayRequestDto,
         @AuthenticationPrincipal User user) {
         groupPrayFacade.createGroupPray(groupPrayRequestDto, user.getUsername());
-        return ApiResponseDto.success(SuccessStatus.CREATE_GROUP_PRAY_SUCCESS,
-            SuccessStatus.CREATE_GROUP_PRAY_SUCCESS.getMessage());
+        return ApiResponseDto.success(SuccessStatus.CREATE_GROUP_PRAY_SUCCESS);
     }
 
     @GetMapping("/{groupId}")
@@ -67,23 +67,20 @@ public class GroupPrayController implements GroupPrayApi{
     @DeleteMapping("/{groupPrayId}")
     public ApiResponseDto<?> deleteGroupPray(@PathVariable(name = "groupPrayId") Long id) {
         groupPrayService.deleteGroupPray(id);
-        return ApiResponseDto.success(SuccessStatus.DELETE_GROUP_PRAY_SUCCESS,
-            SuccessStatus.DELETE_GROUP_PRAY_SUCCESS.getMessage());
+        return ApiResponseDto.success(SuccessStatus.DELETE_GROUP_PRAY_SUCCESS);
     }
 
     @PostMapping("/{groupPrayId}/like")
     public ApiResponseDto<?> likeGroupPray(@PathVariable(name = "groupPrayId") Long id,
-        @AuthenticationPrincipal User user) {
+        @AuthenticationPrincipal User user) throws IOException {
         groupPrayFacade.heartGroupPray(id, user.getUsername());
-        return ApiResponseDto.success(SuccessStatus.LIKE_GROUP_PRAY_SUCCESS,
-            SuccessStatus.LIKE_GROUP_PRAY_SUCCESS.getMessage());
+        return ApiResponseDto.success(SuccessStatus.LIKE_GROUP_PRAY_SUCCESS);
     }
 
     @PostMapping("/scrap")
     public ApiResponseDto<?> scarpGroupPray(@RequestBody ScrapRequestDto scrapRequestDto,
-        @AuthenticationPrincipal User user) {
+        @AuthenticationPrincipal User user) throws IOException {
         groupPrayFacade.scrapGroupPray(scrapRequestDto, user.getUsername());
-        return ApiResponseDto.success(SuccessStatus.SCARP_GROUP_PRAY_SUCCESS,
-            SuccessStatus.SCARP_GROUP_PRAY_SUCCESS.getMessage());
+        return ApiResponseDto.success(SuccessStatus.SCARP_GROUP_PRAY_SUCCESS);
     }
 }

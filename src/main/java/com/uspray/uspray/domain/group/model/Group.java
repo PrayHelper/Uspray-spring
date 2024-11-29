@@ -1,9 +1,7 @@
 package com.uspray.uspray.domain.group.model;
 
-import com.uspray.uspray.global.common.model.AuditingTimeEntity;
 import com.uspray.uspray.domain.member.model.Member;
-import com.uspray.uspray.global.exception.ErrorStatus;
-import com.uspray.uspray.global.exception.model.CustomException;
+import com.uspray.uspray.global.common.model.AuditingTimeEntity;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -45,6 +43,13 @@ public class Group extends AuditingTimeEntity {
     @JoinColumn(name = "leader_id", referencedColumnName = "member_id")
     private Member leader;
 
+    public static Group of(String name, Member leader) {
+        return Group.builder()
+            .name(name)
+            .leader(leader)
+            .build();
+    }
+
     @Builder
     public Group(String name, Member leader) {
         this.name = name;
@@ -55,27 +60,7 @@ public class Group extends AuditingTimeEntity {
         this.name = name;
     }
 
-    public void changeLeader(Member member) {
-        this.leader = member;
-    }
-
-    public void kickMember(GroupMember groupMember) {
-        this.groupMemberList.remove(groupMember);
-
-    }
-
-    public void validateGroupName(String newName) {
-        if (this.name.equals(newName)) {
-            throw new CustomException(ErrorStatus.ALREADY_EXIST_GROUP_NAME_EXCEPTION);
-        }
-    }
-
-    public void checkLeaderAuthorization(Member member) {
-        Member leader = this.getLeader();
-        System.out.println(leader.getUserId());
-        System.out.println(member.getUserId());
-        if (!leader.equals(member)) {
-            throw new CustomException(ErrorStatus.GROUP_UNAUTHORIZED_EXCEPTION);
-        }
+    public void changeLeader(Member newLeader) {
+        this.leader = newLeader;
     }
 }

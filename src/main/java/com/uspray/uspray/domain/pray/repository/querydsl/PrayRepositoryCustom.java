@@ -9,5 +9,5 @@ public interface PrayRepositoryCustom {
     List<Pray> findAllWithOrderAndType(String username, String prayType);
 
     @Nullable
-    Integer getSharedCountByOriginPrayId(Long prayId);
+    Integer getSharedCountByIdAndOriginPrayId(Long prayId, Long originPrayId);
 }

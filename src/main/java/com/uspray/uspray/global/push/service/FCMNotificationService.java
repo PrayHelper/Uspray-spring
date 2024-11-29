@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.common.net.HttpHeaders;
 import com.uspray.uspray.global.push.model.FCMMessage;
+import com.uspray.uspray.global.push.model.NotificationLog;
+import com.uspray.uspray.global.push.repository.NotificationLogRepository;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Service;
 public class FCMNotificationService {
 
     private final ObjectMapper objectMapper;
+    private final NotificationLogRepository notificationLogRepository;
 
     public void sendMessageTo(String targetToken, String title, String body) throws IOException {
         String message = makeMessage(targetToken, title, body);
@@ -65,6 +68,10 @@ public class FCMNotificationService {
 
         googleCredentials.refreshIfExpired();
         return googleCredentials.getAccessToken().getTokenValue();
+    }
+
+    public void saveNotificationLog(NotificationLog notificationLog) {
+        notificationLogRepository.save(notificationLog);
     }
 
 }
