@@ -12,6 +12,7 @@ import com.uspray.uspray.domain.pray.model.Pray;
 import com.uspray.uspray.domain.pray.repository.PrayRepository;
 import com.uspray.uspray.global.enums.CategoryType;
 import com.uspray.uspray.global.exception.ErrorStatus;
+import com.uspray.uspray.global.exception.model.CustomException;
 import com.uspray.uspray.global.exception.model.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
