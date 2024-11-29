@@ -68,20 +68,42 @@ public class HistoryService {
 		return new HistoryListResponseDto(historyList.getContent(), historyList.getTotalPages());
 	}
 
-	@Transactional(readOnly = true)
-	public HistoryDetailResponseDto getHistoryDetail(String username, Long historyId) {
-		Member member = memberRepository.getMemberByUserId(username);
-		History history = historyRepository.getHistoryById(historyId);
-		if (!history.getMember().getId().equals(member.getId())) {
-			throw new NotFoundException(ErrorStatus.HISTORY_NOT_FOUND_EXCEPTION);
-		}
-    
-		if (history.getCategoryType() == CategoryType.SHARED) {
-			Pray originPray = prayRepository.getPrayById(history.getOriginPrayId());
-			return HistoryDetailResponseDto.shared(history, originPray);
-		}
-		return HistoryDetailResponseDto.of(history);
-	}
+    @Transactional(readOnly = true)
+    public HistoryDetailResponseDto getHistoryDetail(String username, Long historyId) {
+        Member member = memberRepository.getMemberByUserId(username);
+        History history = getHistoryById(historyId);
+        if (history.getCategoryType() == CategoryType.SHARED) {
+            Pray originPray = prayRepository.getPrayById(history.getOriginPrayId());
+            return HistoryDetailResponseDto.shared(history, originPray);
+        }
+        return HistoryDetailResponseDto.of(history);
+    }
+
+    @Transactional
+    public void saveHistory(History history) {
+        historyRepository.save(history);
+    }
+
+    @Transactional
+    public void deleteHistory(History history) {
+        historyRepository.delete(history);
+    }
+
+    @Transactional(readOnly = true)
+    public History getHistoryByIdAndMember(Long historyId, Member member) {
+        return historyRepository.findByIdAndMember(historyId, member)
+            .orElseThrow(() -> new NotFoundException(
+                ErrorStatus.HISTORY_NOT_FOUND_EXCEPTION
+            ));
+    }
+
+    @Transactional(readOnly = true)
+    public History getHistoryById(Long historyId) {
+        return historyRepository.findById(historyId)
+            .orElseThrow(() -> new NotFoundException(
+                ErrorStatus.HISTORY_NOT_FOUND_EXCEPTION
+            ));
+    }
 
 	@Transactional
 	public void createHistory(Pray pray, Integer totalCountOrNull) {
@@ -91,4 +113,5 @@ public class HistoryService {
 			.build();
 		historyRepository.save(history);
 	}
+
 }

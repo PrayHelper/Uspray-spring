@@ -18,18 +18,7 @@ public interface HistoryRepository extends JpaRepository<History, Long>, History
 
     Page<History> findByMemberAndOriginPrayIdIsNotNull(Member member, Pageable pageable);
 
-
     Optional<History> findByIdAndMember(Long historyId, Member member);
 
-    default History getHistoryByIdAndMember(Long historyId, Member member) {
-        return findByIdAndMember(historyId, member)
-            .orElseThrow(() -> new NotFoundException(ErrorStatus.HISTORY_NOT_FOUND_EXCEPTION));
-    }
-
-    default History getHistoryById(Long historyId) {
-        return findById(historyId)
-            .orElseThrow(() -> new NotFoundException(
-                ErrorStatus.HISTORY_NOT_FOUND_EXCEPTION
-            ));
-    }
+    Optional<History> findById(Long historyId);
 }
